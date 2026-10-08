@@ -23,7 +23,11 @@ html, body { margin: 0; }
 
 body {
   /* The grain is the page's own background: it tiles forever, so it never runs out on big screens. */
-  background: var(--paper) url("assets/noise.png") repeat top left / 720px 512px;
+  /* The PNG is about 10% opaque. Stacking it twice gives about 19%; delete one of the two url() lines for ~10%, add a third for ~27%. */
+  background:
+    url("assets/noise.png") repeat top left / 720px 512px,
+    url("assets/noise.png") repeat top left / 720px 512px,
+    var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
   font-weight: 300;
@@ -40,7 +44,7 @@ p, dl, dd { margin: 0; }
 .stage {
   position: relative;
   width: 100%;
-  height: calc(var(--u) * 1080);   /* a little taller than the Figma frame so the lowered group has room */
+  height: max(100vh, calc(var(--u) * 1080));   /* a little taller than the Figma frame so the lowered group has room */
   overflow: hidden;
   isolation: isolate;              /* transparent, so the body's grain shows through */
 }
