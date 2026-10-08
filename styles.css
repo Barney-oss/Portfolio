@@ -126,6 +126,8 @@ p, dl, dd { margin: 0; }
   background: #fbc7b4;                                   /* peach, until the real shape is dropped in */
   border-radius: 48% 52% 50% 50% / 30% 32% 68% 70%;
 }
+.logo__blob:has(img) { background: none; border-radius: 0; display: grid; place-items: center; }
+.logo__blob img { width: calc(var(--u) * 82); height: calc(var(--u) * 175); }
 .logo__text {
   position: relative;
   font-family: var(--font-display);
