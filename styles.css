@@ -146,8 +146,8 @@ p, dl, dd { margin: 0; }
 .card:focus-visible .card__blob { filter: drop-shadow(0 0 calc(var(--u) * 6) var(--orange)); }
 
 /* The facts fade out and back in when the card changes. */
-.fact dd, .fact p, .counter { transition: opacity 0.25s ease; }
-.is-swapping .fact dd, .is-swapping .fact p, .is-swapping .counter { opacity: 0; }
+.fact dd, .fact p, .counter__num { transition: opacity 0.25s ease; }
+.is-swapping .fact dd, .is-swapping .fact p, .is-swapping .counter__num { opacity: 0; }
 
 /* ------------------------------------------------------------
    Logo and navigation
@@ -228,17 +228,43 @@ p, dl, dd { margin: 0; }
 .fact--center { text-align: center; }
 .fact--center .fact__label { margin-bottom: calc(var(--u) * 9); }
 
+/* The big number is the anchor of the page, like a page number in a book. */
 .counter {
   position: absolute;
   right: calc(var(--u) * 40);
-  bottom: calc(var(--u) * 36);
+  bottom: calc(var(--u) * 10);
   z-index: 5;
-  text-align: center;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: calc(var(--u) * 20);
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 8);
+  line-height: 0.8;
   color: var(--orange-deep);
 }
+.counter__num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: calc(var(--u) * 190);
+}
+.counter__total {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: calc(var(--u) * 22);
+}
+
+/* Small labels along the top and bottom edges. */
+.edge {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: calc(var(--u) * 16);
+  color: var(--ink);
+  white-space: nowrap;
+}
+.edge--top { top: calc(var(--u) * 58); left: calc(var(--u) * 420); right: calc(var(--u) * 40); }
+.edge--bottom { bottom: calc(var(--u) * 36); left: calc(var(--u) * 40); }
 
 /* ------------------------------------------------------------
    Respect people who ask their device for less motion

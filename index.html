@@ -53,8 +53,18 @@
       </ul>
     </nav>
 
+    <!-- A quiet row of small labels along the top and bottom edges, like a frame. -->
+    <div class="edge edge--top">
+      <span>Selected work</span>
+      <span id="local-time">Addis Ababa</span>
+      <span>Product designer</span>
+    </div>
+    <div class="edge edge--bottom">
+      <span class="scroll-cue">Scroll <span aria-hidden="true">&darr;</span></span>
+    </div>
+
     <!-- Which card this is. The number belongs to the project, so 02 always means the same one. -->
-    <p class="counter" id="counter" aria-label="Project 1 of 4">01/04</p>
+    <p class="counter" id="counter" aria-label="Project 1 of 4"><span class="counter__num">01</span><span class="counter__total">/04</span></p>
   </div>
   <script src="script.js"></script>
 </body>

@@ -124,7 +124,8 @@ function updateFacts() {
   factFor.textContent = p.designedFor;
   factRole.textContent = p.role;
   factType.textContent = p.type;
-  counter.textContent = String(current + 1).padStart(2, "0") + "/" + String(total).padStart(2, "0");
+  counter.querySelector(".counter__num").textContent = String(current + 1).padStart(2, "0");
+  counter.querySelector(".counter__total").textContent = "/" + String(total).padStart(2, "0");
   counter.setAttribute("aria-label", `Project ${current + 1} of ${total}`);
 }
 
@@ -177,3 +178,12 @@ updateFacts();
 place();
 /* Switch the animation on only after the first frame has been drawn. */
 requestAnimationFrame(() => requestAnimationFrame(() => cardsEl.classList.add("is-ready")));
+
+/* ---------- local time in the top row ---------- */
+const timeEl = document.getElementById("local-time");
+function tick() {
+  const t = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Africa/Addis_Ababa" }).format(new Date());
+  timeEl.textContent = "Addis Ababa, " + t;
+}
+tick();
+setInterval(tick, 30000);
