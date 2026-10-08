@@ -14,9 +14,11 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- The whole hero is laid out on a 1440 x 1024 design canvas that scales with the window. -->
+  <!-- Logo, nav and counter hug the window corners. Everything else lives on a centred canvas. -->
   <div class="stage">
 
+    <!-- The middle of the page is drawn on a 1440 x 1080 canvas that stays centred in the window. -->
+    <div class="canvas">
     <!-- Background blobs that peek out behind the main card (the next and previous projects). -->
     <div class="layer blob blob--dark" style="--x:215; --y:391; --w:576; --h:502;" aria-hidden="true">
       <img src="assets/left-blob.svg" alt="" onerror="this.remove()">
@@ -38,6 +40,21 @@
            onerror="this.remove()">
     </main>
 
+    <!-- Project facts. -->
+    <dl class="layer fact" style="--x:71; --y:525; --w:131;">
+      <dt>Designed for:</dt>
+      <dd>Agristelle farm stays</dd>
+    </dl>
+    <dl class="layer fact" style="--x:1260; --y:522; --w:110;">
+      <dt>Role:</dt>
+      <dd>Product designer</dd>
+    </dl>
+    <div class="layer fact fact--center" style="--x:530; --y:955; --w:341;">
+      <p class="fact__label">Project type:</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus dui augue, ac volutpat elit eleifend quis. Phasellus non erat a augue</p>
+    </div>
+    </div>
+
     <!-- Logo, which is also the way back to the entry screen. -->
     <a class="layer logo" href="#" style="--x:21; --y:24; --w:103; --h:182;" aria-label="Nardos, home">
       <span class="logo__blob" aria-hidden="true"><img src="assets/logo-blob.svg" alt="" onerror="this.remove()"></span>
@@ -54,22 +71,8 @@
       </ul>
     </nav>
 
-    <!-- Project facts. -->
-    <dl class="layer fact" style="--x:71; --y:525; --w:131;">
-      <dt>Designed for:</dt>
-      <dd>Agristelle farm stays</dd>
-    </dl>
-    <dl class="layer fact" style="--x:1260; --y:522; --w:110;">
-      <dt>Role:</dt>
-      <dd>Product designer</dd>
-    </dl>
-    <div class="layer fact fact--center" style="--x:530; --y:955; --w:341;">
-      <p class="fact__label">Project type:</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus dui augue, ac volutpat elit eleifend quis. Phasellus non erat a augue</p>
-    </div>
-
     <!-- Which card this is. The number belongs to the project, so 02 always means the same one. -->
-    <p class="layer counter" style="--x:1278; --y:964; --w:151;" aria-label="Project 1 of 5">01/05</p>
+    <p class="counter" aria-label="Project 1 of 5">01/05</p>
   </div>
 </body>
 </html>

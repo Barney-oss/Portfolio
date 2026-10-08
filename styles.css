@@ -23,7 +23,6 @@ html, body { margin: 0; }
 
 /* This screen never scrolls the page. Later, scrolling will move between cards instead. */
 html, body { height: 100%; overflow: hidden; }
-body { display: grid; place-items: center; }
 
 body {
   /* The grain is the page's own background: it tiles forever, so it never runs out on big screens. */
@@ -46,11 +45,20 @@ p, dl, dd { margin: 0; }
    ------------------------------------------------------------ */
 .stage {
   position: relative;
-  width: calc(var(--u) * 1440);
-  height: calc(var(--u) * 1080);
-  margin-inline: auto;             /* centred when the window is wider than the canvas */
+  width: 100vw;
+  height: 100dvh;                  /* exactly the window: logo and nav hug the top-left corner, the counter the bottom-right */
   overflow: hidden;
   isolation: isolate;              /* transparent, so the body's grain shows through */
+}
+
+/* The middle of the page keeps its design proportions and sits in the centre of the window. */
+.canvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--u) * 1440);
+  height: calc(var(--u) * 1080);
+  transform: translate(-50%, -50%);
 }
 
 /* Anything with class "layer" is placed using --x, --y, --w, --h in design pixels. */
@@ -184,6 +192,9 @@ p, dl, dd { margin: 0; }
 .fact--center .fact__label { margin-bottom: calc(var(--u) * 9); }
 
 .counter {
+  position: absolute;
+  right: calc(var(--u) * 40);
+  bottom: calc(var(--u) * 36);
   z-index: 5;
   text-align: center;
   font-family: var(--font-body);
