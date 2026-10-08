@@ -14,12 +14,16 @@
   --font-body: "Lato", system-ui, sans-serif;
 
   /* 1 design pixel. The hero is drawn on a 1440 x 1080 canvas and scaled to fit whichever is tighter, the width or the height, so it never needs scrolling. */
-  --u: min(calc(100vw / 1440), calc(100vh / 1080));
+  --u: min(calc(100vw / 1440), calc(100dvh / 1080));
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body { margin: 0; }
+
+/* This screen never scrolls the page. Later, scrolling will move between cards instead. */
+html, body { height: 100%; overflow: hidden; }
+body { display: grid; place-items: center; }
 
 body {
   /* The grain is the page's own background: it tiles forever, so it never runs out on big screens. */
@@ -31,7 +35,6 @@ body {
   color: var(--ink);
   font-family: var(--font-body);
   font-weight: 300;
-  overflow-x: hidden;
 }
 
 img { display: block; max-width: none; }
