@@ -22,7 +22,8 @@
 html, body { margin: 0; }
 
 body {
-  background: var(--paper);
+  /* The grain is the page's own background: it tiles forever, so it never runs out on big screens. */
+  background: var(--paper) url("assets/noise.png") repeat top left / 720px 512px;
   color: var(--ink);
   font-family: var(--font-body);
   font-weight: 300;
@@ -41,21 +42,7 @@ p, dl, dd { margin: 0; }
   width: 100%;
   height: calc(var(--u) * 1024);
   overflow: hidden;
-  background: var(--paper);
-  isolation: isolate;
-}
-
-/* Fine grain over everything. Multiply keeps the white background from going grey. */
-.stage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  pointer-events: none;
-  background-image: url("assets/noise.png");
-  background-size: calc(var(--u) * 1440) calc(var(--u) * 1024);
-  mix-blend-mode: multiply;
-  opacity: 1;                      /* the PNG already carries its own 10% transparency */
+  isolation: isolate;              /* transparent, so the body's grain shows through */
 }
 
 /* Anything with class "layer" is placed using --x, --y, --w, --h in design pixels. */
