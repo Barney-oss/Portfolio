@@ -1,0 +1,203 @@
+/* ------------------------------------------------------------
+   Design tokens (from the Figma file and our palette decisions)
+   ------------------------------------------------------------ */
+:root {
+  --ink: #231F1C;          /* warm charcoal, instead of pure black */
+  --orange: #EA5B0C;       /* "Primary orange" in Figma: labels, scribble */
+  --orange-deep: #D64A1C;  /* nav "Work" and the counter in the design */
+  --paper: #FFFFFF;        /* the Figma frame is white, with grain on top */
+  --cream: #F7F3EC;
+  --teal: #2FA593;         /* placeholder until the real blob SVG is dropped in */
+  --dark: #2A211C;         /* placeholder, same reason */
+
+  --font-display: "Antonio", "Anton", sans-serif;
+  --font-body: "Lato", system-ui, sans-serif;
+
+  /* 1 design pixel. The hero was designed at 1440px wide, so everything scales with the window. */
+  --u: calc(100vw / 1440);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: none; }
+ul { margin: 0; padding: 0; list-style: none; }
+p, dl, dd { margin: 0; }
+
+/* ------------------------------------------------------------
+   The stage and the positioning helper
+   ------------------------------------------------------------ */
+.stage {
+  position: relative;
+  width: 100%;
+  height: calc(var(--u) * 1024);
+  overflow: hidden;
+  background: var(--paper);
+  isolation: isolate;
+}
+
+/* Fine grain over everything. Multiply keeps the white background from going grey. */
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background-image: url("assets/noise.png");
+  background-size: calc(var(--u) * 800);
+  mix-blend-mode: multiply;
+  opacity: 0.1;
+}
+
+/* Anything with class "layer" is placed using --x, --y, --w, --h in design pixels. */
+.layer {
+  position: absolute;
+  left: calc(var(--u) * var(--x));
+  top: calc(var(--u) * var(--y));
+  width: calc(var(--u) * var(--w));
+  height: calc(var(--u) * var(--h, 0));
+}
+.layer:not([style*="--h"]) { height: auto; }
+
+/* ------------------------------------------------------------
+   Blobs and the main card
+   ------------------------------------------------------------ */
+.blob { z-index: 1; }
+
+/* Stand-in shapes, hidden automatically once the real SVGs load. */
+.blob--dark {
+  background: radial-gradient(circle at 40% 55%, #8a4a22 0%, var(--dark) 70%);
+  border-radius: 55% 45% 52% 48% / 48% 54% 46% 52%;
+  filter: blur(calc(var(--u) * 6));
+}
+.blob--teal {
+  background: var(--teal);
+  border-radius: 48% 52% 44% 56% / 55% 45% 55% 45%;
+  filter: blur(calc(var(--u) * 6));
+}
+.blob img { width: 100%; height: 100%; }
+.blob:has(img) { background: none; filter: none; border-radius: 0; }
+
+.card { z-index: 2; }
+
+.card__blob {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  border-radius: 46% 54% 50% 50% / 44% 48% 52% 56%;
+  box-shadow: 0 0 0 calc(var(--u) * 1.5) var(--orange);   /* stand-in for the scribble outline */
+}
+.card__blob:has(img) { background: none; border-radius: 0; box-shadow: none; }
+.card__blob img { width: 100%; height: 100%; }
+
+.card__shot { object-fit: cover; }
+.card__shot--back {
+  border-radius: calc(var(--u) * 12);
+  box-shadow: 0 calc(var(--u) * 4) calc(var(--u) * 40) rgba(6, 95, 70, 0.2);
+}
+.card__shot--front {
+  border-radius: calc(var(--u) * 27);
+  box-shadow: 0 calc(var(--u) * 4) calc(var(--u) * 40) rgba(6, 95, 70, 0.2);
+}
+
+/* ------------------------------------------------------------
+   Logo and navigation
+   ------------------------------------------------------------ */
+.logo {
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  text-decoration: none;
+}
+.logo__blob {
+  position: absolute;
+  inset: 0;
+  background: #fbc7b4;                                   /* peach, until the real shape is dropped in */
+  border-radius: 48% 52% 50% 50% / 30% 32% 68% 70%;
+}
+.logo__text {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: calc(var(--u) * 40);
+  line-height: 1;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);                              /* reads bottom to top, like the design */
+}
+
+.nav { z-index: 5; }
+.nav ul { display: flex; flex-direction: column; gap: calc(var(--u) * 2); }
+
+.nav__link {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 8);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: calc(var(--u) * 20);
+  line-height: normal;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+.nav__link:hover,
+.nav__link:focus-visible { color: var(--orange-deep); }
+
+.nav__link--active {
+  font-size: calc(var(--u) * 25);
+  color: var(--orange-deep);
+  margin-bottom: calc(var(--u) * 2);
+}
+.nav__link--active::before {
+  content: "";
+  flex: none;                                             /* don't let the dot squash when the row is tight */
+  width: calc(var(--u) * 15);
+  height: calc(var(--u) * 15);
+  background: var(--orange-deep);
+  border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%;
+}
+
+/* ------------------------------------------------------------
+   Project facts and counter
+   ------------------------------------------------------------ */
+.fact { z-index: 5; font-size: calc(var(--u) * 15); line-height: normal; }
+
+.fact dt,
+.fact__label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: calc(var(--u) * 17);
+  color: var(--orange);
+  margin-bottom: calc(var(--u) * 6);
+}
+.fact dd { white-space: nowrap; }                          /* the short facts sit on one line in the design */
+.fact--center { text-align: center; }
+.fact--center .fact__label { margin-bottom: calc(var(--u) * 9); }
+
+.counter {
+  z-index: 5;
+  text-align: center;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: calc(var(--u) * 20);
+  color: var(--orange-deep);
+}
+
+/* ------------------------------------------------------------
+   Respect people who ask their device for less motion
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

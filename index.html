@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nardos — Product designer</title>
+  <meta name="description" content="Nardos, product designer. Selected work, starting with Agristelle farm stays.">
+
+  <!-- Fonts used in the Figma file: Antonio (display) and Lato (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600&family=Lato:wght@300;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- The whole hero is laid out on a 1440 x 1024 design canvas that scales with the window. -->
+  <div class="stage">
+
+    <!-- Background blobs that peek out behind the main card (the next and previous projects). -->
+    <div class="layer blob blob--dark" style="--x:155; --y:291; --w:607; --h:608;" aria-hidden="true">
+      <img src="assets/left-blob.svg" alt="" onerror="this.remove()">
+    </div>
+    <div class="layer blob blob--teal" style="--x:650; --y:27; --w:609; --h:665;" aria-hidden="true">
+      <img src="assets/right-blob.svg" alt="" onerror="this.remove()">
+    </div>
+
+    <!-- Main card: the current project. -->
+    <main class="layer card" style="--x:231; --y:45; --w:941; --h:918;" aria-label="Selected project: Agristelle">
+      <div class="card__blob" aria-hidden="true">
+        <img src="assets/front-blob.svg" alt="" onerror="this.remove()">
+      </div>
+      <img class="card__shot card__shot--back layer" style="--x:227; --y:246; --w:371; --h:426;"
+           src="assets/agristelle-dashboard-02.png" alt="Agristelle admin panel: experiences and community overview"
+           onerror="this.remove()">
+      <img class="card__shot card__shot--front layer" style="--x:396; --y:345; --w:355; --h:291;"
+           src="assets/agristelle-dashboard-01.png" alt="Agristelle admin panel: property owner detail"
+           onerror="this.remove()">
+    </main>
+
+    <!-- Logo, which is also the way back to the entry screen. -->
+    <a class="layer logo" href="#" style="--x:21; --y:24; --w:103; --h:182;" aria-label="Nardos, home">
+      <span class="logo__blob" aria-hidden="true"></span>
+      <span class="logo__text">NARDOS</span>
+    </a>
+
+    <!-- Navigation. The active page gets the orange dot. -->
+    <nav class="layer nav" style="--x:160; --y:56; --w:71;" aria-label="Main">
+      <ul>
+        <li><a href="#" class="nav__link nav__link--active" aria-current="page">Work</a></li>
+        <li><a href="#" class="nav__link">About</a></li>
+        <li><a href="#" class="nav__link">Say Hi!</a></li>
+        <li><a href="#" class="nav__link">Resume</a></li>
+      </ul>
+    </nav>
+
+    <!-- Project facts. -->
+    <dl class="layer fact" style="--x:71; --y:474; --w:131;">
+      <dt>Designed for:</dt>
+      <dd>Agristelle farm stays</dd>
+    </dl>
+    <dl class="layer fact" style="--x:1260; --y:471; --w:110;">
+      <dt>Role:</dt>
+      <dd>Product designer</dd>
+    </dl>
+    <div class="layer fact fact--center" style="--x:530; --y:888; --w:341;">
+      <p class="fact__label">Project type:</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus dui augue, ac volutpat elit eleifend quis. Phasellus non erat a augue</p>
+    </div>
+
+    <!-- Which card this is. The number belongs to the project, so 02 always means the same one. -->
+    <p class="layer counter" style="--x:1278; --y:964; --w:151;" aria-label="Project 1 of 5">01/05</p>
+  </div>
+</body>
+</html>
