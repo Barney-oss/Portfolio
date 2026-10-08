@@ -131,11 +131,8 @@ function updateFacts() {
 let swapTimer;
 function goTo(index) {
   if (index === current) return;
-  const leaving = cardEls[current];
   current = (index + total) % total;
   place();
-  leaving.classList.add("is-leaving");
-  setTimeout(() => leaving.classList.remove("is-leaving"), 700);
   stage.classList.add("is-swapping");
   clearTimeout(swapTimer);
   swapTimer = setTimeout(() => {

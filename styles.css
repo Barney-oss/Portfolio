@@ -102,7 +102,7 @@ p, dl, dd { margin: 0; }
 .card__side {
   position: absolute;
   inset: 0;
-  transition: opacity 0.3s ease 0.4s;   /* the coloured blob appears once the card has shrunk */
+  transition: opacity 0.35s ease 0.1s;
 }
 .card__side img {
   width: 100%;
@@ -115,12 +115,10 @@ p, dl, dd { margin: 0; }
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.3s ease 0.4s;   /* leaving: stays visible while it shrinks, then swaps to the blob near the end */
+  transition: opacity 0.18s ease;       /* leaving: disappears fast, before the card shrinks much */
 }
 .card[data-slot="0"] .card__front { opacity: 1; transition: opacity 0.4s ease 0.25s; }
-.card[data-slot="0"] .card__side { opacity: 0; transition: opacity 0.25s ease; }
-/* The card that is giving up the centre stays in front while it shrinks, so you can watch it. */
-.card.is-leaving { --z: 4; }
+.card[data-slot="0"] .card__side { opacity: 0; }
 
 .card__blob { position: absolute; inset: 0; }
 .card__blob img { width: 100%; height: 100%; }
