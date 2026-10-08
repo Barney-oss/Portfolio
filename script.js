@@ -51,7 +51,7 @@ const PROJECTS = [
 const SLOTS = {
   0: { x: 333, y: 256, w: 775, h: 652 },
   1: { x: 640, y: 181, w: 584, h: 544 },
-  2: { x: 520, y: 330, w: 400, h: 340 },
+  2: { x: 500, y: 300, w: 420, h: 360 },
   3: { x: 215, y: 391, w: 576, h: 502 },
 };
 
@@ -72,6 +72,7 @@ if (wantedIndex >= 0) current = wantedIndex;
 const cardEls = PROJECTS.map((p, i) => {
   const a = document.createElement("a");
   a.className = "layer card";
+  a.setAttribute("style", "--x:333; --y:256; --w:775; --h:652;");   /* every card starts as the centre box */
   a.href = "project.html?p=" + p.slug;
   a.setAttribute("aria-label", `${p.title}, project ${i + 1} of ${total}`);
   a.innerHTML = `
@@ -105,10 +106,11 @@ function place() {
     const slot = slotOf(i);
     const s = SLOTS[slot];
     el.dataset.slot = slot;
-    el.style.setProperty("--x", s.x);
-    el.style.setProperty("--y", s.y);
-    el.style.setProperty("--w", s.w);
-    el.style.setProperty("--h", s.h);
+    /* Slide and scale from the centre box (SLOTS[0]) into this slot's box. */
+    const c0 = SLOTS[0];
+    const dx = s.x - c0.x, dy = s.y - c0.y;
+    el.style.transform =
+      `translate(calc(var(--u) * ${dx}), calc(var(--u) * ${dy})) scale(${s.w / c0.w}, ${s.h / c0.h})`;
     const isCurrent = slot === 0;
     el.tabIndex = isCurrent ? 0 : -1;
     if (isCurrent) el.setAttribute("aria-current", "true");
@@ -173,3 +175,5 @@ window.addEventListener("keydown", (e) => {
 /* ---------- start ---------- */
 updateFacts();
 place();
+/* Switch the animation on only after the first frame has been drawn. */
+requestAnimationFrame(() => requestAnimationFrame(() => cardsEl.classList.add("is-ready")));
