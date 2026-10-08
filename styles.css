@@ -258,7 +258,7 @@ p, dl, dd { margin: 0; }
   display: flex;
   justify-content: space-between;
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 700;
   font-size: calc(var(--u) * 16);
   color: var(--ink);
   white-space: nowrap;
