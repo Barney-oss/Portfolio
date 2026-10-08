@@ -17,42 +17,24 @@
   <!-- Logo, nav and counter hug the window corners. Everything else lives on a centred canvas. -->
   <div class="stage">
 
-    <!-- The middle of the page is drawn on a 1440 x 1080 canvas that stays centred in the window. -->
+    <!-- The middle of the page is drawn on a 1440 x 1080 canvas that stays centred in the window.
+         script.js builds the project cards inside #cards from the list at the top of that file. -->
     <div class="canvas">
-    <!-- Background blobs that peek out behind the main card (the next and previous projects). -->
-    <div class="layer blob blob--dark" style="--x:215; --y:391; --w:576; --h:502;" aria-hidden="true">
-      <img src="assets/left-blob.svg" alt="" onerror="this.remove()">
-    </div>
-    <div class="layer blob blob--teal" style="--x:640; --y:181; --w:584; --h:544;" aria-hidden="true">
-      <img src="assets/right-blob.svg" alt="" onerror="this.remove()">
-    </div>
+      <div id="cards" class="cards" aria-live="off"></div>
 
-    <!-- Main card: the current project. -->
-    <main class="layer card" style="--x:333; --y:256; --w:775; --h:652;" aria-label="Selected project: Agristelle">
-      <div class="card__blob" aria-hidden="true">
-        <img src="assets/front-blob.svg" alt="" onerror="this.remove()">
+      <!-- Project facts. They change with the current card. -->
+      <dl class="layer fact" style="--x:71; --y:525; --w:131;">
+        <dt>Designed for:</dt>
+        <dd id="fact-for">Agristelle farm stays</dd>
+      </dl>
+      <dl class="layer fact" style="--x:1260; --y:522; --w:110;">
+        <dt>Role:</dt>
+        <dd id="fact-role">Product designer</dd>
+      </dl>
+      <div class="layer fact fact--center" style="--x:530; --y:955; --w:341;">
+        <p class="fact__label">Project type:</p>
+        <p id="fact-type">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus dui augue, ac volutpat elit eleifend quis. Phasellus non erat a augue</p>
       </div>
-      <img class="card__shot card__shot--back layer" style="--x:125; --y:103; --w:371; --h:426;"
-           src="assets/agristelle-dashboard-02.png" alt="Agristelle admin panel: experiences and community overview"
-           onerror="this.remove()">
-      <img class="card__shot card__shot--front layer" style="--x:294; --y:202; --w:355; --h:291;"
-           src="assets/agristelle-dashboard-01.png" alt="Agristelle admin panel: property owner detail"
-           onerror="this.remove()">
-    </main>
-
-    <!-- Project facts. -->
-    <dl class="layer fact" style="--x:71; --y:525; --w:131;">
-      <dt>Designed for:</dt>
-      <dd>Agristelle farm stays</dd>
-    </dl>
-    <dl class="layer fact" style="--x:1260; --y:522; --w:110;">
-      <dt>Role:</dt>
-      <dd>Product designer</dd>
-    </dl>
-    <div class="layer fact fact--center" style="--x:530; --y:955; --w:341;">
-      <p class="fact__label">Project type:</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus dui augue, ac volutpat elit eleifend quis. Phasellus non erat a augue</p>
-    </div>
     </div>
 
     <!-- Logo, which is also the way back to the entry screen. -->
@@ -72,7 +54,8 @@
     </nav>
 
     <!-- Which card this is. The number belongs to the project, so 02 always means the same one. -->
-    <p class="counter" aria-label="Project 1 of 5">01/05</p>
+    <p class="counter" id="counter" aria-label="Project 1 of 4">01/04</p>
   </div>
+  <script src="script.js"></script>
 </body>
 </html>
