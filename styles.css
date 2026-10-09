@@ -365,29 +365,29 @@ p, dl, dd { margin: 0; }
   .card__shot--front, .card__ph--front { border-radius: calc(var(--u) * 13); }
   .card__ph { font-size: calc(var(--u) * 13); }
 
-  /* facts: bigger, label in Antonio, text in Lato Light */
-  .fact { font-size: calc(var(--u) * 15); }
-  .fact dt, .fact__label { font-size: calc(var(--u) * 18); margin-bottom: calc(var(--u) * 4); }
-  .fact--center .fact__label { margin-bottom: calc(var(--u) * 8); }
-  .fact--for  { --x: 25 !important;  --y: 180 !important; --w: 200 !important; }
-  .fact--role { --x: 262 !important; --y: 222 !important; --w: 140 !important; }
-  .fact--type { --x: 36 !important;  --y: 650 !important; --w: 340 !important; }
+  /* facts: bigger again, label in Antonio, text in Lato Light */
+  .fact { font-size: calc(var(--u) * 18); }
+  .fact dt, .fact__label { font-size: calc(var(--u) * 23); margin-bottom: calc(var(--u) * 5); }
+  .fact--center .fact__label { margin-bottom: calc(var(--u) * 9); }
+  .fact--for  { --x: 24 !important;  --y: 172 !important; --w: 290 !important; }
+  .fact--role { --x: 238 !important; --y: 222 !important; --w: 170 !important; }
+  .fact--type { --x: 24 !important;  --y: 632 !important; --w: 364 !important; }
 
   /* logo: wide apricot pill, name across it */
-  .logo { --x: 23 !important; --y: 60 !important; --w: 122 !important; --h: 62 !important; }
+  .logo { --x: 20 !important; --y: 50 !important; --w: 170 !important; --h: 80 !important; }
   .stage .logo { opacity: 1; pointer-events: auto; }
   .logo__blob img:not(.logo__blob-m) { display: none; }
-  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 122); height: calc(var(--u) * 57); }
-  .logo__text { writing-mode: horizontal-tb; transform: none; font-size: calc(var(--u) * 27); }
+  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 170); height: calc(var(--u) * 80); }
+  .logo__text { writing-mode: horizontal-tb; transform: none; font-size: calc(var(--u) * 38); }
 
   /* menu button and menu */
   .burger {
     display: block; position: absolute; z-index: 40;
-    left: calc(var(--ox) + var(--u) * 340); top: calc(var(--oy) + var(--u) * 66);
+    left: calc(var(--ox) + var(--u) * 336); top: calc(var(--oy) + var(--u) * 62);
     padding: calc(var(--u) * 10) calc(var(--u) * 6);
     background: none; border: 0; color: var(--orange); cursor: pointer;
   }
-  .burger svg { display: block; width: calc(var(--u) * 42); height: calc(var(--u) * 24); }
+  .burger svg { display: block; width: calc(var(--u) * 56); height: calc(var(--u) * 32); }
   .menu {
     display: grid; place-items: center; position: absolute; inset: 0; z-index: 30;
     background: rgba(247, 243, 236, .99);
@@ -401,16 +401,16 @@ p, dl, dd { margin: 0; }
   }
   .menu__link--active { color: var(--orange-deep); }
 
-  /* bottom: "Swipe" cue, then the count, both orange Antonio */
-  .edge--bottom { left: var(--ox); right: var(--ox); top: calc(var(--oy) + var(--u) * 800); bottom: auto; justify-content: center; }
+  /* bottom, like desktop: "Swipe" bottom left, big number bottom right */
+  .edge--bottom { left: calc(var(--ox) + var(--u) * 24); right: auto; top: auto; bottom: calc(var(--oy) + var(--u) * 30); }
   .cue-d { display: none; }
   .cue-m { display: inline; }
   .cue-m i { display: none; }
-  .edge .scroll-cue { font-size: calc(var(--u) * 26); }
+  .edge .scroll-cue { font-size: calc(var(--u) * 34); }
   .counter {
-    right: auto; bottom: auto; left: var(--ox); width: calc(var(--u) * 412);
-    top: calc(var(--oy) + var(--u) * 842); justify-content: center; line-height: 1; gap: 0;
-    color: var(--orange);
+    left: auto; top: auto; width: auto; line-height: .8; gap: calc(var(--u) * 6); color: var(--orange-deep);
+    right: calc(var(--ox) + var(--u) * 24); bottom: calc(var(--oy) + var(--u) * 14);
   }
-  .counter__num, .counter__total { font-family: var(--font-display); font-weight: 600; font-size: calc(var(--u) * 30); }
+  .counter__num { font-size: calc(var(--u) * 120); }
+  .counter__total { font-size: calc(var(--u) * 22); }
 }
