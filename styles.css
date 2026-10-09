@@ -255,7 +255,8 @@ p, dl, dd { margin: 0; }
 /* Small labels along the top and bottom edges. */
 .edge {
   position: absolute;
-  z-index: 5;
+  z-index: 25;                     /* above the entry screen, so these stay crisp on both screens */
+  pointer-events: none;
   display: flex;
   justify-content: space-between;
   font-family: var(--font-body);
@@ -281,9 +282,9 @@ p, dl, dd { margin: 0; }
 /* The work page, blurred behind a milky pane. */
 .intro__glass {
   position: absolute; inset: 0;
-  background: rgba(255, 255, 255, .2);
-  -webkit-backdrop-filter: blur(38px);
-  backdrop-filter: blur(38px);
+  background: rgba(255, 255, 255, .08);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   transition: opacity .8s ease;
 }
 
