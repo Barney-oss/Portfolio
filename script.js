@@ -70,8 +70,8 @@ const MOBILE_SLOTS = {
   3: { x: 106.4, y: 317.4, w: 424.4, h: 370.8 },  /* lower right, bleeding off the edge */
 };
 const MOBILE_SHOTS = {
-  back:  { x: 56.5,  y: 49,   w: 186.2, h: 214 },
-  front: { x: 140.1, y: 98.8, w: 178.9, h: 146.6 },
+  back:  { x: 63,    y: 49,   w: 186.2, h: 214 },
+  front: { x: 146.6, y: 98.8, w: 178.9, h: 146.6 },
 };
 const DESKTOP_SHOTS = {
   back:  { x: 125, y: 103, w: 371, h: 426 },

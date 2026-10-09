@@ -372,29 +372,29 @@ p, dl, dd { margin: 0; }
   .card__ph { font-size: calc(var(--u) * 13); }
 
   /* facts: label in Antonio, text in Lato Light */
-  .fact { font-size: calc(var(--u) * 13); }
-  .fact dt, .fact__label { font-size: calc(var(--u) * 15); margin-bottom: calc(var(--u) * 4); }
+  .fact { font-size: calc(var(--u) * 11.5); }
+  .fact dt, .fact__label { font-size: calc(var(--u) * 13.5); margin-bottom: calc(var(--u) * 4); }
   .fact--center .fact__label { margin-bottom: calc(var(--u) * 8); }
-  .fact--for  { --x: 24 !important;  --y: 104 !important; --w: 260 !important; }
-  .fact--role { --x: 262 !important; --y: 150 !important; --w: 130 !important; }
-  .fact--type { --x: 30 !important;  --w: 352 !important; top: auto !important; bottom: calc(var(--u) * 100); }
+  .fact--for  { --x: 24 !important;  --y: 88 !important; --w: 260 !important; }
+  .fact--role { --x: 276 !important; --y: 130 !important; --w: 120 !important; }
+  .fact--type { --x: 30 !important;  --w: 352 !important; top: auto !important; bottom: calc(var(--u) * 92); }
 
   /* logo: wide apricot pill, name across it, hugging the left margin */
-  .logo { --x: 24 !important; --y: 12 !important; --w: 138 !important; --h: 65 !important; }
+  .logo { --x: 24 !important; --y: 14 !important; --w: 112 !important; --h: 53 !important; }
   .stage .logo { opacity: 1; pointer-events: auto; }
   .logo__blob { justify-content: start; }
   .logo__blob img:not(.logo__blob-m) { display: none; }
-  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 138); height: calc(var(--u) * 65); }
-  .logo__text { writing-mode: horizontal-tb; transform: none; font-size: calc(var(--u) * 30); }
+  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 112); height: calc(var(--u) * 53); }
+  .logo__text { writing-mode: horizontal-tb; transform: none; font-size: calc(var(--u) * 24); }
 
   /* menu button and menu */
   .burger {
     display: block; position: absolute; z-index: 40;
-    right: calc(var(--ox) + var(--u) * 18); top: calc(var(--u) * 24);
+    right: calc(var(--ox) + var(--u) * 18); top: calc(var(--u) * 18);
     padding: calc(var(--u) * 10) calc(var(--u) * 6);
     background: none; border: 0; color: var(--orange); cursor: pointer;
   }
-  .burger svg { display: block; width: calc(var(--u) * 44); height: calc(var(--u) * 25); }
+  .burger svg { display: block; width: calc(var(--u) * 34); height: calc(var(--u) * 19); }
   .menu {
     display: grid; place-items: center; position: absolute; inset: 0; z-index: 30;
     background: rgba(247, 243, 236, .99);
@@ -413,7 +413,7 @@ p, dl, dd { margin: 0; }
   .cue-d { display: none; }
   .cue-m { display: inline; }
   .cue-m i { display: none; }
-  .edge .scroll-cue { font-size: calc(var(--u) * 20); }
+  .edge .scroll-cue { font-size: calc(var(--u) * 15); }
   .counter {
     left: auto; top: auto; width: auto; line-height: .8; gap: calc(var(--u) * 5); color: var(--orange-deep);
     right: calc(var(--ox) + var(--u) * 24); bottom: calc(var(--u) * 12);
