@@ -160,13 +160,21 @@ const letters = [..."NARDOS"].map((ch) => {
   return el;
 });
 
-/* Hover: letters flip to BBH Sans Bartle and fade to orange, one after another. */
-let hoverTimers = [];
+/* Hover: one letter at a time turns into BBH Sans Bartle and orange, then hands over to the next. */
+let waveTimer = null, waveAt = 0;
 function heat(on) {
-  hoverTimers.forEach(clearTimeout);
-  hoverTimers = letters.map((el, i) =>
-    setTimeout(() => el.classList.toggle("is-hot", on), i * 140));
+  clearInterval(waveTimer);
+  letters.forEach((el) => el.classList.remove("is-hot"));
+  if (!on) return;
+  waveAt = 0;
+  const tick = () => {
+    letters.forEach((el, i) => el.classList.toggle("is-hot", i === waveAt));
+    waveAt = (waveAt + 1) % letters.length;
+  };
+  tick();
+  waveTimer = setInterval(tick, 260);
 }
+
 /* Each letter gets a fixed slot as wide as the wider of its two shapes, so the neighbours
    never shift when one letter changes typeface. Measured once the fonts have loaded. */
 function lockLetterWidths() {

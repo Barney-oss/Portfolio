@@ -306,7 +306,7 @@ p, dl, dd { margin: 0; }
   font-family: var(--font-display); font-weight: 700; font-size: calc(var(--u) * 170); line-height: 1;
   color: var(--ink);
 }
-.ltr { display: inline-block; transition: color .4s ease; }
+.ltr { display: inline-block; transition: color .25s ease; }
 .ltr.is-hot { font-family: "BBH Sans Bartle", var(--font-display); font-weight: 400; color: var(--orange); }
 
 /* Leaving: texts and glass fade, the blob and name are moved by script.js. */
