@@ -234,8 +234,34 @@ function lockLetterWidths() {
 Promise.all([
   document.fonts.load('700 100px "Antonio"'),
   document.fonts.load('400 100px "BBH Sans Bartle"'),
-]).catch(() => {}).then(() => document.fonts.ready).then(lockLetterWidths);
+]).catch(() => {}).then(() => document.fonts.ready).then(lockLetterWidths).then(playLetters);
 
+
+/* Phones have no hover, so the letters play once on their own, one at a time, then rest. */
+let autoplay = 0;
+function playLetters() {
+  if (!isPhone || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const run = ++autoplay;
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  (async () => {
+    await wait(700);
+    for (const el of letters) {
+      if (run !== autoplay || !stage.classList.contains("is-intro")) break;
+      el.classList.add("is-hot");
+      await wait(520);
+      el.classList.remove("is-hot");
+      await wait(120);
+    }
+    letters.forEach((el) => el.classList.remove("is-hot"));
+  })();
+}
+
+/* The phone blob is a separate drawing: if assets/m-first-blob.svg exists it replaces the stand-in. */
+if (isPhone) {
+  const probe = new Image();
+  probe.onload = () => { const img = introBlob.querySelector("img"); if (img) img.src = probe.src; };
+  probe.src = "assets/m-first-blob.svg";
+}
 
 const centre = (r) => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
 
@@ -243,6 +269,7 @@ const centre = (r) => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
 function leaveIntro() {
   if (introBusy || !stage.classList.contains("is-intro")) return;
   introBusy = true;
+  autoplay++;                                       /* stop the letter animation */
   heat(false);
   /* Measure everything at rest, before anything moves. */
   const logoBlob = document.querySelector(isPhone ? ".logo__blob-m" : ".logo__blob img") || document.querySelector(".logo__blob");

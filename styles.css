@@ -430,18 +430,11 @@ p, dl, dd { margin: 0; }
   .intro__hello { font-size: calc(var(--u) * 15); }
   .intro__name { font-size: calc(var(--u) * 80); }
   .intro__bio { font-size: calc(var(--u) * 10); }
-  .intro__cue {
-    display: flex; align-items: center; justify-content: center; gap: calc(var(--u) * 8);
-    background: #F7E6D6; border: calc(var(--u) * 1.5) solid var(--orange);
-    border-radius: 46% 54% 52% 48% / 62% 58% 42% 38%;
-    font: 400 calc(var(--u) * 14)/1 var(--font-display); color: var(--ink);
-    transition: opacity .35s ease .5s;
-  }
-  .intro__cue i { width: calc(var(--u) * 11); height: calc(var(--u) * 11); background: var(--orange-deep); border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%; }
-  .stage.is-leaving .intro__cue { opacity: 0; transition: opacity .3s ease; }
-  .stage.is-pre .intro__cue { opacity: 0; }
-  .stage.is-intro .burger, .stage.is-intro .edge, .stage.is-intro .counter { opacity: 0; }
-  .stage.is-intro.is-leaving .burger, .stage.is-intro.is-leaving .edge, .stage.is-intro.is-leaving .counter { opacity: 1; transition: opacity .3s .65s; }
+  .stage.is-intro .burger { opacity: 0; }
+  .stage.is-intro.is-leaving .burger { opacity: 1; transition: opacity .3s .65s; }
+  /* the cue is the same one as desktop: crisp above the entry screen, reading "Scroll" */
+  .stage.is-intro .cue-d { display: inline; }
+  .stage.is-intro .cue-m { display: none; }
   .stage.is-intro .cards { animation: drift-m 9s ease-in-out infinite alternate; }
   @keyframes drift-m {
     from { transform: translate(calc(var(--u) * -28), calc(var(--u) * 20)) rotate(-4deg); }
