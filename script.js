@@ -50,7 +50,7 @@ const PROJECTS = [
    ------------------------------------------------------------ */
 const SLOTS = {
   0: { x: 333, y: 256, w: 775, h: 652 },
-  1: { x: 640, y: 181, w: 584, h: 544 },
+  1: { x: 884, y: 160, w: 700, h: 652 },    /* x is recalculated in place() so it always runs 100px past the window edge */
   2: { x: 500, y: 300, w: 420, h: 360 },
   3: { x: 215, y: 391, w: 576, h: 502 },
 };
@@ -102,6 +102,10 @@ function slotOf(i) {
 
 /* ---------- put every card in its slot ---------- */
 function place() {
+  /* Where the right edge of the window falls, measured in canvas pixels. */
+  const u = Math.min(innerWidth / 1440, innerHeight / 1080);
+  const rightEdge = 1440 + (innerWidth / u - 1440) / 2;
+  SLOTS[1].x = Math.round(rightEdge + 100 - SLOTS[1].w);
   cardEls.forEach((el, i) => {
     const slot = slotOf(i);
     const s = SLOTS[slot];
@@ -174,6 +178,7 @@ window.addEventListener("keydown", (e) => {
 });
 
 /* ---------- start ---------- */
+addEventListener("resize", () => place());
 updateFacts();
 place();
 /* Switch the animation on only after the first frame has been drawn. */
