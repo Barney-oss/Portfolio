@@ -160,20 +160,12 @@ const letters = [..."NARDOS"].map((ch) => {
   return el;
 });
 
-/* Hover: one letter at a time turns into BBH Sans Bartle and orange, then hands over to the next. */
-let waveTimer = null, waveAt = 0;
-function heat(on) {
-  clearInterval(waveTimer);
-  letters.forEach((el) => el.classList.remove("is-hot"));
-  if (!on) return;
-  waveAt = 0;
-  const tick = () => {
-    letters.forEach((el, i) => el.classList.toggle("is-hot", i === waveAt));
-    waveAt = (waveAt + 1) % letters.length;
-  };
-  tick();
-  waveTimer = setInterval(tick, 260);
-}
+/* Hover: only the letter under the cursor turns into BBH Sans Bartle and orange. */
+function heat(on) { if (!on) letters.forEach((el) => el.classList.remove("is-hot")); }
+letters.forEach((el) => {
+  el.addEventListener("mouseenter", () => el.classList.add("is-hot"));
+  el.addEventListener("mouseleave", () => el.classList.remove("is-hot"));
+});
 
 /* Each letter gets a fixed slot as wide as the wider of its two shapes, so the neighbours
    never shift when one letter changes typeface. Measured once the fonts have loaded. */
@@ -195,8 +187,6 @@ Promise.all([
   document.fonts.load('400 100px "BBH Sans Bartle"'),
 ]).catch(() => {}).then(() => document.fonts.ready).then(lockLetterWidths);
 
-introName.addEventListener("mouseenter", () => heat(true));
-introName.addEventListener("mouseleave", () => heat(false));
 
 const centre = (r) => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
 
