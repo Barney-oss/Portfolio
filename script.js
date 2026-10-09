@@ -165,8 +165,28 @@ let hoverTimers = [];
 function heat(on) {
   hoverTimers.forEach(clearTimeout);
   hoverTimers = letters.map((el, i) =>
-    setTimeout(() => el.classList.toggle("is-hot", on), i * 55));
+    setTimeout(() => el.classList.toggle("is-hot", on), i * 140));
 }
+/* Each letter gets a fixed slot as wide as the wider of its two shapes, so the neighbours
+   never shift when one letter changes typeface. Measured once the fonts have loaded. */
+function lockLetterWidths() {
+  const size = parseFloat(getComputedStyle(introName).fontSize);
+  letters.forEach((el) => {
+    el.style.width = "";
+    el.classList.remove("is-hot");
+    const a = el.getBoundingClientRect().width;
+    el.classList.add("is-hot");
+    const b = el.getBoundingClientRect().width;
+    el.classList.remove("is-hot");
+    el.style.width = Math.max(a, b) / size + "em";
+    el.style.textAlign = "center";
+  });
+}
+Promise.all([
+  document.fonts.load('700 100px "Antonio"'),
+  document.fonts.load('400 100px "BBH Sans Bartle"'),
+]).catch(() => {}).then(() => document.fonts.ready).then(lockLetterWidths);
+
 introName.addEventListener("mouseenter", () => heat(true));
 introName.addEventListener("mouseleave", () => heat(false));
 
