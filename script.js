@@ -170,19 +170,22 @@ letters.forEach((el) => {
   el.addEventListener("mouseleave", () => el.classList.remove("is-hot"));
 });
 
-/* Each letter gets a fixed slot as wide as the wider of its two shapes, so the neighbours
-   never shift when one letter changes typeface. Measured once the fonts have loaded. */
+/* Each letter's slot is as wide as its current shape, and glides to the other width when it
+   changes, so the word stays smooth and centred. Measured once the fonts have loaded. */
 function lockLetterWidths() {
   const size = parseFloat(getComputedStyle(introName).fontSize);
   letters.forEach((el) => {
-    el.style.width = "";
+    el.style.removeProperty("--w0"); el.style.removeProperty("--w1");
     el.classList.remove("is-hot");
+    el.style.width = "auto";
     const a = el.getBoundingClientRect().width;
     el.classList.add("is-hot");
+    el.style.width = "auto";
     const b = el.getBoundingClientRect().width;
     el.classList.remove("is-hot");
-    el.style.width = Math.max(a, b) / size + "em";
-    el.style.textAlign = "center";
+    el.style.width = "";
+    el.style.setProperty("--w0", a / size + "em");
+    el.style.setProperty("--w1", b / size + "em");
   });
 }
 Promise.all([
