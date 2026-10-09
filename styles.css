@@ -372,15 +372,15 @@ p, dl, dd { margin: 0; }
   .card__ph { font-size: calc(var(--u) * 13); }
 
   /* facts: label in Antonio, text in Lato Light */
-  .fact { font-size: calc(var(--u) * 16); }
-  .fact dt, .fact__label { font-size: calc(var(--u) * 20); margin-bottom: calc(var(--u) * 4); }
+  .fact { font-size: calc(var(--u) * 13); }
+  .fact dt, .fact__label { font-size: calc(var(--u) * 15); margin-bottom: calc(var(--u) * 4); }
   .fact--center .fact__label { margin-bottom: calc(var(--u) * 8); }
-  .fact--for  { --x: 24 !important;  --y: 148 !important; --w: 260 !important; }
-  .fact--role { --x: 252 !important; --y: 196 !important; --w: 150 !important; }
-  .fact--type { --x: 30 !important;  --w: 352 !important; top: auto !important; bottom: calc(var(--u) * 118); }
+  .fact--for  { --x: 24 !important;  --y: 104 !important; --w: 260 !important; }
+  .fact--role { --x: 262 !important; --y: 150 !important; --w: 130 !important; }
+  .fact--type { --x: 30 !important;  --w: 352 !important; top: auto !important; bottom: calc(var(--u) * 100); }
 
   /* logo: wide apricot pill, name across it, hugging the left margin */
-  .logo { --x: 24 !important; --y: 40 !important; --w: 138 !important; --h: 65 !important; }
+  .logo { --x: 24 !important; --y: 12 !important; --w: 138 !important; --h: 65 !important; }
   .stage .logo { opacity: 1; pointer-events: auto; }
   .logo__blob { justify-content: start; }
   .logo__blob img:not(.logo__blob-m) { display: none; }
@@ -390,7 +390,7 @@ p, dl, dd { margin: 0; }
   /* menu button and menu */
   .burger {
     display: block; position: absolute; z-index: 40;
-    right: calc(var(--ox) + var(--u) * 18); top: calc(var(--u) * 52);
+    right: calc(var(--ox) + var(--u) * 18); top: calc(var(--u) * 24);
     padding: calc(var(--u) * 10) calc(var(--u) * 6);
     background: none; border: 0; color: var(--orange); cursor: pointer;
   }
@@ -409,15 +409,15 @@ p, dl, dd { margin: 0; }
   .menu__link--active { color: var(--orange-deep); }
 
   /* bottom, like desktop: "Swipe" bottom left, big number bottom right */
-  .edge--bottom { left: calc(var(--ox) + var(--u) * 24); right: auto; top: auto; bottom: calc(var(--u) * 26); }
+  .edge--bottom { left: calc(var(--ox) + var(--u) * 24); right: auto; top: auto; bottom: calc(var(--u) * 24); }
   .cue-d { display: none; }
   .cue-m { display: inline; }
   .cue-m i { display: none; }
-  .edge .scroll-cue { font-size: calc(var(--u) * 26); }
+  .edge .scroll-cue { font-size: calc(var(--u) * 20); }
   .counter {
     left: auto; top: auto; width: auto; line-height: .8; gap: calc(var(--u) * 5); color: var(--orange-deep);
     right: calc(var(--ox) + var(--u) * 24); bottom: calc(var(--u) * 12);
   }
-  .counter__num { font-size: calc(var(--u) * 92); }
-  .counter__total { font-size: calc(var(--u) * 17); }
+  .counter__num { font-size: calc(var(--u) * 62); }
+  .counter__total { font-size: calc(var(--u) * 14); }
 }
