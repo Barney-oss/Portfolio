@@ -15,6 +15,7 @@
 
   /* 1 design pixel. The hero is drawn on a 1440 x 1080 canvas and scaled to fit whichever is tighter, the width or the height, so it never needs scrolling. */
   --u: min(calc(100vw / 1440), calc(100dvh / 1080));
+  --cw: 1440; --ch: 1080;   /* canvas size in design pixels */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -56,8 +57,8 @@ p, dl, dd { margin: 0; }
   position: absolute;
   left: 50%;
   top: 50%;
-  width: calc(var(--u) * 1440);
-  height: calc(var(--u) * 1080);
+  width: calc(var(--u) * var(--cw));
+  height: calc(var(--u) * var(--ch));
   transform: translate(-50%, -50%);
 }
 
@@ -164,7 +165,7 @@ p, dl, dd { margin: 0; }
 .logo__blob {
   position: absolute;
   inset: 0;
-  background: #fbc7b4;                                   /* peach, until the real shape is dropped in */
+  background: #F7E6D6;                                   /* apricot cream, until the real shape is dropped in */
   border-radius: 48% 52% 50% 50% / 30% 32% 68% 70%;
 }
 .logo__blob:has(img) { background: none; border-radius: 0; display: grid; place-items: center; }
@@ -270,6 +271,9 @@ p, dl, dd { margin: 0; }
 
 .edge .scroll-cue { font-family: var(--font-display); font-weight: 600; font-size: calc(var(--u) * 22); color: var(--orange); letter-spacing: .02em; }
 
+/* Phone-only pieces are off on bigger screens. */
+.burger, .menu, .logo__blob-m, .cue-m { display: none; }
+
 /* ------------------------------------------------------------
    Respect people who ask their device for less motion
    ------------------------------------------------------------ */
@@ -334,4 +338,79 @@ p, dl, dd { margin: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
+}
+
+/* ------------------------------------------------------------
+   Phones: the Figma "Android Compact" frame, 412 x 917.
+   Same rules as above, drawn on a smaller canvas. --ox / --oy are the empty margins around
+   the canvas, so things pinned to the window follow the design.
+   ------------------------------------------------------------ */
+@media (max-width: 700px) {
+  :root {
+    --cw: 412; --ch: 917;
+    --u: min(calc(100vw / 412), calc(100dvh / 917));
+    --ox: calc((100vw - var(--u) * 412) / 2);
+    --oy: calc((100dvh - var(--u) * 917) / 2);
+  }
+  html, body { overscroll-behavior: none; }
+
+  /* Things placed straight on the stage start from the canvas corner, not the window corner. */
+  .stage > .layer { left: calc(var(--ox) + var(--u) * var(--x)); top: calc(var(--oy) + var(--u) * var(--y)); }
+
+  .intro, .nav, .edge--top { display: none !important; }
+
+  /* cards */
+  .card__side img { filter: blur(calc(var(--u) * 3)) hue-rotate(var(--tint, 0deg)); }
+  .card__shot--back, .card__ph--back { border-radius: calc(var(--u) * 6); }
+  .card__shot--front, .card__ph--front { border-radius: calc(var(--u) * 13); }
+  .card__ph { font-size: calc(var(--u) * 13); }
+
+  /* facts: 11px, label in Antonio, text in Lato Light */
+  .fact { font-size: calc(var(--u) * 11); }
+  .fact dt, .fact__label { font-size: calc(var(--u) * 11); margin-bottom: calc(var(--u) * 4); }
+  .fact--center .fact__label { margin-bottom: calc(var(--u) * 8); }
+  .fact--for  { --x: 25 !important;  --y: 188 !important; --w: 140 !important; }
+  .fact--role { --x: 294 !important; --y: 226 !important; --w: 111 !important; }
+  .fact--type { --x: 73 !important;  --y: 656 !important; --w: 265 !important; }
+
+  /* logo: wide apricot pill, name across it */
+  .logo { --x: 23 !important; --y: 66 !important; --w: 97.45 !important; --h: 55 !important; }
+  .stage .logo { opacity: 1; pointer-events: auto; }
+  .logo__blob img:not(.logo__blob-m) { display: none; }
+  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 94); height: calc(var(--u) * 44); }
+  .logo__text { writing-mode: horizontal-tb; transform: none; font-size: calc(var(--u) * 20); }
+
+  /* menu button and menu */
+  .burger {
+    display: block; position: absolute; z-index: 40;
+    left: calc(var(--ox) + var(--u) * 350); top: calc(var(--oy) + var(--u) * 68);
+    padding: calc(var(--u) * 10) calc(var(--u) * 6);
+    background: none; border: 0; color: var(--orange); cursor: pointer;
+  }
+  .burger svg { display: block; width: calc(var(--u) * 32); height: calc(var(--u) * 18); }
+  .menu {
+    display: grid; place-items: center; position: absolute; inset: 0; z-index: 30;
+    background: rgba(247, 243, 236, .99);
+    opacity: 0; pointer-events: none; transition: opacity .3s ease;
+  }
+  .menu.is-open { opacity: 1; pointer-events: auto; }
+  .menu ul { display: flex; flex-direction: column; gap: calc(var(--u) * 18); align-items: center; }
+  .menu__link {
+    font-family: var(--font-display); font-weight: 600; font-size: calc(var(--u) * 44);
+    color: var(--ink); text-decoration: none;
+  }
+  .menu__link--active { color: var(--orange-deep); }
+
+  /* bottom: cue with a dot, then the small count */
+  .edge--bottom { left: var(--ox); right: var(--ox); top: calc(var(--oy) + var(--u) * 816); bottom: auto; justify-content: center; }
+  .cue-d { display: none; }
+  .cue-m { display: inline-flex; align-items: center; gap: calc(var(--u) * 6); }
+  .cue-m i { width: calc(var(--u) * 11); height: calc(var(--u) * 11); background: var(--orange-deep); border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%; }
+  .edge .scroll-cue { font-size: calc(var(--u) * 14); }
+  .counter {
+    right: auto; bottom: auto; left: var(--ox); width: calc(var(--u) * 412);
+    top: calc(var(--oy) + var(--u) * 848); justify-content: center; line-height: 1; gap: 0;
+  }
+  .counter__num { font-family: var(--font-body); font-weight: 700; font-size: calc(var(--u) * 12); }
+  .counter__total { font-size: calc(var(--u) * 12); }
 }

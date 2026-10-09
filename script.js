@@ -55,7 +55,35 @@ const SLOTS = {
   3: { x: 215, y: 391, w: 576, h: 502 },
 };
 
+/* ------------------------------------------------------------
+   Phones get their own layout (drawn on a 412 x 917 canvas). Same cards, same logic, other
+   numbers. Crossing the breakpoint (turning the phone, resizing the window) just reloads.
+   ------------------------------------------------------------ */
+const phone = window.matchMedia("(max-width: 700px)");
+const isPhone = phone.matches;
+phone.addEventListener("change", () => location.reload());
+
+const MOBILE_SLOTS = {
+  0: { x: 13.6, y: 275.5, w: 388.5, h: 326.5 },
+  1: { x: -86.3, y: 191, w: 367.7, h: 369.1 },    /* upper left, bleeding off the edge */
+  2: { x: 60, y: 330, w: 290, h: 250 },
+  3: { x: 106.4, y: 317.4, w: 424.4, h: 370.8 },  /* lower right, bleeding off the edge */
+};
+const MOBILE_SHOTS = {
+  back:  { x: 56.5,  y: 49,   w: 186.2, h: 214 },
+  front: { x: 140.1, y: 98.8, w: 178.9, h: 146.6 },
+};
+const DESKTOP_SHOTS = {
+  back:  { x: 125, y: 103, w: 371, h: 426 },
+  front: { x: 294, y: 202, w: 355, h: 291 },
+};
+const MOBILE_SIDE = { "assets/right-blob.svg": "assets/m-side-teal.svg", "assets/left-blob.svg": "assets/m-side-dark.svg" };
+const slots = isPhone ? MOBILE_SLOTS : SLOTS;
+const shotBox = isPhone ? MOBILE_SHOTS : DESKTOP_SHOTS;
+const box = (b) => `--x:${b.x}; --y:${b.y}; --w:${b.w};` + (b.h ? ` --h:${b.h};` : "");
+
 const stage = document.querySelector(".stage");
+if (isPhone) stage.classList.remove("is-intro");   /* the phone entry screen is not designed yet */
 const cardsEl = document.getElementById("cards");
 const factFor = document.getElementById("fact-for");
 const factRole = document.getElementById("fact-role");
@@ -72,19 +100,19 @@ if (wantedIndex >= 0) current = wantedIndex;
 const cardEls = PROJECTS.map((p, i) => {
   const a = document.createElement("a");
   a.className = "layer card";
-  a.setAttribute("style", "--x:333; --y:256; --w:775; --h:652;");   /* every card starts as the centre box */
+  a.setAttribute("style", box(slots[0]));   /* every card starts as the centre box */
   a.href = "project.html?p=" + p.slug;
   a.setAttribute("aria-label", `${p.title}, project ${i + 1} of ${total}`);
   a.innerHTML = `
-    <div class="card__side" aria-hidden="true"><img src="${p.side}" alt="" style="--tint:${p.tint}"></div>
+    <div class="card__side" aria-hidden="true"><img src="${isPhone ? MOBILE_SIDE[p.side] || p.side : p.side}" alt="" style="--tint:${p.tint}"></div>
     <div class="card__front">
       <div class="card__blob" aria-hidden="true"><img src="assets/front-blob.svg" alt=""></div>
       ${p.shots ? `
-        <img class="card__shot card__shot--back layer" style="--x:125; --y:103; --w:371; --h:426;" src="${p.shots.back.src}" alt="${p.shots.back.alt}">
-        <img class="card__shot card__shot--front layer" style="--x:294; --y:202; --w:355; --h:291;" src="${p.shots.front.src}" alt="${p.shots.front.alt}">`
+        <img class="card__shot card__shot--back layer" style="${box(shotBox.back)}" src="${p.shots.back.src}" alt="${p.shots.back.alt}">
+        <img class="card__shot card__shot--front layer" style="${box(shotBox.front)}" src="${p.shots.front.src}" alt="${p.shots.front.alt}">`
       : `
-        <div class="card__ph card__ph--back layer" style="--x:125; --y:103; --w:371; --h:426; --ph:${p.ph}" aria-hidden="true"></div>
-        <div class="card__ph card__ph--front layer" style="--x:294; --y:202; --w:355; --h:291; --ph:${p.ph}" aria-hidden="true">${p.title}</div>`}
+        <div class="card__ph card__ph--back layer" style="${box(shotBox.back)} --ph:${p.ph}" aria-hidden="true"></div>
+        <div class="card__ph card__ph--front layer" style="${box(shotBox.front)} --ph:${p.ph}" aria-hidden="true">${p.title}</div>`}
     </div>`;
   cardsEl.appendChild(a);
   a.addEventListener("click", (e) => {
@@ -104,10 +132,10 @@ function slotOf(i) {
 function place() {
   cardEls.forEach((el, i) => {
     const slot = slotOf(i);
-    const s = SLOTS[slot];
+    const s = slots[slot];
     el.dataset.slot = slot;
     /* Slide and scale from the centre box (SLOTS[0]) into this slot's box. */
-    const c0 = SLOTS[0];
+    const c0 = slots[0];
     const dx = s.x - c0.x, dy = s.y - c0.y;
     el.style.transform =
       `translate(calc(var(--u) * ${dx}), calc(var(--u) * ${dy})) scale(${s.w / c0.w}, ${s.h / c0.h})`;
@@ -249,7 +277,7 @@ function leaveIntro() {
 
 /* Back to the entry screen (logo click): the same move, played backwards. */
 function enterIntro() {
-  if (introBusy || stage.classList.contains("is-intro")) return;
+  if (isPhone || introBusy || stage.classList.contains("is-intro")) return;
   introBusy = true;
   cardsEl.style.animation = ""; cardsEl.style.transition = ""; cardsEl.style.transform = "";
   stage.classList.add("is-intro", "is-pre");       /* blob and name start on the logo, texts hidden */
@@ -264,7 +292,7 @@ intro.addEventListener("click", leaveIntro);
 document.querySelector(".logo").addEventListener("click", (e) => { e.preventDefault(); enterIntro(); });
 
 /* Coming back from a project page goes straight to the work. */
-if (new URLSearchParams(location.search).has("card")) {
+if (new URLSearchParams(location.search).has("card") && !isPhone) {
   stage.classList.remove("is-intro");
   introBlob.style.transform = "translate(0,0) scale(.15)";
   introName.style.transform = "scale(.2)";
@@ -303,6 +331,18 @@ window.addEventListener("keydown", (e) => {
   if (["ArrowDown", "ArrowRight", "PageDown"].includes(e.key)) { e.preventDefault(); step(1); }
   if (["ArrowUp", "ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); step(-1); }
 });
+
+/* ---------- phone menu ---------- */
+const burger = document.getElementById("burger");
+const menu = document.getElementById("menu");
+function setMenu(open) {
+  menu.classList.toggle("is-open", open);
+  burger.setAttribute("aria-expanded", String(open));
+  menu.setAttribute("aria-hidden", String(!open));
+}
+burger.addEventListener("click", () => setMenu(!menu.classList.contains("is-open")));
+menu.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
+window.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
 
 /* ---------- start ---------- */
 updateFacts();

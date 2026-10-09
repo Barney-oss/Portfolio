@@ -23,15 +23,15 @@
       <div id="cards" class="cards" aria-live="off"></div>
 
       <!-- Project facts. They change with the current card. -->
-      <dl class="layer fact" style="--x:100; --y:520; --w:175;">
+      <dl class="layer fact fact--for" style="--x:100; --y:520; --w:175;">
         <dt>Designed for:</dt>
         <dd id="fact-for">Agristelle farm stays</dd>
       </dl>
-      <dl class="layer fact" style="--x:1230; --y:520; --w:145;">
+      <dl class="layer fact fact--role" style="--x:1230; --y:520; --w:145;">
         <dt>Role:</dt>
         <dd id="fact-role">Product designer</dd>
       </dl>
-      <div class="layer fact fact--center" style="--x:500; --y:950; --w:400;">
+      <div class="layer fact fact--center fact--type" style="--x:500; --y:950; --w:400;">
         <p class="fact__label">Project type:</p>
         <p id="fact-type">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus dui augue, ac volutpat elit eleifend quis. Phasellus non erat a augue</p>
       </div>
@@ -39,7 +39,7 @@
 
     <!-- Logo, which is also the way back to the entry screen. -->
     <a class="layer logo" href="#" style="--x:21; --y:24; --w:103; --h:182;" aria-label="Nardos, home">
-      <span class="logo__blob" aria-hidden="true"><img src="assets/logo-blob.svg" alt="" onerror="this.remove()"></span>
+      <span class="logo__blob" aria-hidden="true"><img src="assets/logo-blob.svg" alt="" onerror="this.remove()"><img class="logo__blob-m" src="assets/m-logo-blob.svg" alt=""></span>
       <span class="logo__text">NARDOS</span>
     </a>
 
@@ -53,6 +53,22 @@
       </ul>
     </nav>
 
+    <!-- Phone only: menu button and the full-screen menu it opens. -->
+    <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 32 18" width="32" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+        <path d="M2 4.5c4-2.2 7 2.2 11 0s7 2.2 11 0 4-1.2 6-.4"/>
+        <path d="M3 14c4-2 6.5 2 10.500 0s7 2 11 0 3.500-1.200 5.500-.3"/>
+      </svg>
+    </button>
+    <nav class="menu" id="menu" aria-label="Menu" aria-hidden="true">
+      <ul>
+        <li><a href="#" class="menu__link menu__link--active" aria-current="page">Work</a></li>
+        <li><a href="#" class="menu__link">About</a></li>
+        <li><a href="#" class="menu__link">Say Hi!</a></li>
+        <li><a href="#" class="menu__link">Resume</a></li>
+      </ul>
+    </nav>
+
     <!-- A quiet row of small labels along the top and bottom edges, like a frame. -->
     <div class="edge edge--top">
       <span>Selected work</span>
@@ -60,7 +76,7 @@
       <span>Product designer</span>
     </div>
     <div class="edge edge--bottom">
-      <span class="scroll-cue">Scroll <span aria-hidden="true">&darr;</span></span>
+      <span class="scroll-cue"><span class="cue-d">Scroll <span aria-hidden="true">&darr;</span></span><span class="cue-m"><i aria-hidden="true"></i>Scroll to view works</span></span>
     </div>
 
     <!-- Entry screen. It sits over the work page; scrolling lifts it away and the blob and name
