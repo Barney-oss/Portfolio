@@ -169,7 +169,8 @@ p, dl, dd { margin: 0; }
   border-radius: 48% 52% 50% 50% / 30% 32% 68% 70%;
 }
 .logo__blob:has(img) { background: none; border-radius: 0; display: grid; place-items: center; }
-.logo__blob img { width: calc(var(--u) * 82); height: calc(var(--u) * 175); }
+/* The logo blob is the big entry blob, turned a quarter and squeezed, so the two always match. */
+.logo__blob img { width: calc(var(--u) * 175); height: calc(var(--u) * 82); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); object-fit: fill; }
 .logo__text {
   position: relative;
   font-family: var(--font-display);
@@ -385,7 +386,7 @@ p, dl, dd { margin: 0; }
   .logo { justify-content: flex-start; }
   .logo__blob { justify-content: start; right: auto; left: calc(var(--u) * -16); width: calc(var(--u) * 112); }   /* the word, not the blob, lines up with the texts below */
   .logo__blob img:not(.logo__blob-m) { display: none; }
-  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 112); height: calc(var(--u) * 53); }
+  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 112); height: calc(var(--u) * 53); position: static; transform: none; object-fit: fill; }
   .logo__text { writing-mode: horizontal-tb; transform: none; font-size: calc(var(--u) * 24); }
 
   /* menu button and menu */
