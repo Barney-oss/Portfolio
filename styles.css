@@ -274,7 +274,15 @@ p, dl, dd { margin: 0; }
 /* ------------------------------------------------------------
    Entry screen
    ------------------------------------------------------------ */
-.intro { position: absolute; inset: 0; z-index: 20; visibility: hidden; cursor: pointer; }
+.intro { --intro-scale: 1.12; position: absolute; inset: 0; z-index: 20; visibility: hidden; cursor: pointer; }
+.intro .canvas { transform: translate(-50%, -50%) scale(var(--intro-scale)); }   /* a little bigger than the design, so the middle feels fuller */
+
+/* The work page behind the glass drifts slowly while the entry screen is open. */
+.stage.is-intro .cards { animation: drift 16s ease-in-out infinite alternate; }
+@keyframes drift {
+  from { transform: translate(calc(var(--u) * -16), calc(var(--u) * 10)) rotate(-1deg); }
+  to   { transform: translate(calc(var(--u) * 16), calc(var(--u) * -12)) rotate(1.2deg); }
+}
 .stage.is-intro .intro { visibility: visible; }
 .stage.is-intro .logo { opacity: 0; pointer-events: none; }
 .stage.is-intro.is-leaving .logo { opacity: 1; transition: opacity .3s .65s; }

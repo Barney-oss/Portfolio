@@ -176,7 +176,9 @@ letters.forEach((el) => {
 /* Each letter's slot is as wide as its current shape, and glides to the other width when it
    changes, so the word stays smooth and centred. Measured once the fonts have loaded. */
 function lockLetterWidths() {
-  const size = parseFloat(getComputedStyle(introName).fontSize);
+  /* Measurements come from the screen, which shows the entry screen scaled up, so divide that out. */
+  const k = parseFloat(getComputedStyle(intro).getPropertyValue("--intro-scale")) || 1;
+  const size = parseFloat(getComputedStyle(introName).fontSize) * k;
   /* Distance from the top of the letter's box down to its baseline, found with a zero-size marker. */
   const baseline = (el) => {
     const probe = document.createElement("i");
@@ -220,13 +222,23 @@ function leaveIntro() {
   const b = introBlob.getBoundingClientRect(), bt = logoBlob.getBoundingClientRect();
   const n = introName.getBoundingClientRect(), nt = logoText.getBoundingClientRect();
   const bc = centre(b), btc = centre(bt), nc = centre(n), ntc = centre(nt);
-  const fontRatio = parseFloat(getComputedStyle(logoText).fontSize) / parseFloat(getComputedStyle(introName).fontSize);
+  /* The entry screen is drawn a little larger than the design (--intro-scale), so distances are
+     divided by that, and the letter size ratio is measured against what is on screen. */
+  const k = parseFloat(getComputedStyle(intro).getPropertyValue("--intro-scale")) || 1;
+  const fontRatio = parseFloat(getComputedStyle(logoText).fontSize) / (parseFloat(getComputedStyle(introName).fontSize) * k);
 
   /* The blob turns a quarter turn, so its width becomes the logo's height and the other way round. */
   introBlob.style.transform =
-    `translate(${btc.x - bc.x}px, ${btc.y - bc.y}px) rotate(-90deg) scale(${bt.height / b.width}, ${bt.width / b.height})`;
+    `translate(${(btc.x - bc.x) / k}px, ${(btc.y - bc.y) / k}px) rotate(-90deg) scale(${bt.height / b.width}, ${bt.width / b.height})`;
   introName.style.transform =
-    `translate(${ntc.x - nc.x}px, ${ntc.y - nc.y}px) rotate(-90deg) scale(${fontRatio})`;
+    `translate(${(ntc.x - nc.x) / k}px, ${(ntc.y - nc.y) / k}px) rotate(-90deg) scale(${fontRatio})`;
+  /* Freeze the drifting background where it is, then let it settle back to its place. */
+  const frozen = getComputedStyle(cardsEl).transform;
+  cardsEl.style.animation = "none";
+  cardsEl.style.transform = frozen;
+  void cardsEl.offsetWidth;
+  cardsEl.style.transition = "transform .9s cubic-bezier(.65, 0, .25, 1)";
+  cardsEl.style.transform = "none";
   stage.classList.add("is-leaving");
 
   setTimeout(() => {
@@ -239,6 +251,7 @@ function leaveIntro() {
 function enterIntro() {
   if (introBusy || stage.classList.contains("is-intro")) return;
   introBusy = true;
+  cardsEl.style.animation = ""; cardsEl.style.transition = ""; cardsEl.style.transform = "";
   stage.classList.add("is-intro", "is-pre");       /* blob and name start on the logo, texts hidden */
   void stage.offsetWidth;                           /* let the browser register that start */
   stage.classList.remove("is-pre");
