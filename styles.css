@@ -278,10 +278,10 @@ p, dl, dd { margin: 0; }
 .intro .canvas { transform: translate(-50%, -50%) scale(var(--intro-scale)); }   /* a little bigger than the design, so the middle feels fuller */
 
 /* The work page behind the glass drifts slowly while the entry screen is open. */
-.stage.is-intro .cards { animation: drift 16s ease-in-out infinite alternate; }
+.stage.is-intro .cards { animation: drift 9s ease-in-out infinite alternate; }
 @keyframes drift {
-  from { transform: translate(calc(var(--u) * -16), calc(var(--u) * 10)) rotate(-1deg); }
-  to   { transform: translate(calc(var(--u) * 16), calc(var(--u) * -12)) rotate(1.2deg); }
+  from { transform: translate(calc(var(--u) * -70), calc(var(--u) * 45)) rotate(-4deg); }
+  to   { transform: translate(calc(var(--u) * 70), calc(var(--u) * -50)) rotate(4deg); }
 }
 .stage.is-intro .intro { visibility: visible; }
 .stage.is-intro .logo { opacity: 0; pointer-events: none; }
@@ -312,7 +312,7 @@ p, dl, dd { margin: 0; }
 
 .intro__name {
   margin: 0; display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-weight: 700; font-size: calc(var(--u) * 170); line-height: 1;
+  font-family: var(--font-display); font-weight: 700; font-size: calc(var(--u) * 230); line-height: 1;
   color: var(--ink);
 }
 .intro__word { display: flex; align-items: flex-start; }   /* every letter sits on the same baseline, whichever typeface it is in */
