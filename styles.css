@@ -365,29 +365,29 @@ p, dl, dd { margin: 0; }
   .card__shot--front, .card__ph--front { border-radius: calc(var(--u) * 13); }
   .card__ph { font-size: calc(var(--u) * 13); }
 
-  /* facts: 11px, label in Antonio, text in Lato Light */
-  .fact { font-size: calc(var(--u) * 11); }
-  .fact dt, .fact__label { font-size: calc(var(--u) * 11); margin-bottom: calc(var(--u) * 4); }
+  /* facts: bigger, label in Antonio, text in Lato Light */
+  .fact { font-size: calc(var(--u) * 15); }
+  .fact dt, .fact__label { font-size: calc(var(--u) * 18); margin-bottom: calc(var(--u) * 4); }
   .fact--center .fact__label { margin-bottom: calc(var(--u) * 8); }
-  .fact--for  { --x: 25 !important;  --y: 188 !important; --w: 140 !important; }
-  .fact--role { --x: 294 !important; --y: 226 !important; --w: 111 !important; }
-  .fact--type { --x: 73 !important;  --y: 656 !important; --w: 265 !important; }
+  .fact--for  { --x: 25 !important;  --y: 180 !important; --w: 200 !important; }
+  .fact--role { --x: 262 !important; --y: 222 !important; --w: 140 !important; }
+  .fact--type { --x: 36 !important;  --y: 650 !important; --w: 340 !important; }
 
   /* logo: wide apricot pill, name across it */
-  .logo { --x: 23 !important; --y: 66 !important; --w: 97.45 !important; --h: 55 !important; }
+  .logo { --x: 23 !important; --y: 60 !important; --w: 122 !important; --h: 62 !important; }
   .stage .logo { opacity: 1; pointer-events: auto; }
   .logo__blob img:not(.logo__blob-m) { display: none; }
-  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 94); height: calc(var(--u) * 44); }
-  .logo__text { writing-mode: horizontal-tb; transform: none; font-size: calc(var(--u) * 20); }
+  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 122); height: calc(var(--u) * 57); }
+  .logo__text { writing-mode: horizontal-tb; transform: none; font-size: calc(var(--u) * 27); }
 
   /* menu button and menu */
   .burger {
     display: block; position: absolute; z-index: 40;
-    left: calc(var(--ox) + var(--u) * 350); top: calc(var(--oy) + var(--u) * 68);
+    left: calc(var(--ox) + var(--u) * 340); top: calc(var(--oy) + var(--u) * 66);
     padding: calc(var(--u) * 10) calc(var(--u) * 6);
     background: none; border: 0; color: var(--orange); cursor: pointer;
   }
-  .burger svg { display: block; width: calc(var(--u) * 32); height: calc(var(--u) * 18); }
+  .burger svg { display: block; width: calc(var(--u) * 42); height: calc(var(--u) * 24); }
   .menu {
     display: grid; place-items: center; position: absolute; inset: 0; z-index: 30;
     background: rgba(247, 243, 236, .99);
@@ -401,16 +401,16 @@ p, dl, dd { margin: 0; }
   }
   .menu__link--active { color: var(--orange-deep); }
 
-  /* bottom: cue with a dot, then the small count */
-  .edge--bottom { left: var(--ox); right: var(--ox); top: calc(var(--oy) + var(--u) * 816); bottom: auto; justify-content: center; }
+  /* bottom: "Swipe" cue, then the count, both orange Antonio */
+  .edge--bottom { left: var(--ox); right: var(--ox); top: calc(var(--oy) + var(--u) * 800); bottom: auto; justify-content: center; }
   .cue-d { display: none; }
-  .cue-m { display: inline-flex; align-items: center; gap: calc(var(--u) * 6); }
-  .cue-m i { width: calc(var(--u) * 11); height: calc(var(--u) * 11); background: var(--orange-deep); border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%; }
-  .edge .scroll-cue { font-size: calc(var(--u) * 14); }
+  .cue-m { display: inline; }
+  .cue-m i { display: none; }
+  .edge .scroll-cue { font-size: calc(var(--u) * 26); }
   .counter {
     right: auto; bottom: auto; left: var(--ox); width: calc(var(--u) * 412);
-    top: calc(var(--oy) + var(--u) * 848); justify-content: center; line-height: 1; gap: 0;
+    top: calc(var(--oy) + var(--u) * 842); justify-content: center; line-height: 1; gap: 0;
+    color: var(--orange);
   }
-  .counter__num { font-family: var(--font-body); font-weight: 700; font-size: calc(var(--u) * 12); }
-  .counter__total { font-size: calc(var(--u) * 12); }
+  .counter__num, .counter__total { font-family: var(--font-display); font-weight: 600; font-size: calc(var(--u) * 30); }
 }
