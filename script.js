@@ -65,7 +65,7 @@ phone.addEventListener("change", () => location.reload());
 
 const MOBILE_SLOTS = {
   0: { x: 13.6, y: 275.5, w: 388.5, h: 326.5 },
-  1: { x: -62.3, y: 191, w: 367.7, h: 369.1 },    /* upper left, bleeding off the edge */
+  1: { x: -86.3, y: 175, w: 392, h: 393.5 },    /* upper left, bleeding off the edge */
   2: { x: 60, y: 330, w: 290, h: 250 },
   3: { x: 106.4, y: 317.4, w: 424.4, h: 370.8 },  /* lower right, bleeding off the edge */
 };
