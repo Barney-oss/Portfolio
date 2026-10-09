@@ -174,18 +174,28 @@ letters.forEach((el) => {
    changes, so the word stays smooth and centred. Measured once the fonts have loaded. */
 function lockLetterWidths() {
   const size = parseFloat(getComputedStyle(introName).fontSize);
+  /* Distance from the top of the letter's box down to its baseline, found with a zero-size marker. */
+  const baseline = (el) => {
+    const probe = document.createElement("i");
+    probe.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline";
+    el.appendChild(probe);
+    const d = probe.getBoundingClientRect().bottom - el.getBoundingClientRect().top;
+    probe.remove();
+    return d;
+  };
   letters.forEach((el) => {
-    el.style.removeProperty("--w0"); el.style.removeProperty("--w1");
     el.classList.remove("is-hot");
     el.style.width = "auto";
-    const a = el.getBoundingClientRect().width;
+    const a = el.getBoundingClientRect().width, ya = baseline(el);
     el.classList.add("is-hot");
     el.style.width = "auto";
-    const b = el.getBoundingClientRect().width;
+    const b = el.getBoundingClientRect().width, yb = baseline(el);
     el.classList.remove("is-hot");
     el.style.width = "";
     el.style.setProperty("--w0", a / size + "em");
     el.style.setProperty("--w1", b / size + "em");
+    /* Antonio's baseline is the reference; the Bartle letter is nudged so its baseline lands on it. */
+    el.style.setProperty("--dy", (ya - yb) / size + "em");
   });
 }
 Promise.all([

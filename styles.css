@@ -306,9 +306,9 @@ p, dl, dd { margin: 0; }
   font-family: var(--font-display); font-weight: 700; font-size: calc(var(--u) * 170); line-height: 1;
   color: var(--ink);
 }
-.intro__word { display: flex; align-items: baseline; }   /* every letter sits on the same baseline, whichever typeface it is in */
-.ltr { display: inline-block; text-align: center; width: var(--w0, auto); transition: color .25s ease, width .3s ease; }
-.ltr.is-hot { width: var(--w1, auto); font-family: "BBH Sans Bartle", var(--font-display); font-weight: 400; color: var(--orange); }
+.intro__word { display: flex; align-items: flex-start; }   /* every letter sits on the same baseline, whichever typeface it is in */
+.ltr { display: inline-block; text-align: center; width: var(--w0, auto); transition: color .25s ease, width .55s cubic-bezier(.3, .7, .2, 1); }
+.ltr.is-hot { width: var(--w1, auto); margin-top: var(--dy, 0); font-family: "BBH Sans Bartle", var(--font-display); font-weight: 400; color: var(--orange); }
 
 /* Leaving: texts and glass fade, the blob and name are moved by script.js. */
 .stage.is-leaving .intro__glass,
