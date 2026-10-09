@@ -290,9 +290,9 @@ p, dl, dd { margin: 0; }
 /* The work page, blurred behind a milky pane. */
 .intro__glass {
   position: absolute; inset: 0;
-  background: rgba(255, 255, 255, .08);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, .05);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   transition: opacity .8s ease;
 }
 
@@ -307,13 +307,14 @@ p, dl, dd { margin: 0; }
 .stage.is-leaving .intro__blob img, .stage.is-leaving .intro__blob.is-fallback::before { animation-play-state: paused; }
 
 .intro__hello, .intro__bio { margin: 0; color: var(--ink); text-align: center; transition: opacity .35s ease .5s; }
-.intro__hello { font: 400 calc(var(--u) * 20)/normal var(--font-body); }
+.intro__hello { font: 400 calc(var(--u) * 38)/1 "Kaushan Script", "Caveat", cursive; color: var(--orange); transform: rotate(-4deg); }
 .intro__bio { font: 400 calc(var(--u) * 16)/1.4 var(--font-body); }
 
 .intro__name {
   margin: 0; display: flex; align-items: center; justify-content: center;
   font-family: var(--font-display); font-weight: 700; font-size: calc(var(--u) * 207); line-height: 1;
   color: var(--ink);
+  filter: url(#grain);
 }
 .intro__word { display: flex; align-items: flex-start; }   /* every letter sits on the same baseline, whichever typeface it is in */
 .ltr { display: flex; justify-content: center; flex: none; width: var(--w0, auto); transition: color .25s ease, width .55s cubic-bezier(.3, .7, .2, 1); }
