@@ -83,7 +83,7 @@ const shotBox = isPhone ? MOBILE_SHOTS : DESKTOP_SHOTS;
 const box = (b) => `--x:${b.x}; --y:${b.y}; --w:${b.w};` + (b.h ? ` --h:${b.h};` : "");
 
 const stage = document.querySelector(".stage");
-if (isPhone) stage.classList.remove("is-intro");   /* the phone entry screen is not designed yet */
+
 const cardsEl = document.getElementById("cards");
 const factFor = document.getElementById("fact-for");
 const factRole = document.getElementById("fact-role");
@@ -245,7 +245,7 @@ function leaveIntro() {
   introBusy = true;
   heat(false);
   /* Measure everything at rest, before anything moves. */
-  const logoBlob = document.querySelector(".logo__blob img") || document.querySelector(".logo__blob");
+  const logoBlob = document.querySelector(isPhone ? ".logo__blob-m" : ".logo__blob img") || document.querySelector(".logo__blob");
   const logoText = document.querySelector(".logo__text");
   const b = introBlob.getBoundingClientRect(), bt = logoBlob.getBoundingClientRect();
   const n = introName.getBoundingClientRect(), nt = logoText.getBoundingClientRect();
@@ -256,10 +256,13 @@ function leaveIntro() {
   const fontRatio = parseFloat(getComputedStyle(logoText).fontSize) / (parseFloat(getComputedStyle(introName).fontSize) * k);
 
   /* The blob turns a quarter turn, so its width becomes the logo's height and the other way round. */
+  /* On a phone the logo is a wide pill with the name across it, so nothing needs to turn. */
+  const turn = isPhone ? "" : "rotate(-90deg)";
   introBlob.style.transform =
-    `translate(${(btc.x - bc.x) / k}px, ${(btc.y - bc.y) / k}px) rotate(-90deg) scale(${bt.height / b.width}, ${bt.width / b.height})`;
+    `translate(${(btc.x - bc.x) / k}px, ${(btc.y - bc.y) / k}px) ${turn} ` +
+    (isPhone ? `scale(${bt.width / b.width}, ${bt.height / b.height})` : `scale(${bt.height / b.width}, ${bt.width / b.height})`);
   introName.style.transform =
-    `translate(${(ntc.x - nc.x) / k}px, ${(ntc.y - nc.y) / k}px) rotate(-90deg) scale(${fontRatio})`;
+    `translate(${(ntc.x - nc.x) / k}px, ${(ntc.y - nc.y) / k}px) ${turn} scale(${fontRatio})`;
   /* Freeze the drifting background where it is, then let it settle back to its place. */
   const frozen = getComputedStyle(cardsEl).transform;
   cardsEl.style.animation = "none";
@@ -277,7 +280,7 @@ function leaveIntro() {
 
 /* Back to the entry screen (logo click): the same move, played backwards. */
 function enterIntro() {
-  if (isPhone || introBusy || stage.classList.contains("is-intro")) return;
+  if (introBusy || stage.classList.contains("is-intro")) return;
   introBusy = true;
   cardsEl.style.animation = ""; cardsEl.style.transition = ""; cardsEl.style.transform = "";
   stage.classList.add("is-intro", "is-pre");       /* blob and name start on the logo, texts hidden */
@@ -292,7 +295,7 @@ intro.addEventListener("click", leaveIntro);
 document.querySelector(".logo").addEventListener("click", (e) => { e.preventDefault(); enterIntro(); });
 
 /* Coming back from a project page goes straight to the work. */
-if (new URLSearchParams(location.search).has("card") && !isPhone) {
+if (new URLSearchParams(location.search).has("card")) {
   stage.classList.remove("is-intro");
   introBlob.style.transform = "translate(0,0) scale(.15)";
   introName.style.transform = "scale(.2)";

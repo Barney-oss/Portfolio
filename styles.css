@@ -322,6 +322,7 @@ p, dl, dd { margin: 0; }
   color: var(--ink);
   filter: url(#grain);
 }
+.intro__cue { display: none; }
 .intro__word { display: flex; align-items: flex-start; }   /* every letter sits on the same baseline, whichever typeface it is in */
 .ltr { display: flex; justify-content: center; flex: none; width: var(--w0, auto); transition: color .25s ease, width .55s cubic-bezier(.3, .7, .2, 1); }
 .ltr__g { flex: none; white-space: nowrap; }   /* wider than its slot while the slot is still growing: it spills out evenly on both sides */
@@ -354,7 +355,7 @@ p, dl, dd { margin: 0; }
   }
   html, body { overscroll-behavior: none; }
 
-  .intro, .nav, .edge--top { display: none !important; }
+  .nav, .edge--top { display: none !important; }
 
   /* the canvas is the whole window; the cards get their own centred 412 x 917 area */
   .canvas { left: 0; top: 0; width: 100vw; height: 100dvh; transform: none; }
@@ -381,7 +382,6 @@ p, dl, dd { margin: 0; }
 
   /* logo: wide apricot pill, name across it, hugging the left margin */
   .logo { --x: 24 !important; --y: 14 !important; --w: 112 !important; --h: 53 !important; }
-  .stage .logo { opacity: 1; pointer-events: auto; }
   .logo { justify-content: flex-start; }
   .logo__blob { justify-content: start; right: auto; left: calc(var(--u) * -16); width: calc(var(--u) * 112); }   /* the word, not the blob, lines up with the texts below */
   .logo__blob img:not(.logo__blob-m) { display: none; }
@@ -421,4 +421,34 @@ p, dl, dd { margin: 0; }
   }
   .counter__num { font-size: calc(var(--u) * 62); }
   .counter__total { font-size: calc(var(--u) * 14); }
+
+  /* ---- entry screen: the same as desktop (blur, drift, fonts, hover, grain), at the phone's own size ---- */
+  .intro { --intro-scale: 1; }
+  .intro .canvas { transform: none; }
+  .intro .canvas > .layer { top: calc(50dvh - var(--u) * 458.5 + var(--u) * 6 + var(--u) * var(--y)); }
+  .intro__blob img { width: 100%; height: 100%; object-fit: fill; }   /* stand-in shape until the phone blob is exported */
+  .intro__hello { font-size: calc(var(--u) * 15); }
+  .intro__name { font-size: calc(var(--u) * 80); }
+  .intro__bio { font-size: calc(var(--u) * 10); }
+  .intro__cue {
+    display: flex; align-items: center; justify-content: center; gap: calc(var(--u) * 8);
+    background: #F7E6D6; border: calc(var(--u) * 1.5) solid var(--orange);
+    border-radius: 46% 54% 52% 48% / 62% 58% 42% 38%;
+    font: 400 calc(var(--u) * 14)/1 var(--font-display); color: var(--ink);
+    transition: opacity .35s ease .5s;
+  }
+  .intro__cue i { width: calc(var(--u) * 11); height: calc(var(--u) * 11); background: var(--orange-deep); border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%; }
+  .stage.is-leaving .intro__cue { opacity: 0; transition: opacity .3s ease; }
+  .stage.is-pre .intro__cue { opacity: 0; }
+  .stage.is-intro .burger, .stage.is-intro .edge, .stage.is-intro .counter { opacity: 0; }
+  .stage.is-intro.is-leaving .burger, .stage.is-intro.is-leaving .edge, .stage.is-intro.is-leaving .counter { opacity: 1; transition: opacity .3s .65s; }
+  .stage.is-intro .cards { animation: drift-m 9s ease-in-out infinite alternate; }
+  @keyframes drift-m {
+    from { transform: translate(calc(var(--u) * -28), calc(var(--u) * 20)) rotate(-4deg); }
+    to   { transform: translate(calc(var(--u) * 28), calc(var(--u) * -22)) rotate(4deg); }
+  }
+  .intro__blob  { --x: -7 !important;  --y: 199 !important; --w: 430 !important; --h: 363 !important; }
+  .intro__hello { --x: 64 !important;  --y: 325 !important; --w: 110 !important; text-align: left; }
+  .intro__name  { --x: 0 !important;   --y: 329 !important; --w: 412 !important; --h: 120 !important; }
+  .intro__bio   { --x: 56 !important; --y: 433 !important; --w: 300 !important; }
 }
