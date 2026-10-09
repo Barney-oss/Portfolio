@@ -157,7 +157,10 @@ introName.appendChild(word);
 const letters = [..."NARDOS"].map((ch) => {
   const el = document.createElement("span");
   el.className = "ltr";
-  el.textContent = ch;
+  const g = document.createElement("span");      /* the glyph itself, centred in the slot */
+  g.className = "ltr__g";
+  g.textContent = ch;
+  el.appendChild(g);
   el.setAttribute("aria-hidden", "true");
   word.appendChild(el);
   return el;
@@ -178,7 +181,7 @@ function lockLetterWidths() {
   const baseline = (el) => {
     const probe = document.createElement("i");
     probe.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline";
-    el.appendChild(probe);
+    el.firstChild.appendChild(probe);
     const d = probe.getBoundingClientRect().bottom - el.getBoundingClientRect().top;
     probe.remove();
     return d;
