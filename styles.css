@@ -375,14 +375,15 @@ p, dl, dd { margin: 0; }
   .fact { font-size: calc(var(--u) * 11.5); }
   .fact dt, .fact__label { font-size: calc(var(--u) * 13.5); margin-bottom: calc(var(--u) * 4); }
   .fact--center .fact__label { margin-bottom: calc(var(--u) * 8); }
-  .fact--for  { --x: 24 !important;  --y: 88 !important; --w: 260 !important; }
-  .fact--role { --x: 276 !important; --y: 130 !important; --w: 120 !important; }
-  .fact--type { --x: 30 !important;  --w: 352 !important; top: auto !important; bottom: calc(var(--u) * 92); }
+  .fact--for  { --x: 24 !important;  --y: 120 !important; --w: 260 !important; }
+  .fact--role { --x: 276 !important; --y: 176 !important; --w: 120 !important; }
+  .fact--type { --x: 30 !important;  --w: 352 !important; top: auto !important; bottom: calc(var(--u) * 116); }
 
   /* logo: wide apricot pill, name across it, hugging the left margin */
   .logo { --x: 24 !important; --y: 14 !important; --w: 112 !important; --h: 53 !important; }
   .stage .logo { opacity: 1; pointer-events: auto; }
-  .logo__blob { justify-content: start; }
+  .logo { justify-content: flex-start; }
+  .logo__blob { justify-content: start; right: auto; left: calc(var(--u) * -16); width: calc(var(--u) * 112); }   /* the word, not the blob, lines up with the texts below */
   .logo__blob img:not(.logo__blob-m) { display: none; }
   .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 112); height: calc(var(--u) * 53); }
   .logo__text { writing-mode: horizontal-tb; transform: none; font-size: calc(var(--u) * 24); }
