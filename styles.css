@@ -440,7 +440,7 @@ p, dl, dd { margin: 0; }
     from { transform: translate(calc(var(--u) * -28), calc(var(--u) * 20)) rotate(-4deg); }
     to   { transform: translate(calc(var(--u) * 28), calc(var(--u) * -22)) rotate(4deg); }
   }
-  .intro__blob  { --x: -7 !important;  --y: 199 !important; --w: 430 !important; --h: 363 !important; }
+  .intro__blob  { --x: 11.8 !important;  --y: 226.3 !important; --w: 401 !important; --h: 309 !important; }
   .intro__hello { --x: 64 !important;  --y: 325 !important; --w: 110 !important; text-align: left; }
   .intro__name  { --x: 0 !important;   --y: 329 !important; --w: 412 !important; --h: 120 !important; }
   .intro__bio   { --x: 56 !important; --y: 433 !important; --w: 300 !important; }

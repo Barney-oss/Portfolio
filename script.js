@@ -256,11 +256,11 @@ function playLetters() {
   })();
 }
 
-/* The phone blob is a separate drawing: if assets/m-first-blob.svg exists it replaces the stand-in. */
+/* The phone blob is a separate drawing: if assets/phone-blob.svg exists it replaces the stand-in. */
 if (isPhone) {
   const probe = new Image();
   probe.onload = () => { const img = introBlob.querySelector("img"); if (img) img.src = probe.src; };
-  probe.src = "assets/m-first-blob.svg";
+  probe.src = "assets/phone-blob.svg";
 }
 
 const centre = (r) => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
