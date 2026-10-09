@@ -270,6 +270,54 @@ p, dl, dd { margin: 0; }
 /* ------------------------------------------------------------
    Respect people who ask their device for less motion
    ------------------------------------------------------------ */
+/* ------------------------------------------------------------
+   Entry screen
+   ------------------------------------------------------------ */
+.intro { position: absolute; inset: 0; z-index: 20; visibility: hidden; cursor: pointer; }
+.stage.is-intro .intro { visibility: visible; }
+.stage.is-intro .logo { opacity: 0; pointer-events: none; }
+.stage.is-intro.is-leaving .logo { opacity: 1; transition: opacity .3s .65s; }
+
+/* The work page, blurred behind a milky pane. */
+.intro__glass {
+  position: absolute; inset: 0;
+  background: rgba(255, 255, 255, .2);
+  -webkit-backdrop-filter: blur(38px);
+  backdrop-filter: blur(38px);
+  transition: opacity .8s ease;
+}
+
+.intro__blob, .intro__name { transition: transform .95s cubic-bezier(.65, 0, .25, 1), opacity .3s ease; transform-origin: 50% 50%; }
+.intro__blob img { display: block; width: 100%; height: 100%; transform-origin: 50% 50%; animation: pulse 4.5s ease-in-out infinite; }
+.intro__blob.is-fallback::before {                       /* stand-in until assets/first-blob.svg is uploaded */
+  content: ""; position: absolute; inset: 0;
+  background: #fbf3e6; border: calc(var(--u) * 3) solid var(--orange); border-radius: 50%;
+  animation: pulse 4.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+.stage.is-leaving .intro__blob img, .stage.is-leaving .intro__blob.is-fallback::before { animation-play-state: paused; }
+
+.intro__hello, .intro__bio { margin: 0; color: var(--ink); text-align: center; transition: opacity .35s ease .5s; }
+.intro__hello { font: 400 calc(var(--u) * 20)/normal var(--font-body); text-align: left; }
+.intro__bio { font: 400 calc(var(--u) * 16)/1.4 var(--font-body); }
+
+.intro__name {
+  margin: 0; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: calc(var(--u) * 170); line-height: 1;
+  color: var(--ink);
+}
+.ltr { display: inline-block; transition: color .4s ease; }
+.ltr.is-hot { font-family: "BBH Sans Bartle", var(--font-display); font-weight: 400; color: var(--orange); }
+
+/* Leaving: texts and glass fade, the blob and name are moved by script.js. */
+.stage.is-leaving .intro__glass,
+.stage.is-leaving .intro__hello,
+.stage.is-leaving .intro__bio { opacity: 0; transition-delay: 0s; }
+.stage.is-leaving .intro__hello, .stage.is-leaving .intro__bio { transition-duration: .3s; }
+.stage.is-leaving .intro__blob, .stage.is-leaving .intro__name { opacity: 0; transition: transform .95s cubic-bezier(.65, 0, .25, 1), opacity .3s ease .65s; }
+.stage.is-pre .intro * { transition: none !important; }
+.stage.is-pre .intro__glass, .stage.is-pre .intro__hello, .stage.is-pre .intro__bio { opacity: 0; }
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }

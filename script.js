@@ -144,9 +144,89 @@ function goTo(index) {
 const next = () => goTo(current + 1);
 const prev = () => goTo(current - 1);
 
+/* ---------- entry screen ---------- */
+const intro = document.getElementById("intro");
+const introBlob = document.getElementById("intro-blob");
+const introName = document.getElementById("intro-name");
+let introBusy = false;
+
+/* NARDOS is split into one span per letter so each letter can change on its own. */
+const letters = [..."NARDOS"].map((ch) => {
+  const el = document.createElement("span");
+  el.className = "ltr";
+  el.textContent = ch;
+  el.setAttribute("aria-hidden", "true");
+  introName.appendChild(el);
+  return el;
+});
+
+/* Hover: letters flip to BBH Sans Bartle and fade to orange, one after another. */
+let hoverTimers = [];
+function heat(on) {
+  hoverTimers.forEach(clearTimeout);
+  hoverTimers = letters.map((el, i) =>
+    setTimeout(() => el.classList.toggle("is-hot", on), i * 55));
+}
+introName.addEventListener("mouseenter", () => heat(true));
+introName.addEventListener("mouseleave", () => heat(false));
+
+const centre = (r) => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+
+/* Scroll away: the blob shrinks and turns into the logo blob, and NARDOS travels with it. */
+function leaveIntro() {
+  if (introBusy || !stage.classList.contains("is-intro")) return;
+  introBusy = true;
+  heat(false);
+  /* Measure everything at rest, before anything moves. */
+  const logoBlob = document.querySelector(".logo__blob img") || document.querySelector(".logo__blob");
+  const logoText = document.querySelector(".logo__text");
+  const b = introBlob.getBoundingClientRect(), bt = logoBlob.getBoundingClientRect();
+  const n = introName.getBoundingClientRect(), nt = logoText.getBoundingClientRect();
+  const bc = centre(b), btc = centre(bt), nc = centre(n), ntc = centre(nt);
+  const fontRatio = parseFloat(getComputedStyle(logoText).fontSize) / parseFloat(getComputedStyle(introName).fontSize);
+
+  /* The blob turns a quarter turn, so its width becomes the logo's height and the other way round. */
+  introBlob.style.transform =
+    `translate(${btc.x - bc.x}px, ${btc.y - bc.y}px) rotate(-90deg) scale(${bt.height / b.width}, ${bt.width / b.height})`;
+  introName.style.transform =
+    `translate(${ntc.x - nc.x}px, ${ntc.y - nc.y}px) rotate(-90deg) scale(${fontRatio})`;
+  stage.classList.add("is-leaving");
+
+  setTimeout(() => {
+    stage.classList.remove("is-intro", "is-leaving");
+    introBusy = false;
+  }, 1000);
+}
+
+/* Back to the entry screen (logo click): the same move, played backwards. */
+function enterIntro() {
+  if (introBusy || stage.classList.contains("is-intro")) return;
+  introBusy = true;
+  stage.classList.add("is-intro", "is-pre");       /* blob and name start on the logo, texts hidden */
+  void stage.offsetWidth;                           /* let the browser register that start */
+  stage.classList.remove("is-pre");
+  introBlob.style.transform = "";
+  introName.style.transform = "";
+  setTimeout(() => (introBusy = false), 1000);
+}
+
+intro.addEventListener("click", leaveIntro);
+document.querySelector(".logo").addEventListener("click", (e) => { e.preventDefault(); enterIntro(); });
+
+/* Coming back from a project page goes straight to the work. */
+if (new URLSearchParams(location.search).has("card")) {
+  stage.classList.remove("is-intro");
+  introBlob.style.transform = "translate(0,0) scale(.15)";
+  introName.style.transform = "scale(.2)";
+}
+
 /* ---------- input: wheel, touch, keys ---------- */
 let locked = false;
 function step(direction) {
+  if (stage.classList.contains("is-intro")) {      /* on the entry screen, scrolling down opens the work */
+    if (direction > 0) { locked = true; leaveIntro(); setTimeout(() => (locked = false), 1100); }
+    return;
+  }
   if (locked) return;
   locked = true;
   direction > 0 ? next() : prev();
@@ -169,6 +249,7 @@ window.addEventListener("touchend", (e) => {
 }, { passive: true });
 
 window.addEventListener("keydown", (e) => {
+  if (["ArrowDown", "ArrowRight", "PageDown", "Enter", " "].includes(e.key) && stage.classList.contains("is-intro")) { e.preventDefault(); step(1); return; }
   if (["ArrowDown", "ArrowRight", "PageDown"].includes(e.key)) { e.preventDefault(); step(1); }
   if (["ArrowUp", "ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); step(-1); }
 });
