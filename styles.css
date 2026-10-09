@@ -312,7 +312,7 @@ p, dl, dd { margin: 0; }
 
 .intro__name {
   margin: 0; display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-weight: 700; font-size: calc(var(--u) * 230); line-height: 1;
+  font-family: var(--font-display); font-weight: 700; font-size: calc(var(--u) * 207); line-height: 1;
   color: var(--ink);
 }
 .intro__word { display: flex; align-items: flex-start; }   /* every letter sits on the same baseline, whichever typeface it is in */
