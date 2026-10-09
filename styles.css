@@ -298,7 +298,7 @@ p, dl, dd { margin: 0; }
 .stage.is-leaving .intro__blob img, .stage.is-leaving .intro__blob.is-fallback::before { animation-play-state: paused; }
 
 .intro__hello, .intro__bio { margin: 0; color: var(--ink); text-align: center; transition: opacity .35s ease .5s; }
-.intro__hello { font: 400 calc(var(--u) * 20)/normal var(--font-body); text-align: left; }
+.intro__hello { font: 400 calc(var(--u) * 20)/normal var(--font-body); }
 .intro__bio { font: 400 calc(var(--u) * 16)/1.4 var(--font-body); }
 
 .intro__name {
@@ -306,6 +306,7 @@ p, dl, dd { margin: 0; }
   font-family: var(--font-display); font-weight: 700; font-size: calc(var(--u) * 170); line-height: 1;
   color: var(--ink);
 }
+.intro__word { display: flex; align-items: baseline; }   /* every letter sits on the same baseline, whichever typeface it is in */
 .ltr { display: inline-block; transition: color .25s ease; }
 .ltr.is-hot { font-family: "BBH Sans Bartle", var(--font-display); font-weight: 400; color: var(--orange); }
 

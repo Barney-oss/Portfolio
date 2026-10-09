@@ -151,12 +151,15 @@ const introName = document.getElementById("intro-name");
 let introBusy = false;
 
 /* NARDOS is split into one span per letter so each letter can change on its own. */
+const word = document.createElement("span");
+word.className = "intro__word";
+introName.appendChild(word);
 const letters = [..."NARDOS"].map((ch) => {
   const el = document.createElement("span");
   el.className = "ltr";
   el.textContent = ch;
   el.setAttribute("aria-hidden", "true");
-  introName.appendChild(el);
+  word.appendChild(el);
   return el;
 });
 
