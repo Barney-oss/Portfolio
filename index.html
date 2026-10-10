@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600;700&family=BBH+Sans+Bartle&family=Kaushan+Script&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
   <!-- Logo, nav and counter hug the window corners. Everything else lives on a centred canvas. -->
@@ -88,6 +88,10 @@
         <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  7 0 0 0 -1.25" result="specks"/>
         <feComposite in="SourceGraphic" in2="specks" operator="in"/>
       </filter>
+      <!-- Melt: after the letters are blurred, this makes the soft edges solid again. -->
+      <filter id="goo" x="-60%" y="-40%" width="220%" height="180%" color-interpolation-filters="sRGB">
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"/>
+      </filter>
     </svg>
     <section class="intro" id="intro" aria-label="Introduction">
       <div class="intro__glass"></div>
@@ -104,6 +108,6 @@
     <!-- Which card this is. The number belongs to the project, so 02 always means the same one. -->
     <p class="counter" id="counter" aria-label="Project 1 of 4"><span class="counter__num">01</span><span class="counter__total">/04</span></p>
   </div>
-  <script src="script.js?v=14"></script>
+  <script src="script.js?v=15"></script>
 </body>
 </html>

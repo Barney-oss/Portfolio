@@ -185,20 +185,37 @@ introName.appendChild(word);
 const letters = [..."NARDOS"].map((ch) => {
   const el = document.createElement("span");
   el.className = "ltr";
-  const g = document.createElement("span");      /* the glyph itself, centred in the slot */
+  const g = document.createElement("span");      /* the Antonio letter, in the flow: it sets the slot's height */
   g.className = "ltr__g";
   g.textContent = ch;
-  el.appendChild(g);
+  const b = document.createElement("span");      /* the BBH Sans Bartle letter, stacked on top, orange */
+  b.className = "ltr__b";
+  b.textContent = ch;
+  el.append(g, b);
   el.setAttribute("aria-hidden", "true");
   word.appendChild(el);
   return el;
 });
 
-/* Hover: only the letter under the cursor turns into BBH Sans Bartle and orange. */
-function heat(on) { if (!on) letters.forEach((el) => el.classList.remove("is-hot")); }
+/* The melt: while a letter changes, it is blurred and then sharpened again by an SVG filter (#goo),
+   so the two shapes run into each other like ink. The filter is only on during the change. */
+function melt(el) {
+  el.classList.add("is-melt");
+  clearTimeout(el._melt);
+  el._melt = setTimeout(() => el.classList.remove("is-melt"), 750);
+}
+function setHot(el, on) {
+  if (el.classList.contains("is-hot") === on) return;
+  melt(el);
+  el.classList.toggle("is-hot", on);
+}
+
+/* Hover: the letter under the cursor melts into BBH Sans Bartle. When the cursor leaves it lingers
+   for a moment before melting back. */
+function heat(on) { if (!on) letters.forEach((el) => { clearTimeout(el._t); setHot(el, false); }); }
 letters.forEach((el) => {
-  el.addEventListener("mouseenter", () => el.classList.add("is-hot"));
-  el.addEventListener("mouseleave", () => el.classList.remove("is-hot"));
+  el.addEventListener("mouseenter", () => { clearTimeout(el._t); setHot(el, true); });
+  el.addEventListener("mouseleave", () => { el._t = setTimeout(() => setHot(el, false), 700); });
 });
 
 /* Each letter's slot is as wide as its current shape, and glides to the other width when it
@@ -208,26 +225,27 @@ function lockLetterWidths() {
   const k = parseFloat(getComputedStyle(intro).getPropertyValue("--intro-scale")) || 1;
   const size = parseFloat(getComputedStyle(introName).fontSize) * k;
   /* Distance from the top of the letter's box down to its baseline, found with a zero-size marker. */
-  const baseline = (el) => {
+  const baseline = (el, layer) => {
     const probe = document.createElement("i");
     probe.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline";
-    el.firstChild.appendChild(probe);
+    layer.appendChild(probe);
     const d = probe.getBoundingClientRect().bottom - el.getBoundingClientRect().top;
     probe.remove();
     return d;
   };
   letters.forEach((el) => {
+    const g = el.querySelector(".ltr__g"), b = el.querySelector(".ltr__b");
     el.classList.remove("is-hot");
     el.style.width = "auto";
-    const a = el.getBoundingClientRect().width, ya = baseline(el);
-    el.classList.add("is-hot");
-    el.style.width = "auto";
-    const b = el.getBoundingClientRect().width, yb = baseline(el);
-    el.classList.remove("is-hot");
+    el.classList.remove("is-measuring-b");
+    const a = el.getBoundingClientRect().width, ya = baseline(el, g);
+    el.classList.add("is-measuring-b");              /* Bartle alone, in the flow */
+    const bw = el.getBoundingClientRect().width, yb = baseline(el, b);
+    el.classList.remove("is-measuring-b");
     el.style.width = "";
     el.style.setProperty("--w0", a / size + "em");
-    el.style.setProperty("--w1", b / size + "em");
-    /* Antonio's baseline is the reference; the Bartle letter is nudged so its baseline lands on it. */
+    el.style.setProperty("--w1", bw / size + "em");
+    /* Antonio's baseline is the reference; the Bartle letter sits lower or higher so its baseline lands on it. */
     el.style.setProperty("--dy", (ya - yb) / size + "em");
   });
 }
@@ -247,12 +265,12 @@ function playLetters() {
     await wait(700);
     for (const el of letters) {
       if (run !== autoplay || !stage.classList.contains("is-intro")) break;
-      el.classList.add("is-hot");
-      await wait(520);
-      el.classList.remove("is-hot");
-      await wait(120);
+      setHot(el, true);
+      await wait(620);
+      setHot(el, false);
+      await wait(260);
     }
-    letters.forEach((el) => el.classList.remove("is-hot"));
+    letters.forEach((el) => setHot(el, false));
   })();
 }
 
