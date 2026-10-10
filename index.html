@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600;700&family=BBH+Sans+Bartle&family=Kaushan+Script&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=24">
+  <link rel="stylesheet" href="styles.css?v=26">
 </head>
 <body>
   <!-- Logo, nav and counter hug the window corners. Everything else lives on a centred canvas. -->
@@ -56,11 +56,13 @@
     <!-- Phone only: menu button and the full-screen menu it opens. -->
     <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu">
       <svg viewBox="0 0 32 18" width="32" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
-        <path d="M2 4.5c4-2.2 7 2.2 11 0s7 2.2 11 0 4-1.2 6-.4"/>
-        <path d="M3 14c4-2 6.5 2 10.500 0s7 2 11 0 3.500-1.200 5.500-.3"/>
+        <path id="burger-a" d="M2 4.5c4-2.2 7 2.2 11 0s7 2.2 11 0 4-1.2 6-.4"/>
+        <path id="burger-b" d="M3 14c4-2 6.5 2 10.500 0s7 2 11 0 3.500-1.200 5.500-.3"/>
       </svg>
     </button>
+    <!-- The menu: the page behind goes soft, and a blob opens from the button with the links inside. -->
     <nav class="menu" id="menu" aria-label="Menu" aria-hidden="true">
+      <div class="menu__blob" aria-hidden="true"></div>
       <ul>
         <li><a href="#" class="menu__link menu__link--active" aria-current="page">Work</a></li>
         <li><a href="#" class="menu__link">About</a></li>
@@ -108,6 +110,6 @@
     <p class="counter" id="counter" aria-label="Project 1 of 4"><span class="counter__num">01</span><span class="counter__total">/04</span></p>
   </div>
   <script src="vendor/flubber.min.js"></script>
-  <script src="script.js?v=24"></script>
+  <script src="script.js?v=26"></script>
 </body>
 </html>
