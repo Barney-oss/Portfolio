@@ -18,10 +18,14 @@
 <main>
   <svg id="word" viewBox="-300 -940 4000 1000" role="img" aria-label="Nardos">
     <filter id="grain" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <!-- Grain: tiny specks are knocked out of the letters, but only inside them, so the outline stays clean. -->
       <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="7" result="noise"/>
-      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  7 0 0 0 -1.25" result="specks"/>
-      <feComposite in="SourceGraphic" in2="specks" operator="in"/>
+      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -7 0 0 0 2.25" result="holes"/>
+      <feMorphology in="SourceAlpha" operator="erode" radius="6" result="inner"/>
+      <feComposite in="holes" in2="inner" operator="in" result="knock"/>
+      <feComposite in="SourceGraphic" in2="knock" operator="out"/>
     </filter>
+    <defs id="defs"></defs>
     <g id="letters" filter="url(#grain)"></g>
     <g id="hits"></g>
   </svg>
@@ -67,13 +71,24 @@ fetch("assets/glyphs.json").then((r) => r.json()).then((data) => {
       const m = flubber.interpolate(f, toD[i], { maxSegmentLength: 5 });
       return (t) => (t <= 0.002 ? f : t >= 0.998 ? toD[i] : m(t));
     });
+    /* While a letter is changing, a little blur-then-sharpen rounds off the spiky corners the blend can make.
+       The blur is zero at both ends, so the finished letters are the exact font outlines. */
+    const fid = "round" + ch + Math.random().toString(36).slice(2, 6);
+    const flt = document.createElementNS(NS, "filter");
+    flt.setAttribute("id", fid); flt.setAttribute("x", "-20%"); flt.setAttribute("y", "-20%");
+    flt.setAttribute("width", "140%"); flt.setAttribute("height", "140%");
+    flt.setAttribute("color-interpolation-filters", "sRGB");
+    const blur = document.createElementNS(NS, "feGaussianBlur"); blur.setAttribute("stdDeviation", "0");
+    const th = document.createElementNS(NS, "feColorMatrix"); th.setAttribute("type", "matrix");
+    th.setAttribute("values", "1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9");
+    flt.append(blur, th); document.getElementById("defs").appendChild(flt);
     const path = document.createElementNS(NS, "path");
     path.setAttribute("fill-rule", "evenodd");
     g.appendChild(path);
     const hit = document.createElementNS(NS, "rect");
     hit.setAttribute("class", "hit"); hit.setAttribute("y", -940); hit.setAttribute("height", 1000);
     hits.appendChild(hit);
-    const s = { ch, path, hit, morphs, advA: a.adv, advB: b.adv, p: 0, target: 0 };
+    const s = { ch, path, blur, fid, hit, morphs, advA: a.adv, advB: b.adv, p: 0, target: 0 };
     hit.addEventListener("pointerenter", () => (s.target = 1));
     hit.addEventListener("pointerleave", () => (s.target = 0));
     return s;
@@ -88,6 +103,9 @@ fetch("assets/glyphs.json").then((r) => r.json()).then((data) => {
       s.p = s.target > s.p ? Math.min(s.target, s.p + step) : Math.max(s.target, s.p - step);
       const e = ease(s.p);
       s.path.setAttribute("d", s.morphs.map((m) => m(e)).join(" "));
+      const dev = 10 * Math.sin(Math.PI * e);               /* strongest halfway through */
+      if (dev > 0.5) { s.blur.setAttribute("stdDeviation", dev.toFixed(2)); s.path.setAttribute("filter", `url(#${s.fid})`); }
+      else s.path.removeAttribute("filter");
       s.path.setAttribute("fill", `rgb(${INK.map((v, i) => Math.round(lerp(v, ORANGE[i], e))).join(",")})`);
       const adv = lerp(s.advA, s.advB, e);
       widths.push(adv);
