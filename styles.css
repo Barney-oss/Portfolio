@@ -332,9 +332,6 @@ p, dl, dd { margin: 0; }
 .ltr__g { opacity: 1; }
 .ltr__b { position: absolute; left: 50%; top: var(--dy, 0); transform: translateX(-50%); opacity: 0; filter: blur(.045em);
           font-family: "BBH Sans Bartle", var(--font-display); font-weight: 400; color: var(--orange); }
-/* ?hover=wide: the hovered letter is Antonio itself, stretched sideways, in orange. */
-.hover-wide .ltr__b { font-family: var(--font-display); font-weight: 700; transform: translateX(-50%) scaleX(var(--wide, 1.55)); }
-.hover-wide .ltr.is-measuring-b .ltr__b { transform: none; }
 .ltr.is-hot .ltr__g { opacity: 0; filter: blur(.045em); }
 .ltr.is-hot .ltr__b { opacity: 1; filter: blur(0); }
 .ltr.is-measuring-b .ltr__g { display: none; }
