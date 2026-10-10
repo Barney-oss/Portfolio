@@ -42,30 +42,20 @@ fetch("assets/glyphs.json").then((r) => r.json()).then((data) => {
   const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   const lerp = (a, b, t) => a + (b - a) * t;
 
-  /* split a glyph into its outlines (outer shape first, holes after) and centre it in its slot */
-  const prep = (g) => {
-    const rings = g.d.split(/(?=M)/).filter(Boolean);
-    const [x1, , x2] = [g.bb.x1, g.bb.y1, g.bb.x2];
-    const pad = (g.adv - (x2 - x1)) / 2, dx = pad - x1;
-    return { rings: rings.map((d) => ({ d, area: 0 })), dx, adv: g.adv };
-  };
+  /* each glyph arrives as a list of outlines (outer shape first, holes after), already centred in its slot */
+  const prep = (g) => ({ rings: g.rings.map((d) => ({ d, area: 0 })), adv: g.adv });
   const area = (d) => {                                 /* rough size of an outline, to pair them up */
     const n = (d.match(/-?\d+\.?\d*/g) || []).map(Number); let a = 1e9, b = -1e9, c = 1e9, e = -1e9;
     for (let i = 0; i + 1 < n.length; i += 2) { a = Math.min(a, n[i]); b = Math.max(b, n[i]); c = Math.min(c, n[i + 1]); e = Math.max(e, n[i + 1]); }
     return (b - a) * (e - c);
   };
-  const shift = (d, dx) => {                            /* move an outline sideways (absolute commands only) */
-    let i = 0;
-    return d.replace(/(-?\d+\.?\d*)[ ,](-?\d+\.?\d*)/g, (m, x, y) => (+x + dx) + " " + y);
-  };
-
   const g = document.getElementById("letters"), hits = document.getElementById("hits");
   const NS = "http://www.w3.org/2000/svg";
   const L = [...WORD].map((ch) => {
-    const a = prep(data.antonio.glyphs[ch]), b = prep(data.bartle.glyphs[ch]);
+    const a = prep(data.antonio[ch]), b = prep(data.bartle[ch]);
     a.rings.forEach((r) => (r.area = area(r.d))); b.rings.forEach((r) => (r.area = area(r.d)));
     a.rings.sort((p, q) => q.area - p.area); b.rings.sort((p, q) => q.area - p.area);
-    const fromD = a.rings.map((r) => shift(r.d, a.dx)), toD = b.rings.map((r) => shift(r.d, b.dx));
+    const fromD = a.rings.map((r) => r.d), toD = b.rings.map((r) => r.d);
     /* at rest the exact outline is drawn; only in between is the shape blended */
     const morphs = fromD.map((f, i) => {
       const m = flubber.interpolate(f, toD[i], { maxSegmentLength: 5 });
