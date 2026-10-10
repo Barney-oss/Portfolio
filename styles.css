@@ -100,32 +100,15 @@ p, dl, dd { margin: 0; }
 .card[data-slot="1"], .card[data-slot="3"] { --z: 2; cursor: pointer; }
 .card[data-slot="2"] { --z: 1; opacity: 0; pointer-events: none; }
 
-/* The coloured blob you see when the card is waiting at the side. */
-.card__side {
-  position: absolute;
-  inset: 0;
-  transition: opacity 0.35s ease 0.1s;
-}
-/* The coloured shape is the project's own blob, filled with one colour and blurred. */
-.card__side i {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--c);
-  -webkit-mask: var(--shape) center / 100% 100% no-repeat;
-  mask: var(--shape) center / 100% 100% no-repeat;
-}
-.card__side { filter: blur(calc(var(--u) * 6)) hue-rotate(var(--tint, 0deg)); }   /* blur goes on the wrapper: on the masked shape itself it would be cut off again by the mask */
-
 /* The white card with the scribbled outline, shown when the card is current. */
 .card__front {
   position: absolute;
   inset: 0;
-  opacity: 0;
-  transition: opacity 0.18s ease;       /* leaving: disappears fast, before the card shrinks much */
+  /* A card waiting at the side is the same card, just out of focus: its blob and screenshots, blurred. */
+  filter: blur(var(--soft, calc(var(--u) * 5)));
+  transition: filter 0.5s ease;
 }
-.card[data-slot="0"] .card__front { opacity: 1; transition: opacity 0.4s ease 0.25s; }
-.card[data-slot="0"] .card__side { opacity: 0; }
+.card[data-slot="0"] .card__front { filter: none; }
 
 .card__blob { position: absolute; inset: 0; }
 .card__blob img { width: 100%; height: 100%; }
@@ -367,7 +350,7 @@ p, dl, dd { margin: 0; }
   .stage > .layer, .canvas > .layer { top: calc(var(--u) * var(--y)); }
 
   /* cards */
-  .card__side { filter: blur(calc(var(--u) * 3)) hue-rotate(var(--tint, 0deg)); }
+  .card__front { --soft: calc(var(--u) * 4); }
   .card__shot--back, .card__ph--back { border-radius: calc(var(--u) * 6); }
   .card__shot--front, .card__ph--front { border-radius: calc(var(--u) * 13); }
   .card__ph { font-size: calc(var(--u) * 13); }
