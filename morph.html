@@ -19,9 +19,9 @@
   <svg id="word" viewBox="-300 -940 4000 1000" role="img" aria-label="Nardos">
     <filter id="grain" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
       <!-- Grain: tiny specks are knocked out of the letters, but only inside them, so the outline stays clean. -->
-      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="7" result="noise"/>
+      <feTurbulence id="turb" type="fractalNoise" baseFrequency="0.2" numOctaves="2" seed="7" result="noise"/>
       <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -7 0 0 0 2.25" result="holes"/>
-      <feMorphology in="SourceAlpha" operator="erode" radius="6" result="inner"/>
+      <feMorphology id="erode" in="SourceAlpha" operator="erode" radius="5" result="inner"/>
       <feComposite in="holes" in2="inner" operator="in" result="knock"/>
       <feComposite in="SourceGraphic" in2="knock" operator="out"/>
     </filter>
@@ -84,6 +84,17 @@ fetch("assets/glyphs.json").then((r) => r.json()).then((data) => {
     return s;
   });
 
+  /* Sizes are set in screen pixels, so the grain, its clean edge and the corner rounding look the same
+     on a phone as on a big screen. k = screen pixels per drawing unit. */
+  const svgEl = document.getElementById("word");
+  let k = 0.275;
+  const measure = () => {
+    k = svgEl.getBoundingClientRect().width / 4000 || k;
+    document.getElementById("turb").setAttribute("baseFrequency", (0.75 * k).toFixed(4));
+    document.getElementById("erode").setAttribute("radius", (1.5 / k).toFixed(2));
+  };
+  measure(); addEventListener("resize", measure);
+
   let last = performance.now();
   function frame(now) {
     const dt = now - last; last = now;
@@ -93,8 +104,8 @@ fetch("assets/glyphs.json").then((r) => r.json()).then((data) => {
       s.p = s.target > s.p ? Math.min(s.target, s.p + step) : Math.max(s.target, s.p - step);
       const e = ease(s.p);
       s.path.setAttribute("d", s.morphs.map((m) => m(e)).join(" "));
-      const dev = 10 * Math.sin(Math.PI * e);               /* strongest halfway through */
-      if (dev > 0.5) { s.blur.setAttribute("stdDeviation", dev.toFixed(2)); s.path.setAttribute("filter", `url(#${s.fid})`); }
+      const dev = (3.2 / k) * Math.sin(Math.PI * e);         /* about 3 screen pixels of rounding, strongest halfway */
+      if (dev * k > 0.25) { s.blur.setAttribute("stdDeviation", dev.toFixed(2)); s.path.setAttribute("filter", `url(#${s.fid})`); }
       else s.path.removeAttribute("filter");
       s.path.setAttribute("fill", `rgb(${INK.map((v, i) => Math.round(lerp(v, ORANGE[i], e))).join(",")})`);
       const adv = lerp(s.advA, s.advB, e);
