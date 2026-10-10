@@ -367,6 +367,7 @@ if (new URLSearchParams(location.search).has("card")) {
 /* ---------- input: wheel, touch, keys ---------- */
 let locked = false;
 function step(direction) {
+  if (stage.classList.contains("menu-open")) return;   /* while the menu is open, swiping does nothing */
   if (stage.classList.contains("is-intro")) {      /* on the entry screen, scrolling down opens the work */
     if (direction > 0) { locked = true; leaveIntro(); setTimeout(() => (locked = false), 1100); }
     return;
@@ -429,6 +430,7 @@ function morphBurger(toOne) {
 
 function setMenu(open) {
   menu.classList.toggle("is-open", open);
+  stage.classList.toggle("menu-open", open);
   burger.setAttribute("aria-expanded", String(open));
   menu.setAttribute("aria-hidden", String(!open));
   morphBurger(open);
