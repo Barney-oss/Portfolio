@@ -197,6 +197,12 @@ const letters = [..."NARDOS"].map((ch) => {
   return el;
 });
 
+/* Try-out: add ?hover=wide to the address and the letter becomes a stretched, orange Antonio instead of BBH Sans Bartle. */
+const WIDE = 1.55;
+const wide = new URLSearchParams(location.search).get("hover") === "wide";
+document.documentElement.classList.toggle("hover-wide", wide);
+document.documentElement.style.setProperty("--wide", WIDE);
+
 /* The melt: while a letter changes, it is blurred and then sharpened again by an SVG filter (#goo),
    so the two shapes run into each other like ink. The filter is only on during the change. */
 function melt(el) {
@@ -239,7 +245,7 @@ function lockLetterWidths() {
     el.classList.remove("is-measuring-b");
     const a = el.getBoundingClientRect().width, ya = baseline(el, g);
     el.classList.add("is-measuring-b");              /* Bartle alone, in the flow */
-    const bw = el.getBoundingClientRect().width, yb = baseline(el, b);
+    const bw = el.getBoundingClientRect().width * (wide ? WIDE : 1), yb = baseline(el, b);
     el.classList.remove("is-measuring-b");
     el.style.width = "";
     el.style.setProperty("--w0", a / size + "em");
