@@ -9,7 +9,7 @@ const PROJECTS = [
     designedFor: "Agristelle farm stays",
     role: "Product designer",
     type: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus dui augue, ac volutpat elit eleifend quis. Phasellus non erat a augue",
-    side: "assets/right-blob.svg", tint: "60deg",
+    side: "assets/right-blob.svg", tint: "60deg", blob: "assets/front-blob.svg",
     shots: {
       back:  { src: "assets/agristelle-dashboard-02.png", alt: "Agristelle admin panel: experiences and community overview" },
       front: { src: "assets/agristelle-dashboard-01.png", alt: "Agristelle admin panel: property owner detail" },
@@ -21,7 +21,7 @@ const PROJECTS = [
     designedFor: "Genier (placeholder)",
     role: "Product designer",
     type: "Placeholder text for the second project. Replace this with the real project type.",
-    side: "assets/right-blob.svg", tint: "0deg", ph: "#e6f3ef",
+    side: "assets/right-blob.svg", tint: "0deg", ph: "#e6f3ef", blob: "assets/blob-2.svg",
   },
   {
     slug: "liq-academy",
@@ -29,7 +29,7 @@ const PROJECTS = [
     designedFor: "LIQ Academy (placeholder)",
     role: "Product designer",
     type: "Placeholder text for the third project. Replace this with the real project type.",
-    side: "assets/left-blob.svg", tint: "150deg", ph: "#e8eef7",
+    side: "assets/left-blob.svg", tint: "150deg", ph: "#e8eef7", blob: "assets/blob-3.svg",
   },
   {
     slug: "amharic-academy",
@@ -37,7 +37,7 @@ const PROJECTS = [
     designedFor: "Amharic Academy (placeholder)",
     role: "Product designer",
     type: "Placeholder text for the fourth project. Replace this with the real project type.",
-    side: "assets/left-blob.svg", tint: "0deg", ph: "#f7ece4",
+    side: "assets/left-blob.svg", tint: "0deg", ph: "#f7ece4", blob: "assets/blob-4.svg",
   },
 ];
 
@@ -106,7 +106,7 @@ const cardEls = PROJECTS.map((p, i) => {
   a.innerHTML = `
     <div class="card__side" aria-hidden="true"><img src="${isPhone ? MOBILE_SIDE[p.side] || p.side : p.side}" alt="" style="--tint:${p.tint}"></div>
     <div class="card__front">
-      <div class="card__blob" aria-hidden="true"><img src="assets/front-blob.svg" alt=""></div>
+      <div class="card__blob" aria-hidden="true"><img src="${p.blob}" alt=""></div>
       ${p.shots ? `
         <img class="card__shot card__shot--back layer" style="${box(shotBox.back)}" src="${p.shots.back.src}" alt="${p.shots.back.alt}">
         <img class="card__shot card__shot--front layer" style="${box(shotBox.front)}" src="${p.shots.front.src}" alt="${p.shots.front.alt}">`
