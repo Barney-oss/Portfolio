@@ -178,100 +178,164 @@ const introBlob = document.getElementById("intro-blob");
 const introName = document.getElementById("intro-name");
 let introBusy = false;
 
-/* NARDOS is drawn from the real outlines of the two typefaces (assets/glyphs.json). Hovering a letter
-   blends its Antonio outline into the BBH Sans Bartle one (flubber), and back again when the cursor leaves.
-   The h1 keeps aria-label="Nardos", so screen readers still read the name. */
-const INK = [35, 31, 28], ORANGE = [234, 91, 12];
+/* Words are drawn from the real outlines of the two typefaces (assets/glyphs.json). Touching or hovering a letter
+   blends its Antonio outline into the BBH Sans Bartle one (flubber), and back again when the pointer leaves.
+   The name on the entry screen and the links in the phone menu are both made this way. Their elements keep
+   a text label (aria-label or hidden text), so screen readers still read them. */
+const INK = [35, 31, 28], ORANGE = [234, 91, 12], ORANGE_DEEP = [214, 74, 28];
 const MORPH_MS = 280;                                  /* how long one letter takes to change */
 const easeIO = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const mix = (a, b, t) => a + (b - a) * t;
-let letters = [];                                      /* one state object per letter, filled in once the outlines load */
-let wordSvg = null, wordK = 0.275, wordRunning = false, wordLast = 0;
+const NS = "http://www.w3.org/2000/svg";
+const svgEl = (n, at = {}) => { const e = document.createElementNS(NS, n); for (const k in at) e.setAttribute(k, at[k]); return e; };
+const sizeOf = (d) => {                                /* rough size of an outline, used to pair outlines up */
+  const n = (d.match(/-?\d+\.?\d*/g) || []).map(Number); let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+  for (let i = 0; i + 1 < n.length; i += 2) { x0 = Math.min(x0, n[i]); x1 = Math.max(x1, n[i]); y0 = Math.min(y0, n[i + 1]); y1 = Math.max(y1, n[i + 1]); }
+  return (x1 - x0) * (y1 - y0);
+};
+const ringsOf = (g) => g.rings.map((d) => ({ d, a: sizeOf(d) })).sort((p, q) => q.a - p.a).map((r) => r.d);
+let wordId = 0;
+const allWords = [];                                   /* every morphing word on the page */
 
-function setHot(s, on) { s.target = on ? 1 : 0; runWord(); }
-function heat(on) { if (!on) letters.forEach((s) => setHot(s, false)); }
-
-function buildWord(data) {
-  const NS = "http://www.w3.org/2000/svg";
-  const el = (n, at = {}) => { const e = document.createElementNS(NS, n); for (const k in at) e.setAttribute(k, at[k]); return e; };
-  const sizeOf = (d) => {                               /* rough size of an outline, used to pair outlines up */
-    const n = (d.match(/-?\d+\.?\d*/g) || []).map(Number); let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
-    for (let i = 0; i + 1 < n.length; i += 2) { x0 = Math.min(x0, n[i]); x1 = Math.max(x1, n[i]); y0 = Math.min(y0, n[i + 1]); y1 = Math.max(y1, n[i + 1]); }
-    return (x1 - x0) * (y1 - y0);
-  };
-  const rings = (g) => g.rings.map((d) => ({ d, a: sizeOf(d) })).sort((p, q) => q.a - p.a).map((r) => r.d);
-  const defs = el("defs"), body = el("g"), hits = el("g");
-  letters = [..."NARDOS"].map((ch) => {
+/* Build one word as an svg, one blendable shape per letter. Spaces are just gaps. */
+function makeWord(text, data, ink) {
+  const id = "w" + wordId++;
+  const defs = svgEl("defs"), body = svgEl("g"), hits = svgEl("g");
+  const letters = [];
+  const word = { letters, ink: ink || INK, k: 0.2, id };
+  [...text.toUpperCase()].forEach((ch, n) => {
+    if (ch === " ") { letters.push({ gap: true, advA: 230, advB: 230, p: 0, target: 0 }); return; }
     const A = data.antonio[ch], B = data.bartle[ch];
-    const from = rings(A), to = rings(B);
+    const from = ringsOf(A), to = ringsOf(B);
     /* at rest the exact outline is drawn; only in between is the shape blended */
     const morphs = from.map((f, i) => {
       const m = flubber.interpolate(f, to[i], { maxSegmentLength: 5 });
       return (t) => (t <= 0.002 ? f : t >= 0.998 ? to[i] : m(t));
     });
     /* While a letter changes, a little blur-then-sharpen rounds off spiky corners. It is zero at both ends. */
-    const fid = "round" + ch;
-    const flt = el("filter", { id: fid, x: "-20%", y: "-20%", width: "140%", height: "140%", "color-interpolation-filters": "sRGB" });
-    const blur = el("feGaussianBlur", { stdDeviation: "0" });
-    flt.append(blur, el("feColorMatrix", { type: "matrix", values: "1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" }));
+    const fid = `round${id}_${n}`;
+    const flt = svgEl("filter", { id: fid, x: "-20%", y: "-20%", width: "140%", height: "140%", "color-interpolation-filters": "sRGB" });
+    const blur = svgEl("feGaussianBlur", { stdDeviation: "0" });
+    flt.append(blur, svgEl("feColorMatrix", { type: "matrix", values: "1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" }));
     defs.appendChild(flt);
-    const path = el("path", { "fill-rule": "evenodd" });
+    const path = svgEl("path", { "fill-rule": "evenodd" });
     body.appendChild(path);
-    const hit = el("rect", { y: -1008, height: 1000, fill: "transparent" });
+    const hit = svgEl("rect", { y: -1008, height: 1000, fill: "transparent" });
     hits.appendChild(hit);
-    const s = { path, blur, fid, hit, morphs, advA: A.adv, advB: B.adv, p: 0, target: 0 };
-    hit.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") setHot(s, true); });
-    hit.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") setHot(s, false); });
-    return s;
+    const l = { word, path, blur, fid, hit, morphs, advA: A.adv, advB: B.adv, p: 0, target: 0 };
+    hit._l = l;
+    hit.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") setHot(l, true); });
+    hit.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") setHot(l, false); });
+    letters.push(l);
   });
-  const totalA = letters.reduce((t, s) => t + s.advA, 0);
-  /* The svg is as big as the Antonio word, one em tall, so it sits where the text used to. */
-  wordSvg = el("svg", { viewBox: `${-totalA / 2} -1008 ${totalA} 1000`, "aria-hidden": "true", focusable: "false" });
-  wordSvg.style.cssText = `display:block;overflow:visible;flex:none;height:1em;width:${totalA / 1000}em`;
-  wordSvg.append(defs, body, hits);
-  introName.appendChild(wordSvg);
-  wordSvg._w = totalA;
-  drawWord(0);
+  word.total = letters.reduce((t, l) => t + l.advA, 0);
+  /* The svg is as big as the Antonio word and one em tall, so it sits where text would. */
+  const svg = svgEl("svg", { viewBox: `${-word.total / 2} -1008 ${word.total} 1000`, "aria-hidden": "true", focusable: "false" });
+  svg.style.cssText = `display:block;overflow:visible;flex:none;height:1em;width:${word.total / 1000}em`;
+  svg.append(defs, body, hits);
+  word.svg = svg;
+  allWords.push(word);
+  drawWord(word, 0);
+  return word;
 }
 
-/* Draw every letter for its current progress; dt is the time since the last frame. */
-function drawWord(dt) {
-  const r = wordSvg.getBoundingClientRect();
-  if (r.width) wordK = r.width / wordSvg._w;           /* screen pixels per drawing unit, so rounding looks the same on any screen */
+/* Draw every letter of a word for its current progress; dt is the time since the last frame. */
+function drawWord(word, dt) {
+  const r = word.svg.getBoundingClientRect();
+  if (r.width) word.k = r.width / word.total;          /* screen pixels per drawing unit, so rounding looks the same on any screen */
   const widths = [];
-  letters.forEach((s) => {
+  word.letters.forEach((l) => {
     const step = dt / MORPH_MS;
-    s.p = s.target > s.p ? Math.min(s.target, s.p + step) : Math.max(s.target, s.p - step);
-    const e = easeIO(s.p);
-    s.path.setAttribute("d", s.morphs.map((m) => m(e)).join(" "));
-    const dev = (3.2 / wordK) * Math.sin(Math.PI * e);
-    if (dev * wordK > 0.25) { s.blur.setAttribute("stdDeviation", dev.toFixed(2)); s.path.setAttribute("filter", `url(#${s.fid})`); }
-    else s.path.removeAttribute("filter");
-    s.path.setAttribute("fill", `rgb(${INK.map((v, i) => Math.round(mix(v, ORANGE[i], e))).join(",")})`);
-    widths.push(mix(s.advA, s.advB, e));
+    l.p = l.target > l.p ? Math.min(l.target, l.p + step) : Math.max(l.target, l.p - step);
+    const e = easeIO(l.p);
+    widths.push(mix(l.advA, l.advB, e));
+    if (l.gap) return;
+    l.path.setAttribute("d", l.morphs.map((m) => m(e)).join(" "));
+    const dev = (3.2 / word.k) * Math.sin(Math.PI * e);
+    if (dev * word.k > 0.25) { l.blur.setAttribute("stdDeviation", dev.toFixed(2)); l.path.setAttribute("filter", `url(#${l.fid})`); }
+    else l.path.removeAttribute("filter");
+    l.path.setAttribute("fill", `rgb(${word.ink.map((v, i) => Math.round(mix(v, ORANGE[i], e))).join(",")})`);
   });
   let x = -widths.reduce((a, b) => a + b, 0) / 2;       /* the word stays centred while slots change width */
-  letters.forEach((s, i) => {
-    s.path.setAttribute("transform", `translate(${x} 0)`);
-    s.hit.setAttribute("x", x); s.hit.setAttribute("width", widths[i]);
+  word.letters.forEach((l, i) => {
+    if (!l.gap) { l.path.setAttribute("transform", `translate(${x} 0)`); l.hit.setAttribute("x", x); l.hit.setAttribute("width", widths[i]); }
     x += widths[i];
   });
 }
-function runWord() {
-  if (wordRunning || !wordSvg) return;
-  wordRunning = true; wordLast = performance.now();
+
+let animRunning = false, animLast = 0;
+function setHot(l, on) { l.target = on ? 1 : 0; runWords(); }
+function runWords() {
+  if (animRunning) return;
+  animRunning = true; animLast = performance.now();
   const tick = (now) => {
-    const dt = Math.min(now - wordLast, 50); wordLast = now;
-    drawWord(dt);
-    if (letters.some((s) => s.p !== s.target)) requestAnimationFrame(tick);
-    else wordRunning = false;
+    const dt = Math.min(now - animLast, 50); animLast = now;
+    let busy = false;
+    allWords.forEach((w) => {
+      if (!w.letters.some((l) => l.p !== l.target)) return;
+      drawWord(w, dt); busy = true;
+    });
+    if (busy) requestAnimationFrame(tick); else animRunning = false;
   };
   requestAnimationFrame(tick);
 }
 
-fetch("assets/glyphs.json").then((r) => r.json()).then(buildWord).then(playLetters).catch(() => {
+let letters = [];                                      /* the letters of NARDOS on the entry screen */
+function heat(on) { if (!on) letters.forEach((l) => setHot(l, false)); }
+let menuWords = [];
+
+fetch("assets/glyphs.json").then((r) => r.json()).then((data) => {
+  const nameWord = makeWord("NARDOS", data);
+  introName.appendChild(nameWord.svg);
+  letters = nameWord.letters;
+  if (isPhone) buildMenuWords(data);
+  playLetters();
+}).catch(() => {
   introName.textContent = "NARDOS";                      /* if the outlines can't load, plain text is shown instead */
 });
+
+/* The phone menu's links become big morphing words. Touch a letter, or slide a finger across a word, and the
+   letters under it turn into orange Bartle; they go back when the finger moves on or lifts. */
+function buildMenuWords(data) {
+  document.querySelectorAll(".menu__link").forEach((a) => {
+    const label = a.textContent.trim();
+    a.setAttribute("aria-label", label);
+    a.textContent = "";
+    const w = makeWord(label, data, a.classList.contains("menu__link--active") ? ORANGE_DEEP : INK);
+    a.appendChild(w.svg);
+    menuWords.push(w);
+    let touching = false, moved = false, first = null;
+    const letterAt = (e) => { const t = document.elementFromPoint(e.clientX, e.clientY); return t && t._l && t._l.word === w ? t._l : null; };
+    const only = (l) => w.letters.forEach((m) => { if (!m.gap) setHot(m, m === l); });
+    w.svg.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse") return;
+      touching = true; moved = false; first = letterAt(e); only(first);
+    });
+    w.svg.addEventListener("pointermove", (e) => {
+      if (!touching) return;
+      const l = letterAt(e);
+      if (l !== first) moved = true;
+      only(l);
+    });
+    const end = () => { touching = false; only(null); };
+    w.svg.addEventListener("pointerup", end);
+    w.svg.addEventListener("pointercancel", end);
+    /* sliding across a word is play, not a tap, so it shouldn't open the link */
+    a.addEventListener("click", (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+  });
+}
+
+/* When the menu opens, a quick ripple runs through the words so it's clear they can be touched. */
+let waveRun = 0;
+function waveMenu() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const run = ++waveRun;
+  menuWords.forEach((w, wi) => w.letters.forEach((l, li) => {
+    if (l.gap) return;
+    setTimeout(() => { if (run === waveRun) setHot(l, true); }, 650 + wi * 200 + li * 110);
+    setTimeout(() => setHot(l, false), 650 + wi * 200 + li * 110 + 190);
+  }));
+}
 
 /* Phones have no hover, so the letters play once on their own, one at a time, then rest. */
 let autoplay = 0;
@@ -281,14 +345,14 @@ function playLetters() {
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   (async () => {
     await wait(700);
-    for (const s of letters) {
+    for (const l of letters) {
       if (run !== autoplay || !stage.classList.contains("is-intro")) break;
-      setHot(s, true);
+      setHot(l, true);
       await wait(420);
-      setHot(s, false);
+      setHot(l, false);
       await wait(260);
     }
-    letters.forEach((s) => setHot(s, false));
+    letters.forEach((l) => setHot(l, false));
   })();
 }
 
@@ -434,6 +498,7 @@ function setMenu(open) {
   burger.setAttribute("aria-expanded", String(open));
   menu.setAttribute("aria-hidden", String(!open));
   morphBurger(open);
+  if (open) waveMenu(); else { waveRun++; menuWords.forEach((w) => w.letters.forEach((l) => setHot(l, false))); }
 }
 burger.addEventListener("click", () => setMenu(!menu.classList.contains("is-open")));
 menu.addEventListener("click", (e) => { if (e.target.closest("a") || !e.target.closest("ul, .menu__blob")) setMenu(false); });
