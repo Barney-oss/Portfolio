@@ -178,81 +178,100 @@ const introBlob = document.getElementById("intro-blob");
 const introName = document.getElementById("intro-name");
 let introBusy = false;
 
-/* NARDOS is split into one span per letter so each letter can change on its own. */
-const word = document.createElement("span");
-word.className = "intro__word";
-introName.appendChild(word);
-const letters = [..."NARDOS"].map((ch) => {
-  const el = document.createElement("span");
-  el.className = "ltr";
-  const g = document.createElement("span");      /* the Antonio letter, in the flow: it sets the slot's height */
-  g.className = "ltr__g";
-  g.textContent = ch;
-  const b = document.createElement("span");      /* the BBH Sans Bartle letter, stacked on top, orange */
-  b.className = "ltr__b";
-  b.textContent = ch;
-  el.append(g, b);
-  el.setAttribute("aria-hidden", "true");
-  word.appendChild(el);
-  return el;
-});
+/* NARDOS is drawn from the real outlines of the two typefaces (assets/glyphs.json). Hovering a letter
+   blends its Antonio outline into the BBH Sans Bartle one (flubber), and back again when the cursor leaves.
+   The h1 keeps aria-label="Nardos", so screen readers still read the name. */
+const INK = [35, 31, 28], ORANGE = [234, 91, 12];
+const MORPH_MS = 280;                                  /* how long one letter takes to change */
+const easeIO = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const mix = (a, b, t) => a + (b - a) * t;
+let letters = [];                                      /* one state object per letter, filled in once the outlines load */
+let wordSvg = null, wordK = 0.275, wordRunning = false, wordLast = 0;
 
-/* The melt: while a letter changes, it is blurred and then sharpened again by an SVG filter (#goo),
-   so the two shapes run into each other like ink. The filter is only on during the change. */
-function melt(el) {
-  el.classList.add("is-melt");
-  clearTimeout(el._melt);
-  el._melt = setTimeout(() => el.classList.remove("is-melt"), 750);
-}
-function setHot(el, on) {
-  if (el.classList.contains("is-hot") === on) return;
-  melt(el);
-  el.classList.toggle("is-hot", on);
-}
+function setHot(s, on) { s.target = on ? 1 : 0; runWord(); }
+function heat(on) { if (!on) letters.forEach((s) => setHot(s, false)); }
 
-/* Hover: the letter under the cursor melts into BBH Sans Bartle, and melts back the moment the cursor leaves. */
-function heat(on) { if (!on) letters.forEach((el) => { clearTimeout(el._t); setHot(el, false); }); }
-letters.forEach((el) => {
-  el.addEventListener("mouseenter", () => { clearTimeout(el._t); setHot(el, true); });
-  el.addEventListener("mouseleave", () => { clearTimeout(el._t); setHot(el, false); });
-});
-
-/* Each letter's slot is as wide as its current shape, and glides to the other width when it
-   changes, so the word stays smooth and centred. Measured once the fonts have loaded. */
-function lockLetterWidths() {
-  /* Measurements come from the screen, which shows the entry screen scaled up, so divide that out. */
-  const k = parseFloat(getComputedStyle(intro).getPropertyValue("--intro-scale")) || 1;
-  const size = parseFloat(getComputedStyle(introName).fontSize) * k;
-  /* Distance from the top of the letter's box down to its baseline, found with a zero-size marker. */
-  const baseline = (el, layer) => {
-    const probe = document.createElement("i");
-    probe.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline";
-    layer.appendChild(probe);
-    const d = probe.getBoundingClientRect().bottom - el.getBoundingClientRect().top;
-    probe.remove();
-    return d;
+function buildWord(data) {
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (n, at = {}) => { const e = document.createElementNS(NS, n); for (const k in at) e.setAttribute(k, at[k]); return e; };
+  const sizeOf = (d) => {                               /* rough size of an outline, used to pair outlines up */
+    const n = (d.match(/-?\d+\.?\d*/g) || []).map(Number); let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    for (let i = 0; i + 1 < n.length; i += 2) { x0 = Math.min(x0, n[i]); x1 = Math.max(x1, n[i]); y0 = Math.min(y0, n[i + 1]); y1 = Math.max(y1, n[i + 1]); }
+    return (x1 - x0) * (y1 - y0);
   };
-  letters.forEach((el) => {
-    const g = el.querySelector(".ltr__g"), b = el.querySelector(".ltr__b");
-    el.classList.remove("is-hot");
-    el.style.width = "auto";
-    el.classList.remove("is-measuring-b");
-    const a = el.getBoundingClientRect().width, ya = baseline(el, g);
-    el.classList.add("is-measuring-b");              /* Bartle alone, in the flow */
-    const bw = el.getBoundingClientRect().width, yb = baseline(el, b);
-    el.classList.remove("is-measuring-b");
-    el.style.width = "";
-    el.style.setProperty("--w0", a / size + "em");
-    el.style.setProperty("--w1", bw / size + "em");
-    /* Antonio's baseline is the reference; the Bartle letter sits lower or higher so its baseline lands on it. */
-    el.style.setProperty("--dy", (ya - yb) / size + "em");
+  const rings = (g) => g.rings.map((d) => ({ d, a: sizeOf(d) })).sort((p, q) => q.a - p.a).map((r) => r.d);
+  const defs = el("defs"), body = el("g"), hits = el("g");
+  letters = [..."NARDOS"].map((ch) => {
+    const A = data.antonio[ch], B = data.bartle[ch];
+    const from = rings(A), to = rings(B);
+    /* at rest the exact outline is drawn; only in between is the shape blended */
+    const morphs = from.map((f, i) => {
+      const m = flubber.interpolate(f, to[i], { maxSegmentLength: 5 });
+      return (t) => (t <= 0.002 ? f : t >= 0.998 ? to[i] : m(t));
+    });
+    /* While a letter changes, a little blur-then-sharpen rounds off spiky corners. It is zero at both ends. */
+    const fid = "round" + ch;
+    const flt = el("filter", { id: fid, x: "-20%", y: "-20%", width: "140%", height: "140%", "color-interpolation-filters": "sRGB" });
+    const blur = el("feGaussianBlur", { stdDeviation: "0" });
+    flt.append(blur, el("feColorMatrix", { type: "matrix", values: "1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" }));
+    defs.appendChild(flt);
+    const path = el("path", { "fill-rule": "evenodd" });
+    body.appendChild(path);
+    const hit = el("rect", { y: -1008, height: 1000, fill: "transparent" });
+    hits.appendChild(hit);
+    const s = { path, blur, fid, hit, morphs, advA: A.adv, advB: B.adv, p: 0, target: 0 };
+    hit.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") setHot(s, true); });
+    hit.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") setHot(s, false); });
+    return s;
+  });
+  const totalA = letters.reduce((t, s) => t + s.advA, 0);
+  /* The svg is as big as the Antonio word, one em tall, so it sits where the text used to. */
+  wordSvg = el("svg", { viewBox: `${-totalA / 2} -1008 ${totalA} 1000`, "aria-hidden": "true", focusable: "false" });
+  wordSvg.style.cssText = `display:block;overflow:visible;flex:none;height:1em;width:${totalA / 1000}em`;
+  wordSvg.append(defs, body, hits);
+  introName.appendChild(wordSvg);
+  wordSvg._w = totalA;
+  drawWord(0);
+}
+
+/* Draw every letter for its current progress; dt is the time since the last frame. */
+function drawWord(dt) {
+  const r = wordSvg.getBoundingClientRect();
+  if (r.width) wordK = r.width / wordSvg._w;           /* screen pixels per drawing unit, so rounding looks the same on any screen */
+  const widths = [];
+  letters.forEach((s) => {
+    const step = dt / MORPH_MS;
+    s.p = s.target > s.p ? Math.min(s.target, s.p + step) : Math.max(s.target, s.p - step);
+    const e = easeIO(s.p);
+    s.path.setAttribute("d", s.morphs.map((m) => m(e)).join(" "));
+    const dev = (3.2 / wordK) * Math.sin(Math.PI * e);
+    if (dev * wordK > 0.25) { s.blur.setAttribute("stdDeviation", dev.toFixed(2)); s.path.setAttribute("filter", `url(#${s.fid})`); }
+    else s.path.removeAttribute("filter");
+    s.path.setAttribute("fill", `rgb(${INK.map((v, i) => Math.round(mix(v, ORANGE[i], e))).join(",")})`);
+    widths.push(mix(s.advA, s.advB, e));
+  });
+  let x = -widths.reduce((a, b) => a + b, 0) / 2;       /* the word stays centred while slots change width */
+  letters.forEach((s, i) => {
+    s.path.setAttribute("transform", `translate(${x} 0)`);
+    s.hit.setAttribute("x", x); s.hit.setAttribute("width", widths[i]);
+    x += widths[i];
   });
 }
-Promise.all([
-  document.fonts.load('700 100px "Antonio"'),
-  document.fonts.load('400 100px "BBH Sans Bartle"'),
-]).catch(() => {}).then(() => document.fonts.ready).then(lockLetterWidths).then(playLetters);
+function runWord() {
+  if (wordRunning || !wordSvg) return;
+  wordRunning = true; wordLast = performance.now();
+  const tick = (now) => {
+    const dt = Math.min(now - wordLast, 50); wordLast = now;
+    drawWord(dt);
+    if (letters.some((s) => s.p !== s.target)) requestAnimationFrame(tick);
+    else wordRunning = false;
+  };
+  requestAnimationFrame(tick);
+}
 
+fetch("assets/glyphs.json").then((r) => r.json()).then(buildWord).then(playLetters).catch(() => {
+  introName.textContent = "NARDOS";                      /* if the outlines can't load, plain text is shown instead */
+});
 
 /* Phones have no hover, so the letters play once on their own, one at a time, then rest. */
 let autoplay = 0;
@@ -262,14 +281,14 @@ function playLetters() {
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   (async () => {
     await wait(700);
-    for (const el of letters) {
+    for (const s of letters) {
       if (run !== autoplay || !stage.classList.contains("is-intro")) break;
-      setHot(el, true);
-      await wait(620);
-      setHot(el, false);
+      setHot(s, true);
+      await wait(420);
+      setHot(s, false);
       await wait(260);
     }
-    letters.forEach((el) => setHot(el, false));
+    letters.forEach((s) => setHot(s, false));
   })();
 }
 

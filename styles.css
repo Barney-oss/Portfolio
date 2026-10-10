@@ -324,19 +324,6 @@ p, dl, dd { margin: 0; }
   filter: url(#grain);
 }
 .intro__cue { display: none; }
-.intro__word { display: flex; align-items: flex-start; }   /* every letter sits on the same baseline, whichever typeface it is in */
-.ltr { position: relative; display: flex; justify-content: center; flex: none; width: var(--w0, auto); transition: width .55s cubic-bezier(.3, .7, .2, 1); }
-.ltr.is-hot { width: var(--w1, auto); }
-.ltr.is-melt { filter: url(#goo); }              /* sharpens the blur back into solid shapes while a letter changes */
-.ltr__g, .ltr__b { flex: none; white-space: nowrap; transition: opacity .55s ease, filter .55s ease; }
-.ltr__g { opacity: 1; }
-.ltr__b { position: absolute; left: 50%; top: var(--dy, 0); transform: translateX(-50%); opacity: 0; filter: blur(.045em);
-          font-family: "BBH Sans Bartle", var(--font-display); font-weight: 400; color: var(--orange); }
-.ltr.is-hot .ltr__g { opacity: 0; filter: blur(.045em); }
-.ltr.is-hot .ltr__b { opacity: 1; filter: blur(0); }
-.ltr.is-measuring-b .ltr__g { display: none; }
-.ltr.is-measuring-b .ltr__b { position: static; transform: none; opacity: 1; filter: none; }
-
 /* Leaving: texts and glass fade, the blob and name are moved by script.js. */
 .stage.is-leaving .intro__glass,
 .stage.is-leaving .intro__hello,
