@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Path morph test</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #F7E6D6; font-family: Lato, system-ui, sans-serif; color: #231F1C; }
+    main { min-height: 100%; display: grid; place-items: center; align-content: center; gap: 28px; padding: 24px; box-sizing: border-box; }
+    svg { width: min(92vw, 1100px); height: auto; overflow: visible; }
+    .hit { fill: transparent; cursor: default; }
+    p { margin: 0; font-size: 14px; opacity: .7; text-align: center; }
+    button { font: inherit; padding: 8px 16px; border: 1px solid #EA5B0C; background: none; color: #EA5B0C; border-radius: 20px; cursor: pointer; }
+  </style>
+</head>
+<body>
+<main>
+  <svg id="word" viewBox="-300 -940 4000 1000" role="img" aria-label="Nardos">
+    <filter id="grain" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="7" result="noise"/>
+      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  7 0 0 0 -1.25" result="specks"/>
+      <feComposite in="SourceGraphic" in2="specks" operator="in"/>
+    </filter>
+    <g id="letters" filter="url(#grain)"></g>
+    <g id="hits"></g>
+  </svg>
+  <p>Hover a letter. It morphs from Antonio into BBH Sans Bartle, and back when you leave.</p>
+  <button id="play" type="button">Play all</button>
+</main>
+<script src="vendor/flubber.min.js"></script>
+<script>
+/* Path morph test. Letter outlines were taken straight from the two fonts (assets/glyphs.json),
+   and flubber blends one outline into the other. Nothing here touches the live site. */
+fetch("assets/glyphs.json").then((r) => r.json()).then((data) => {
+  const WORD = "NARDOS", INK = [35, 31, 28], ORANGE = [234, 91, 12];
+  const DUR = 600;                                     /* milliseconds for a full change */
+  const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  /* split a glyph into its outlines (outer shape first, holes after) and centre it in its slot */
+  const prep = (g) => {
+    const rings = g.d.split(/(?=M)/).filter(Boolean);
+    const [x1, , x2] = [g.bb.x1, g.bb.y1, g.bb.x2];
+    const pad = (g.adv - (x2 - x1)) / 2, dx = pad - x1;
+    return { rings: rings.map((d) => ({ d, area: 0 })), dx, adv: g.adv };
+  };
+  const area = (d) => {                                 /* rough size of an outline, to pair them up */
+    const n = (d.match(/-?\d+\.?\d*/g) || []).map(Number); let a = 1e9, b = -1e9, c = 1e9, e = -1e9;
+    for (let i = 0; i + 1 < n.length; i += 2) { a = Math.min(a, n[i]); b = Math.max(b, n[i]); c = Math.min(c, n[i + 1]); e = Math.max(e, n[i + 1]); }
+    return (b - a) * (e - c);
+  };
+  const shift = (d, dx) => {                            /* move an outline sideways (absolute commands only) */
+    let i = 0;
+    return d.replace(/(-?\d+\.?\d*)[ ,](-?\d+\.?\d*)/g, (m, x, y) => (+x + dx) + " " + y);
+  };
+
+  const g = document.getElementById("letters"), hits = document.getElementById("hits");
+  const NS = "http://www.w3.org/2000/svg";
+  const L = [...WORD].map((ch) => {
+    const a = prep(data.antonio.glyphs[ch]), b = prep(data.bartle.glyphs[ch]);
+    a.rings.forEach((r) => (r.area = area(r.d))); b.rings.forEach((r) => (r.area = area(r.d)));
+    a.rings.sort((p, q) => q.area - p.area); b.rings.sort((p, q) => q.area - p.area);
+    const fromD = a.rings.map((r) => shift(r.d, a.dx)), toD = b.rings.map((r) => shift(r.d, b.dx));
+    /* at rest the exact outline is drawn; only in between is the shape blended */
+    const morphs = fromD.map((f, i) => {
+      const m = flubber.interpolate(f, toD[i], { maxSegmentLength: 5 });
+      return (t) => (t <= 0.002 ? f : t >= 0.998 ? toD[i] : m(t));
+    });
+    const path = document.createElementNS(NS, "path");
+    path.setAttribute("fill-rule", "evenodd");
+    g.appendChild(path);
+    const hit = document.createElementNS(NS, "rect");
+    hit.setAttribute("class", "hit"); hit.setAttribute("y", -940); hit.setAttribute("height", 1000);
+    hits.appendChild(hit);
+    const s = { ch, path, hit, morphs, advA: a.adv, advB: b.adv, p: 0, target: 0 };
+    hit.addEventListener("pointerenter", () => (s.target = 1));
+    hit.addEventListener("pointerleave", () => (s.target = 0));
+    return s;
+  });
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = now - last; last = now;
+    let x = 0; const widths = [];
+    L.forEach((s) => {
+      const step = dt / DUR;
+      s.p = s.target > s.p ? Math.min(s.target, s.p + step) : Math.max(s.target, s.p - step);
+      const e = ease(s.p);
+      s.path.setAttribute("d", s.morphs.map((m) => m(e)).join(" "));
+      s.path.setAttribute("fill", `rgb(${INK.map((v, i) => Math.round(lerp(v, ORANGE[i], e))).join(",")})`);
+      const adv = lerp(s.advA, s.advB, e);
+      widths.push(adv);
+    });
+    const total = widths.reduce((a, b) => a + b, 0);
+    x = (3400 - total) / 2;
+    L.forEach((s, i) => {
+      s.path.setAttribute("transform", `translate(${x} 0)`);
+      s.hit.setAttribute("x", x); s.hit.setAttribute("width", widths[i]);
+      x += widths[i];
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* play every letter once, one after another */
+  document.getElementById("play").addEventListener("click", () => {
+    L.forEach((s, i) => {
+      setTimeout(() => (s.target = 1), i * 650);
+      setTimeout(() => (s.target = 0), i * 650 + 550);
+    });
+  });
+});
+</script>
+</body>
+</html>
