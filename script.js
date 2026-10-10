@@ -104,7 +104,7 @@ const cardEls = PROJECTS.map((p, i) => {
   a.href = "project.html?p=" + p.slug;
   a.setAttribute("aria-label", `${p.title}, project ${i + 1} of ${total}`);
   a.innerHTML = `
-    <div class="card__side" aria-hidden="true"><img src="${isPhone ? MOBILE_SIDE[p.side] || p.side : p.side}" alt="" style="--tint:${p.tint}"></div>
+    <div class="card__side" aria-hidden="true" style="--tint:${p.tint}"><i style="--c:${p.side.includes('right') ? '#2A9D8F' : '#231F1C'}; --shape:url(${p.blob})"></i></div>
     <div class="card__front">
       <div class="card__blob" aria-hidden="true"><img src="${p.blob}" alt=""></div>
       ${p.shots ? `
