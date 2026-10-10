@@ -38,7 +38,7 @@
    and flubber blends one outline into the other. Nothing here touches the live site. */
 fetch("assets/glyphs.json").then((r) => r.json()).then((data) => {
   const WORD = "NARDOS", INK = [35, 31, 28], ORANGE = [234, 91, 12];
-  const DUR = 600;                                     /* milliseconds for a full change */
+  const DUR = 280;                                     /* milliseconds for a full change */
   const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   const lerp = (a, b, t) => a + (b - a) * t;
 
