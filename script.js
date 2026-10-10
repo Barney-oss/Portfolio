@@ -210,12 +210,11 @@ function setHot(el, on) {
   el.classList.toggle("is-hot", on);
 }
 
-/* Hover: the letter under the cursor melts into BBH Sans Bartle. When the cursor leaves it lingers
-   for a moment before melting back. */
+/* Hover: the letter under the cursor melts into BBH Sans Bartle, and melts back the moment the cursor leaves. */
 function heat(on) { if (!on) letters.forEach((el) => { clearTimeout(el._t); setHot(el, false); }); }
 letters.forEach((el) => {
   el.addEventListener("mouseenter", () => { clearTimeout(el._t); setHot(el, true); });
-  el.addEventListener("mouseleave", () => { el._t = setTimeout(() => setHot(el, false), 700); });
+  el.addEventListener("mouseleave", () => { clearTimeout(el._t); setHot(el, false); });
 });
 
 /* Each letter's slot is as wide as its current shape, and glides to the other width when it
