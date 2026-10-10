@@ -215,8 +215,7 @@ p, dl, dd { margin: 0; }
   flex: none;                                             /* don't let the dot squash when the row is tight */
   width: calc(var(--u) * 15);
   height: calc(var(--u) * 15);
-  background: var(--orange-deep);
-  border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%;
+  background: url(assets/nav-dot.svg) center / 100% 100% no-repeat;
 }
 
 /* ------------------------------------------------------------
@@ -441,7 +440,7 @@ p, dl, dd { margin: 0; }
   .menu__link:not(.menu__link--active):active { filter: none; color: var(--ink); }
   .menu__link--active::before {
     content: ""; flex: none; width: calc(var(--u) * 20); height: calc(var(--u) * 20);
-    background: var(--orange-deep); border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%;
+    background: url(assets/nav-dot.svg) center / 100% 100% no-repeat;
   }
 
   /* bottom, like desktop: "Swipe" bottom left, big number bottom right */
