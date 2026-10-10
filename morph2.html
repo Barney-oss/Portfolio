@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Smooth morph test</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #F7E6D6; font-family: Lato, system-ui, sans-serif; color: #231F1C; }
+    main { min-height: 100%; display: grid; place-items: center; align-content: center; gap: 28px; padding: 24px; box-sizing: border-box; }
+    .word { position: relative; width: min(92vw, 1100px); aspect-ratio: 4 / 1; }
+    canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .hit { position: absolute; top: 0; height: 100%; }
+    p { margin: 0; font-size: 14px; opacity: .7; text-align: center; }
+    button { font: inherit; padding: 8px 16px; border: 1px solid #EA5B0C; background: none; color: #EA5B0C; border-radius: 20px; cursor: pointer; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="word" id="word" role="img" aria-label="Nardos"><canvas id="c"></canvas><div id="hits"></div></div>
+  <p>Hover a letter. It morphs from Antonio into BBH Sans Bartle, and back when you leave.<br>This version blends the letters as soft distance fields instead of as outlines, so the edges stay smooth all the way.</p>
+  <button id="play" type="button">Play all</button>
+</main>
+<script>
+/* Smooth morph. Each letter is turned into a "distance picture" (how far every point is from the letter's
+   edge, inside or out). Blending two distance pictures and drawing where the result crosses zero gives a
+   perfectly smooth in-between shape, however different the two letters are. Nothing here touches the live site. */
+fetch("assets/glyphs.json").then((r) => r.json()).then((data) => {
+  const WORD = "NARDOS", INK = [35 / 255, 31 / 255, 28 / 255], ORANGE = [234 / 255, 91 / 255, 12 / 255];
+  const DUR = 600, BOXW = 1500, BOXH = 1000, TOP = -920, SCALE = 0.5, RT = 40;       /* texture: 0.5 pixel per drawing unit */
+  const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  /* ---------- distance picture of one glyph (after Mapbox's tiny-sdf) ---------- */
+  const W = BOXW * SCALE, H = BOXH * SCALE, INF = 1e20;
+  const f = new Float64Array(Math.max(W, H)), z = new Float64Array(Math.max(W, H) + 1), v = new Uint16Array(Math.max(W, H));
+  const d1 = (grid, off, stride, n) => {              /* squared distance transform of one row or column */
+    let k = 0; v[0] = 0; z[0] = -INF; z[1] = INF;
+    for (let i = 0; i < n; i++) f[i] = grid[off + i * stride];
+    for (let q = 1; q < n; q++) {
+      let s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]);
+      while (s <= z[k]) { k--; s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]); }
+      k++; v[k] = q; z[k] = s; z[k + 1] = INF;
+    }
+    k = 0;
+    for (let q = 0; q < n; q++) { while (z[k + 1] < q) k++; const dq = q - v[k]; grid[off + q * stride] = dq * dq + f[v[k]]; }
+  };
+  const edt = (grid) => { for (let x = 0; x < W; x++) d1(grid, x, W, H); for (let y = 0; y < H; y++) d1(grid, y * W, 1, W); };
+
+  const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const cx2 = cv.getContext("2d", { willReadFrequently: true });
+  const makeSDF = (g) => {
+    cx2.setTransform(1, 0, 0, 1, 0, 0); cx2.clearRect(0, 0, W, H); cx2.setTransform(SCALE, 0, 0, SCALE, (BOXW / 2 - g.adv / 2) * SCALE, -TOP * SCALE);
+    cx2.fillStyle = "#000"; cx2.fill(new Path2D(g.rings.join(" ")), "evenodd");
+    const px = cx2.getImageData(0, 0, W, H).data, outer = new Float64Array(W * H), inner = new Float64Array(W * H);
+    for (let i = 0; i < W * H; i++) {
+      const a = px[i * 4 + 3] / 255;
+      outer[i] = a === 1 ? 0 : a === 0 ? INF : Math.pow(Math.max(0, .5 - a), 2);
+      inner[i] = a === 1 ? INF : a === 0 ? 0 : Math.pow(Math.max(0, a - .5), 2);
+    }
+    edt(outer); edt(inner);
+    const out = new Uint8Array(W * H);
+    for (let i = 0; i < W * H; i++) {                 /* positive = inside; stored as 0..255 across +-RT texels */
+      const dIn = Math.sqrt(inner[i]) - Math.sqrt(outer[i]);
+      out[i] = Math.max(0, Math.min(255, Math.round((.5 + dIn / (2 * RT)) * 255)));
+    }
+    return out;
+  };
+
+  /* ---------- WebGL ---------- */
+  const canvas = document.getElementById("c");
+  const gl = canvas.getContext("webgl", { premultipliedAlpha: true, alpha: true, antialias: false });
+  if (!gl) { document.getElementById("word").textContent = "WebGL is not available in this browser."; return; }
+  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+  const prog = gl.createProgram();
+  gl.attachShader(prog, sh(gl.VERTEX_SHADER, `
+    attribute vec2 a; uniform float cx; varying vec2 uv;
+    void main() {
+      uv = a;
+      float x = cx - ${BOXW / 2}.0 + a.x * ${BOXW}.0;
+      gl_Position = vec4(((x + 300.0) / 4000.0) * 2.0 - 1.0, 1.0 - a.y * 2.0, 0.0, 1.0);
+    }`));
+  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, `
+    precision highp float;
+    varying vec2 uv; uniform sampler2D ta, tb; uniform float e, kd, dpr; uniform vec3 colA, colB;
+    float hash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+    void main() {
+      float da = (texture2D(ta, uv).r - 0.5) * ${4 * RT}.0;       /* distance in drawing units, positive inside */
+      float db = (texture2D(tb, uv).r - 0.5) * ${4 * RT}.0;
+      float d = mix(da, db, e) * kd;                               /* in screen pixels */
+      float alpha = clamp(d + 0.5, 0.0, 1.0);
+      /* grain: tiny specks are knocked out, but only well inside the letter, so the outline stays clean */
+      float cell = max(1.0, floor(dpr * 0.9));
+      float speck = step(0.935, hash(floor(gl_FragCoord.xy / cell)));
+      alpha *= 1.0 - speck * step(1.6 * dpr, d);
+      vec3 c = mix(colA, colB, e);
+      gl_FragColor = vec4(c * alpha, alpha);
+    }`));
+  gl.linkProgram(prog); gl.useProgram(prog);
+  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, "a"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+  const U = (n) => gl.getUniformLocation(prog, n);
+  const tex = (bytes) => {
+    const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, W, H, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, bytes);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return t;
+  };
+
+  const hitsEl = document.getElementById("hits");
+  const L = [...WORD].map((ch) => {
+    const A = data.antonio[ch], B = data.bartle[ch];
+    const hit = document.createElement("div"); hit.className = "hit"; hitsEl.appendChild(hit);
+    const s = { ch, advA: A.adv, advB: B.adv, ta: tex(makeSDF(A)), tb: tex(makeSDF(B)), hit, p: 0, target: 0 };
+    hit.addEventListener("pointerenter", () => (s.target = 1));
+    hit.addEventListener("pointerleave", () => (s.target = 0));
+    return s;
+  });
+
+  let dpr = 1, kd = 1;
+  const resize = () => {
+    dpr = Math.min(window.devicePixelRatio || 1, 3);
+    const r = canvas.getBoundingClientRect();
+    canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
+    kd = canvas.width / 4000; gl.viewport(0, 0, canvas.width, canvas.height);
+  };
+  resize(); addEventListener("resize", resize);
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = now - last; last = now;
+    const es = [], widths = [];
+    L.forEach((s) => {
+      const step = dt / DUR;
+      s.p = s.target > s.p ? Math.min(s.target, s.p + step) : Math.max(s.target, s.p - step);
+      es.push(ease(s.p)); widths.push(lerp(s.advA, s.advB, es[es.length - 1]));
+    });
+    let x = (3400 - widths.reduce((a, b) => a + b, 0)) / 2;
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+    L.forEach((s, i) => {
+      const cx = x + widths[i] / 2, e = es[i];
+      s.hit.style.left = ((x + 300) / 40) + "%"; s.hit.style.width = (widths[i] / 40) + "%";
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, s.ta); gl.uniform1i(U("ta"), 0);
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, s.tb); gl.uniform1i(U("tb"), 1);
+      gl.uniform1f(U("cx"), cx); gl.uniform1f(U("e"), e); gl.uniform1f(U("kd"), kd); gl.uniform1f(U("dpr"), dpr);
+      gl.uniform3fv(U("colA"), INK); gl.uniform3fv(U("colB"), ORANGE);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      x += widths[i];
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  document.getElementById("play").addEventListener("click", () => {
+    L.forEach((s, i) => { setTimeout(() => (s.target = 1), i * 650); setTimeout(() => (s.target = 0), i * 650 + 550); });
+  });
+});
+</script>
+</body>
+</html>
