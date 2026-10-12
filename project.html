@@ -24,8 +24,21 @@
 
     /* Chapter dots on the right edge: shows where you are, tap to jump */
     .dots { position: fixed; right: 14px; top: 50%; transform: translateY(-50%); z-index: 5; display: grid; gap: 12px; }
-    .dots a { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--orange); background: transparent; transition: background .2s; }
-    .dots a.on { background: var(--orange); }
+    .dots a { width: 15px; height: 15px; background: url(assets/nav-dot-empty.svg) center / 100% 100% no-repeat; }
+    .dots a.on { background-image: url(assets/nav-dot.svg); }
+
+    /* Small labels along the edges, same as the work screen */
+    .edge { position: fixed; z-index: 4; pointer-events: none; font-size: 16px; color: var(--ink); white-space: nowrap; }
+    .edge--top { top: 24px; left: 280px; right: 64px; display: flex; justify-content: space-between; }
+    .edge--bottom { bottom: 22px; left: 24px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; letter-spacing: .02em; color: var(--orange); transition: opacity .3s; }
+    .edge--bottom.hide { opacity: 0; }
+    .cue-m { display: none; }
+    @media (max-width: 700px) {
+      .edge--top { top: 56px; left: 24px; right: 44px; font-size: 13px; }
+      .edge--top span:nth-child(2) { display: none; }
+      .cue-d { display: none; } .cue-m { display: inline; }
+      .edge--bottom { font-size: 17px; }
+    }
 
     /* One chapter = one full screen */
     .chapter {
@@ -34,12 +47,12 @@
       padding: 84px 44px 48px 24px;
       max-width: 1200px; margin: 0 auto;
     }
-    .marker { position: relative; width: min(170px, 42vw); aspect-ratio: 1; display: grid; place-items: center; }
-    .marker img { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .marker span { position: relative; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; color: var(--orange-deep); text-align: center; line-height: 1.1; padding: 0 16px; }
-    h1, h2 { font-family: "Antonio", sans-serif; font-weight: 600; margin: 0 0 12px; line-height: 1; }
-    h1 { font-size: clamp(48px, 11vw, 110px); }
-    h2 { font-size: clamp(32px, 6vw, 56px); }
+    /* The chapter title sits on a thin outlined blob, like the logo */
+    .pill { position: relative; display: inline-grid; place-items: center; margin: 0 0 6px; padding: .6em 1.7em .5em; justify-self: start; }
+    .pill img { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .pill h1, .pill h2 { position: relative; margin: 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1; color: var(--ink); }
+    .pill h1 { font-size: clamp(40px, 9vw, 84px); }
+    .pill h2 { font-size: clamp(28px, 5vw, 46px); }
     .text p { margin: 0 0 14px; font-size: 17px; line-height: 1.55; max-width: 46ch; }
     .facts { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 8px; font-size: 14px; }
     .facts b { display: block; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--orange-deep); }
@@ -49,13 +62,14 @@
     @media (min-width: 900px) {
       .chapter { grid-template-columns: 1fr 1.15fr; align-items: center; gap: 64px; padding: 100px 80px 60px; }
       .chapter:nth-of-type(even) .media { order: -1; }
-      .marker { width: 300px; margin-bottom: 20px; }
-    }
+      }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   </style>
 </head>
 <body>
   <a class="back" id="back" href="index.html">&larr; Back to work</a>
+  <div class="edge edge--top"><span>Selected work</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
+  <div class="edge edge--bottom" id="cue"><span class="cue-d">Scroll &darr;</span><span class="cue-m">Swipe &darr;</span></div>
   <nav class="dots" id="dots" aria-label="Chapters"></nav>
   <main id="chapters"></main>
 
@@ -93,8 +107,7 @@
       sec.className = "chapter"; sec.id = "c" + i;
       sec.innerHTML = `
         <div class="text">
-          <div class="marker"><img src="${p.blob}-fill.svg" alt=""><img src="${p.blob}-line.svg" alt=""><span>${c.label}</span></div>
-          ${i === 0 ? `<h1>${c.title}</h1>` : `<h2>${c.title}</h2>`}
+          <div class="pill"><img src="assets/chapter-blob.svg" alt="">${i === 0 ? `<h1>${c.title}</h1>` : `<h2>${c.title}</h2>`}</div>
           <p>${c.body}</p>
           ${c.facts ? `<div class="facts"><div><b>Role</b>${p.role}</div><div><b>Designed for</b>${p.forWho}</div><div><b>Type</b>${p.type}</div></div>` : ""}
         </div>
@@ -102,8 +115,14 @@
       root.appendChild(sec);
       const d = document.createElement("a"); d.href = "#c" + i; d.setAttribute("aria-label", c.label); dots.appendChild(d);
     });
+    const timeEl = document.getElementById("local-time");
+    const tick = () => { timeEl.textContent = "Addis Ababa, " + new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Africa/Addis_Ababa" }).format(new Date()); };
+    tick(); setInterval(tick, 30000);
     const io = new IntersectionObserver((es) => es.forEach(e => {
-      if (e.isIntersecting) [...dots.children].forEach((d, i) => d.classList.toggle("on", "c" + i === e.target.id));
+      if (e.isIntersecting) {
+        [...dots.children].forEach((d, i) => d.classList.toggle("on", "c" + i === e.target.id));
+        document.getElementById("cue").classList.toggle("hide", e.target.id === "c" + (chapters.length - 1));
+      }
     }), { threshold: 0.55 });
     document.querySelectorAll(".chapter").forEach(s => io.observe(s));
   </script>
