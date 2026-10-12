@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Project page layouts</title>
+<style>
+  :root { --ink:#231F1C; --orange:#EA5B0C; --deep:#D64A1C; --cream:#F7E6D6; --paper:#FAFAFA; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 15px/1.45 Lato, system-ui, sans-serif; padding: 28px 18px 60px; }
+  h1 { font: 600 30px/1 Antonio, Impact, sans-serif; letter-spacing: .02em; margin: 0 0 6px; color: var(--deep); }
+  h2 { font: 600 24px/1 Antonio, Impact, sans-serif; margin: 44px 0 4px; }
+  h2 span { color: var(--orange); margin-right: 8px; }
+  p { margin: 0 0 10px; max-width: 62ch; }
+  .why { opacity: .75; font-size: 13.5px; }
+  .strip { display: flex; gap: 14px; overflow-x: auto; padding: 14px 2px 18px; scroll-snap-type: x mandatory; }
+  .s { flex: none; width: 250px; height: 158px; background: #fff; border: 1px solid #e6e1db; border-radius: 10px; position: relative; scroll-snap-align: start; overflow: hidden; }
+  .s b { position: absolute; left: 8px; bottom: 6px; font: 600 11px/1 Lato, sans-serif; color: var(--deep); }
+  .blob { position: absolute; background: var(--cream); border: 2px solid var(--orange); border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%; }
+  .soft { position: absolute; background: #ddd; filter: blur(5px); border-radius: 50% 45% 55% 50%; opacity: .7; }
+  .shot { position: absolute; background: #cfe3dc; border-radius: 4px; box-shadow: 0 3px 10px rgba(0,0,0,.12); }
+  .shot.d { background: #e3e8f2; }
+  .t { position: absolute; height: 4px; background: #c9c3bb; border-radius: 3px; }
+  .t.h { height: 7px; background: var(--ink); }
+  .t.o { background: var(--orange); }
+  .rail { position: absolute; left: 6px; top: 8px; bottom: 8px; width: 12px; font: 600 8px/1 Antonio, sans-serif; writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: .1em; }
+  .num { position: absolute; font: 600 34px/1 Antonio, sans-serif; color: var(--deep); }
+  .pick { display: inline-block; background: var(--orange); color: #fff; font: 700 11px/1 Lato, sans-serif; padding: 4px 8px; border-radius: 10px; margin-left: 8px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<h1>Project page layouts</h1>
+<p>Three ways to organise a case study, drawn as rough sketches in your style. Swipe each row sideways: every box is one "screen" as you move down the page. The grey boxes are text, the green and blue boxes are screenshots.</p>
+
+<h2><span>A</span>One thing per screen</h2>
+<p class="why">Feels most like your home. Each screen holds one idea; you scroll or swipe from one to the next, and the next project's card peeks in at the end.</p>
+<div class="strip">
+  <div class="s"><div class="rail">NARDOS</div><div class="blob" style="left:44px;top:22px;width:130px;height:104px"></div><div class="shot" style="left:62px;top:40px;width:70px;height:58px"></div><div class="shot d" style="left:100px;top:62px;width:56px;height:44px"></div><div class="t h" style="left:186px;top:40px;width:48px"></div><div class="t" style="left:186px;top:56px;width:44px"></div><b>1  Opened card (you have this)</b></div>
+  <div class="s"><div class="blob" style="left:60px;top:18px;width:140px;height:110px"></div><div class="t h" style="left:84px;top:50px;width:70px"></div><div class="t" style="left:84px;top:68px;width:100px"></div><div class="t" style="left:84px;top:78px;width:90px"></div><div class="t o" style="left:84px;top:94px;width:40px"></div><b>2  The story in a few lines</b></div>
+  <div class="s"><div class="shot" style="left:20px;top:18px;width:130px;height:100px"></div><div class="blob" style="left:132px;top:34px;width:100px;height:80px;opacity:.9"></div><div class="t h" style="left:146px;top:58px;width:60px"></div><div class="t" style="left:146px;top:74px;width:72px"></div><b>3  One key screen + 2 lines</b></div>
+  <div class="s"><div class="blob" style="left:16px;top:34px;width:100px;height:80px"></div><div class="t h" style="left:30px;top:58px;width:60px"></div><div class="t" style="left:30px;top:74px;width:70px"></div><div class="shot d" style="left:100px;top:18px;width:130px;height:100px"></div><b>4  Next key screen (sides swap)</b></div>
+  <div class="s"><div class="num" style="left:30px;top:30px">+40%</div><div class="t" style="left:30px;top:80px;width:110px"></div><div class="t" style="left:30px;top:92px;width:90px"></div><div class="soft" style="left:170px;top:40px;width:90px;height:80px"></div><b>5  Result, then next project</b></div>
+</div>
+
+<h2><span>B</span>Blob chapters<span class="pick">my pick</span></h2>
+<p class="why">A normal scroll, but each section starts with a big orange number and a blob. Easy for a recruiter to skim, and it leaves room for long screenshots and real text.</p>
+<div class="strip">
+  <div class="s"><div class="rail">NARDOS</div><div class="blob" style="left:44px;top:22px;width:130px;height:104px"></div><div class="shot" style="left:62px;top:40px;width:70px;height:58px"></div><div class="shot d" style="left:100px;top:62px;width:56px;height:44px"></div><div class="t h" style="left:186px;top:40px;width:48px"></div><div class="t" style="left:186px;top:56px;width:44px"></div><b>Opened card (you have this)</b></div>
+  <div class="s"><div class="rail">NARDOS</div><div class="num" style="left:34px;top:16px">01</div><div class="t h" style="left:34px;top:62px;width:70px"></div><div class="t" style="left:34px;top:80px;width:190px"></div><div class="t" style="left:34px;top:90px;width:170px"></div><div class="t" style="left:34px;top:100px;width:180px"></div><b>01  Context: what and for whom</b></div>
+  <div class="s"><div class="rail">NARDOS</div><div class="num" style="left:34px;top:16px">02</div><div class="shot" style="left:34px;top:62px;width:90px;height:70px"></div><div class="shot d" style="left:130px;top:62px;width:90px;height:70px"></div><b>02  Process: sketches, flows</b></div>
+  <div class="s"><div class="rail">NARDOS</div><div class="num" style="left:34px;top:16px">03</div><div class="blob" style="left:34px;top:54px;width:196px;height:86px"></div><div class="shot" style="left:52px;top:64px;width:160px;height:66px"></div><b>03  The design, big, in a blob</b></div>
+  <div class="s"><div class="rail">NARDOS</div><div class="num" style="left:34px;top:16px">04</div><div class="t h" style="left:34px;top:62px;width:70px"></div><div class="t" style="left:34px;top:80px;width:160px"></div><div class="soft" style="left:150px;top:92px;width:90px;height:50px"></div><b>04  Result + next project peeks in</b></div>
+</div>
+
+<h2><span>C</span>Tap-to-open blobs</h2>
+<p class="why">The most playful: one big screenshot, and small outlined blobs around it. Tap one (Problem, Process, Result) and it opens with the details. Very personal, but a skimming visitor can miss things hidden inside.</p>
+<div class="strip">
+  <div class="s"><div class="rail">NARDOS</div><div class="blob" style="left:44px;top:22px;width:130px;height:104px"></div><div class="shot" style="left:62px;top:40px;width:70px;height:58px"></div><div class="shot d" style="left:100px;top:62px;width:56px;height:44px"></div><div class="t h" style="left:186px;top:40px;width:48px"></div><b>Opened card (you have this)</b></div>
+  <div class="s"><div class="shot" style="left:50px;top:30px;width:150px;height:96px"></div><div class="blob" style="left:6px;top:12px;width:56px;height:40px"></div><div class="blob" style="left:196px;top:24px;width:50px;height:38px"></div><div class="blob" style="left:190px;top:100px;width:56px;height:40px"></div><b>Big screen + small blobs to tap</b></div>
+  <div class="s"><div class="blob" style="left:30px;top:16px;width:190px;height:122px"></div><div class="t h" style="left:60px;top:44px;width:60px"></div><div class="t" style="left:60px;top:62px;width:130px"></div><div class="t" style="left:60px;top:72px;width:110px"></div><div class="t" style="left:60px;top:82px;width:120px"></div><b>One opened: the Problem</b></div>
+</div>
+
+<h2>How I'd choose</h2>
+<p><b>B</b> is the safest: it shows your work clearly and is quick to skim, and it keeps your signature look through the numbers, blobs and outlines. If you want it to feel more like your home screen, I can borrow one idea from <b>A</b>: each chapter fills the screen and snaps into place as you scroll. <b>C</b> is memorable but risky for a hiring manager with two minutes.</p>
+</body>
+</html>
