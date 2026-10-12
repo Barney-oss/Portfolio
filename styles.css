@@ -104,14 +104,17 @@ p, dl, dd { margin: 0; }
 .card__front {
   position: absolute;
   inset: 0;
-  /* A card waiting at the side is the same card, just out of focus: its blob and screenshots, blurred. */
-  filter: blur(var(--soft, calc(var(--u) * 5)));
+  /* A card waiting at the side is the same card, out of focus and without its orange outline. A soft shadow
+     lifts it off the page instead, since the white blob and the page are almost the same colour. */
+  filter: blur(var(--soft, calc(var(--u) * 5))) drop-shadow(0 calc(var(--u) * 10) calc(var(--u) * 26) rgba(35, 31, 28, 0.22));
   transition: filter 0.5s ease;
 }
-.card[data-slot="0"] .card__front { filter: none; }
+.card[data-slot="0"] .card__front { filter: blur(0px) drop-shadow(0 0 0 rgba(35, 31, 28, 0)); }
 
 .card__blob { position: absolute; inset: 0; }
-.card__blob img { width: 100%; height: 100%; }
+.card__blob img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.card__blob-line { transition: opacity 0.4s ease; }
+.card:not([data-slot="0"]) .card__blob-line { opacity: 0; }       /* the orange outline belongs to the card in focus only */
 
 .card__shot { object-fit: cover; box-shadow: 0 calc(var(--u) * 4) calc(var(--u) * 40) rgba(6, 95, 70, 0.2); }
 .card__shot--back { border-radius: calc(var(--u) * 12); }
@@ -136,8 +139,8 @@ p, dl, dd { margin: 0; }
 .card:focus-visible .card__blob { filter: drop-shadow(0 0 calc(var(--u) * 6) var(--orange)); }
 
 /* The facts fade out and back in when the card changes. */
-.fact dd, .fact p, .counter__num { transition: opacity 0.25s ease; }
-.is-swapping .fact dd, .is-swapping .fact p, .is-swapping .counter__num { opacity: 0; }
+.fact dd, #fact-type, .counter__num { transition: opacity 0.25s ease; }
+.is-swapping .fact dd, .is-swapping #fact-type, .is-swapping .counter__num { opacity: 0; }   /* only the changing text fades; labels like "Project type:" stay */
 
 /* ------------------------------------------------------------
    Logo and navigation

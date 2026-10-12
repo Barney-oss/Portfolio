@@ -105,7 +105,7 @@ const cardEls = PROJECTS.map((p, i) => {
   a.setAttribute("aria-label", `${p.title}, project ${i + 1} of ${total}`);
   a.innerHTML = `
     <div class="card__front">
-      <div class="card__blob" aria-hidden="true"><img src="${p.blob}" alt=""></div>
+      <div class="card__blob" aria-hidden="true"><img class="card__blob-fill" src="${p.blob.replace('.svg', '-fill.svg')}" alt=""><img class="card__blob-line" src="${p.blob.replace('.svg', '-line.svg')}" alt=""></div>
       ${p.shots ? `
         <img class="card__shot card__shot--back layer" style="${box(shotBox.back)}" src="${p.shots.back.src}" alt="${p.shots.back.alt}">
         <img class="card__shot card__shot--front layer" style="${box(shotBox.front)}" src="${p.shots.front.src}" alt="${p.shots.front.alt}">`
