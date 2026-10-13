@@ -48,6 +48,7 @@
     .fig { margin: 0; }
     .fig figcaption { margin-top: 8px; font-size: 13px; opacity: .8; max-width: 56ch; }
     .shot { display: block; width: auto; max-width: 100%; max-height: 34dvh; border-radius: 12px; box-shadow: 0 14px 34px rgba(35,31,28,.2); }
+    .shot--bare { border-radius: 0; box-shadow: none; }
     .shot--ph { width: 100%; aspect-ratio: 4 / 3; max-height: 34dvh; background: #e6f3ef; display: grid; place-items: center; font-size: 14px; opacity: .8; }
 
     /* Desktop: text on one side (wider), one big image on the other */
@@ -109,23 +110,23 @@
           { title: "Agristelle", big: true,
             body: ["A booking platform for agriturismi, the working farms in the Italian countryside that rent out a few rooms. I designed the hero of the public site, its type and colour balance, the admin panel and the host panel.",
                    "It was a three-month project in a team of seven: two designers, a backend developer, a front-end developer, a project manager, a QA tester and a tech lead. My feedback came from the other designer and the tech lead."],
-            images: [{ src: "assets/agristelle-dashboard-02.png", alt: "Agristelle admin panel: experiences and community overview", caption: "" }] },
+            images: [{ src: "assets/web-agristelle-overview.png", bare: true, alt: "Agristelle admin panel and host panel on laptop and phone", caption: "" }] },
           { title: "The problem",
             body: ["The old site looked outdated, and the client wanted a modern look. Behind it, the admin panel was Django's default: dense, hard to read, and hard to act on. The host panel was just as cluttered.",
                    "The Django admin panel turned out to be the heaviest part of the project: close to two of the three months went into it."],
-            images: [{ src: null, alt: "The Django admin panel before", caption: "Before: Django's default admin panel." }] },
+            images: [{ src: "assets/web-agristelle-the-problem.png", alt: "The Django admin panel before", caption: "Before: Django's default admin panel." }] },
           { title: "The public site",
             body: ["A visitor comes to look at Italian farm stays, so the first thing they see is one. The hero is a full-width image of an agriturismo, with a search bar and a headline over it. I chose an image over a video because the site has to load fast.",
                    "I also chose the typeface and the balance of colour, based on the brand's own colours. The rest of the public site was designed by the second designer on the team."],
-            images: [{ src: null, alt: "Agristelle hero", caption: "The hero: one farm stay, one search bar." }] },
+            images: [{ src: "assets/web-agristelle-the-public-site.png", alt: "Agristelle hero", caption: "The hero: one farm stay, one search bar." }] },
           { title: "The admin panel",
             body: ["Most of the data was hidden behind tables. The front was dense, with no icons or colour and no clear sign of progress where data was entered. Everything sat on one scrollable page, with nothing to show where one group of data ended and the next began.",
                    "I grouped the information and put the team's main jobs first: approving hosts, listed properties and disputes. The three newest hosts waiting for approval now stand out, in urgent colours, big numbers and icons."],
-            images: [{ src: "assets/agristelle-dashboard-01.png", alt: "Agristelle admin panel: property owner detail", caption: "Grouped information instead of one long page." }] },
+            images: [{ video: "assets/web-agristelle-the-admin-panel.mp4", src: "assets/web-agristelle-the-admin-panel.png", alt: "Agristelle admin panel", caption: "Grouped information instead of one long page." }] },
           { title: "The host panel",
             body: ["Hosts use it to list and manage their properties, answer booking requests and keep their calendar up to date, which shows when each farm is available.",
                    "For hosts with several properties it is one place to see them all. It was cluttered too, so I organised it the same way as the admin panel. The panel and the hero took close to a month together."],
-            images: [{ src: null, alt: "Agristelle host panel", caption: "All of a host's properties in one place." }] },
+            images: [{ src: "assets/web-agristelle-the-host-panel.png", alt: "Agristelle host panel", caption: "All of a host's properties in one place." }] },
           { title: "What's next",
             body: ["The site isn't live yet; some backend work remains.",
                    "The host panel on mobile still needs a design of its own, and time and budget didn't allow it. That's the first thing I'd do with more time."],
@@ -147,7 +148,7 @@
     const fig = (im) => `<figure class="fig">${im.video
       ? `<video class="shot" data-video="${im.video}" ${im.src ? `poster="${im.src}"` : ""} muted loop playsinline preload="none" aria-label="${im.alt || ""}"></video>`
       : im.src
-      ? `<img class="shot" src="${im.src}" alt="${im.alt || ""}">`
+      ? `<img class="shot${im.bare ? " shot--bare" : ""}" src="${im.src}" alt="${im.alt || ""}">`
       : `<div class="shot shot--ph">Screenshot goes here</div>`}${im.caption ? `<figcaption>${im.caption}</figcaption>` : ""}</figure>`;
     const root = document.getElementById("chapters");
     const dots = document.getElementById("dots");
