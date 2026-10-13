@@ -15,12 +15,20 @@
       margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif; font-weight: 400;
       background: #fff url("assets/noise.png") repeat top left / 720px 512px;
     }
-    .back {
-      position: fixed; top: 18px; left: 20px; z-index: 5;
-      font-family: "Antonio", sans-serif; font-weight: 600; font-size: 20px;
-      color: var(--orange-deep); text-decoration: none;
-    }
-    .back:hover, .back:focus-visible { color: var(--orange); text-decoration: underline; }
+    :root { --u: min(calc(100vw / 1440), calc(100dvh / 1080)); }
+    /* Logo and navigation, same as the work screen */
+    .logo { position: fixed; z-index: 6; left: calc(var(--u) * 21); top: calc(var(--u) * 24); width: calc(var(--u) * 103); height: calc(var(--u) * 182); display: grid; place-items: center; color: var(--ink); text-decoration: none; }
+    .logo__blob { position: absolute; inset: 0; display: grid; place-items: center; }
+    .logo__d { position: absolute; left: 50%; top: 50%; width: calc(var(--u) * 175); height: calc(var(--u) * 82); transform: translate(-50%, -50%) rotate(-90deg); }
+    .logo__m { display: none; }
+    .logo__text { position: relative; font-family: "Antonio", sans-serif; font-weight: 400; font-size: calc(var(--u) * 40); line-height: 1; writing-mode: vertical-rl; transform: rotate(180deg); }
+    .nav { position: fixed; z-index: 6; left: calc(var(--u) * 160); top: calc(var(--u) * 56); }
+    .nav ul, .menu ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: calc(var(--u) * 2); }
+    .nav__link { display: flex; align-items: center; gap: calc(var(--u) * 8); font-family: "Antonio", sans-serif; font-weight: 600; font-size: calc(var(--u) * 20); color: var(--ink); text-decoration: none; white-space: nowrap; transition: color .2s; }
+    .nav__link:hover, .nav__link:focus-visible { color: var(--orange-deep); }
+    .nav__link--active { font-size: calc(var(--u) * 25); color: var(--orange-deep); margin-bottom: calc(var(--u) * 2); }
+    .nav__link--active::before, .menu__link--active::before { content: ""; flex: none; width: calc(var(--u) * 15); height: calc(var(--u) * 15); background: url(assets/nav-dot.svg) center / 100% 100% no-repeat; }
+    .burger, .menu { display: none; }
 
     /* Chapter dots on the right edge: shows where you are, tap to jump */
     .dots { position: fixed; right: 14px; top: 50%; transform: translateY(-50%); z-index: 5; display: grid; gap: 12px; }
@@ -28,23 +36,44 @@
     .dots a.on { background-image: url(assets/nav-dot.svg); }
 
     /* Small labels along the edges, same as the work screen */
-    .edge { position: fixed; z-index: 4; pointer-events: none; font-size: 16px; color: var(--ink); white-space: nowrap; }
+    .edge { position: fixed; z-index: 4; pointer-events: none; font-size: max(14px, calc(var(--u) * 16)); color: var(--ink); white-space: nowrap; }
     .edge--top { top: 24px; left: 280px; right: 64px; display: flex; justify-content: space-between; }
     .edge--bottom { bottom: 22px; left: 24px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; letter-spacing: .02em; color: var(--orange); transition: opacity .3s; }
     .edge--bottom.hide { opacity: 0; }
     .cue-m { display: none; }
     @media (max-width: 700px) {
-      .edge--top { top: 56px; left: 24px; right: 44px; font-size: 13px; }
+      :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); }
+      .logo { left: calc(var(--u) * 24); top: calc(var(--u) * 14); width: calc(var(--u) * 112); height: calc(var(--u) * 53); }
+      .logo__d { display: none; } .logo__m { display: block; width: calc(var(--u) * 112); height: calc(var(--u) * 53); object-fit: fill; }
+      .logo__blob { place-items: stretch; }
+      .logo__text { writing-mode: horizontal-tb; transform: none; font-size: calc(var(--u) * 24); }
+      .nav { display: none; }
+      .burger { display: block; position: fixed; z-index: 40; right: calc(var(--u) * 14); top: calc(var(--u) * 18); padding: calc(var(--u) * 10) calc(var(--u) * 6); background: none; border: 0; color: var(--orange); cursor: pointer; -webkit-tap-highlight-color: transparent; outline: none; }
+      .burger svg { display: block; width: calc(var(--u) * 34); height: calc(var(--u) * 19); }
+      .burger #bp-b { transition: opacity .3s, transform .3s; } .burger.is-open #bp-b { opacity: 0; transform: translateY(-5px); }
+      .burger #bp-a { transition: transform .3s; } .burger.is-open #bp-a { transform: translateY(3px); }
+      .menu { display: block; position: fixed; inset: 0; z-index: 30; background: url("assets/noise.png") repeat top left / 720px 512px, url("assets/noise.png") repeat top left / 720px 512px, #fff; opacity: 0; pointer-events: none; transition: opacity .3s; }
+      .menu.is-open { opacity: 1; pointer-events: auto; }
+      .menu__blob { position: absolute; left: calc(50% - var(--u) * 170); top: calc(var(--u) * 166); width: calc(var(--u) * 340); height: calc(var(--u) * 342); transform: scale(.15) rotate(8deg); transform-origin: 90% 0; opacity: 0; transition: transform .3s, opacity .25s; background: url(assets/menu-blob.svg) center / 100% 100% no-repeat; }
+      .menu.is-open .menu__blob { transform: none; opacity: 1; transition: transform .6s cubic-bezier(.34,1.4,.5,1), opacity .25s; }
+      .menu ul { position: absolute; left: calc(50% - var(--u) * 56); top: calc(var(--u) * 268); gap: calc(var(--u) * 5); }
+      .menu__link { display: flex; align-items: center; gap: calc(var(--u) * 8); font-family: "Antonio", sans-serif; font-weight: 600; font-size: calc(var(--u) * 29); color: var(--ink); text-decoration: none; opacity: 0; transform: translateY(calc(var(--u) * 8)); transition: opacity .2s, transform .2s; }
+      .menu.is-open .menu__link { opacity: 1; transform: none; transition: opacity .35s, transform .45s; }
+      .menu__link--active { font-size: calc(var(--u) * 36); color: var(--orange-deep); margin-bottom: calc(var(--u) * 4); }
+      .menu__link--active::before { width: calc(var(--u) * 20); height: calc(var(--u) * 20); }
+      .menu__link:not(.menu__link--active) { filter: blur(calc(var(--u) * 1.4)); color: rgba(35,31,28,.72); }
+      .edge--top { top: calc(var(--u) * 76); left: 24px; right: 24px; font-size: 13px; }
       .edge--top span:nth-child(2) { display: none; }
       .cue-d { display: none; } .cue-m { display: inline; }
       .edge--bottom { font-size: 17px; }
+      :root { --pt: calc(var(--u) * 120); }
     }
 
     /* One chapter = one full screen */
     .chapter {
       min-height: 100dvh; scroll-snap-align: start;
       display: grid; align-content: center; gap: 18px;
-      padding: 84px 44px 48px 24px;
+      padding: var(--pt, 84px) 44px 48px 24px;
       max-width: 1200px; margin: 0 auto;
     }
     /* The chapter title sits on a thin outlined blob, like the logo */
@@ -67,18 +96,34 @@
       .media--multi { grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
       .media--multi .shot { width: 100%; max-height: none; }
     }
+    .media--stack .shot--ph { aspect-ratio: 16 / 7; max-height: 26dvh; width: 100%; }
     .shot--ph { aspect-ratio: 4/3; background: #e6f3ef; display: grid; place-items: center; color: var(--ink); opacity: .7; font-size: 14px; }
 
     @media (min-width: 900px) {
-      .chapter { grid-template-columns: 1fr 1.5fr; align-items: center; gap: 64px; padding: 100px 80px 60px; }
-      .chapter:nth-of-type(even) { grid-template-columns: 1.5fr 1fr; }
+      .chapter { grid-template-columns: 1fr 1.4fr; align-items: start; align-content: center; gap: 48px; padding: 110px 80px 60px 56px; }
+      .chapter:nth-of-type(even) { grid-template-columns: 1.4fr 1fr; }
       .chapter:nth-of-type(even) .media { order: -1; }
       }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   </style>
 </head>
 <body>
-  <a class="back" id="back" href="index.html">&larr; Back to work</a>
+  <a class="logo" id="logo" href="index.html" aria-label="Nardos, home"><span class="logo__blob" aria-hidden="true"><img class="logo__d" src="assets/first-blob.svg" alt=""><img class="logo__m" src="assets/phone-blob.svg" alt=""></span><span class="logo__text">NARDOS</span></a>
+  <nav class="nav" aria-label="Main"><ul>
+    <li><a href="index.html" id="nav-work" class="nav__link nav__link--active" aria-current="page">Work</a></li>
+    <li><a href="#" class="nav__link">About</a></li>
+    <li><a href="#" class="nav__link">Say Hi!</a></li>
+    <li><a href="#" class="nav__link">Resume</a></li>
+  </ul></nav>
+  <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu">
+    <svg viewBox="0 0 32 18" width="34" height="19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path id="bp-a" d="M2 4.5c4-2.2 7 2.2 11 0s7 2.2 11 0 4-1.2 6-.4"/><path id="bp-b" d="M3 14c4-2 6.5 2 10.500 0s7 2 11 0 3.500-1.200 5.500-.3"/></svg>
+  </button>
+  <nav class="menu" id="menu" aria-label="Menu" aria-hidden="true"><div class="menu__blob" aria-hidden="true"></div><ul>
+    <li><a href="index.html" id="menu-work" class="menu__link menu__link--active">Work</a></li>
+    <li><a href="#" class="menu__link">About</a></li>
+    <li><a href="#" class="menu__link">Say Hi!</a></li>
+    <li><a href="#" class="menu__link">Resume</a></li>
+  </ul></nav>
   <div class="edge edge--top"><span>Selected work</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
   <div class="edge edge--bottom" id="cue"><span class="cue-d">Scroll &darr;</span><span class="cue-m">Swipe &darr;</span></div>
   <nav class="dots" id="dots" aria-label="Chapters"></nav>
@@ -99,7 +144,12 @@
           { title: "Agristelle", big: true,
             body: "A booking platform for agriturismi, the working farms in the Italian countryside that rent out a few rooms. I designed the hero of the public site, its type and colour balance, the admin panel and the host panel." },
           { title: "The problem",
-            body: "The old site looked outdated, and the client wanted a modern look. Behind it, the admin panel was Django's default: dense, hard to read, and hard to act on. The host panel was just as cluttered." },
+            body: "The old site looked outdated, and the client wanted a modern look. Behind it, the admin panel was Django's default: dense, hard to read, and hard to act on. The host panel was just as cluttered.",
+            stack: true,
+            images: [
+              { src: null, alt: "The old Agristelle site", caption: "Before: the old public site." },
+              { src: null, alt: "The Django admin panel", caption: "Before: Django's default admin panel." },
+            ] },
           { title: "The public site",
             body: "A visitor comes to look at Italian farm stays, so the first thing they see is one. The hero is a full-width image of an agriturismo, with a search bar and a headline over it. I chose an image over a video because the site has to load fast.",
             images: [{ src: null, alt: "Agristelle hero", caption: "The hero: one farm stay, one search bar." }] },
@@ -123,7 +173,13 @@
     const slug = new URLSearchParams(location.search).get("p");
     const p = PROJECTS[slug] || PROJECTS["agristelle"];
     document.title = p.name + " — Nardos";
-    document.getElementById("back").href = "index.html" + (PROJECTS[slug] ? "?card=" + slug : "");
+    const workHref = "index.html" + (PROJECTS[slug] ? "?card=" + slug : "");
+    ["nav-work", "menu-work"].forEach(id => document.getElementById(id).href = workHref);
+    const menu = document.getElementById("menu"), burger = document.getElementById("burger");
+    const setMenu = (open) => { menu.classList.toggle("is-open", open); burger.classList.toggle("is-open", open); burger.setAttribute("aria-expanded", String(open)); menu.setAttribute("aria-hidden", String(!open)); };
+    burger.addEventListener("click", () => setMenu(!menu.classList.contains("is-open")));
+    menu.addEventListener("click", (e) => { if (e.target.closest("a") || !e.target.closest("ul, .menu__blob")) setMenu(false); });
+    addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
 
     const chapters = p.chapters.map((c, i) => ({ ...c, first: i === 0 }));
     const fig = (im) => `<figure class="fig">${im.src
@@ -141,7 +197,7 @@
           <div class="pill"><img src="assets/chapter-blob.svg" alt="">${c.first ? `<h1>${c.title}</h1>` : `<h2>${c.title}</h2>`}</div>
           <p>${c.body}</p>${facts}
         </div>
-        <div class="media${imgs.length > 1 ? " media--multi" : ""}">${imgs.map(fig).join("")}</div>`;
+        <div class="media${imgs.length > 1 ? (c.stack ? " media--stack" : " media--multi") : ""}">${imgs.map(fig).join("")}</div>`;
       root.appendChild(sec);
       const d = document.createElement("a"); d.href = "#c" + i; d.setAttribute("aria-label", c.title); dots.appendChild(d);
     });
