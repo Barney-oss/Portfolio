@@ -71,6 +71,7 @@
 
     @media (min-width: 900px) {
       .chapter { grid-template-columns: 1fr 1.5fr; align-items: center; gap: 64px; padding: 100px 80px 60px; }
+      .chapter:nth-of-type(even) { grid-template-columns: 1.5fr 1fr; }
       .chapter:nth-of-type(even) .media { order: -1; }
       }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
