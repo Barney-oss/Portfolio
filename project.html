@@ -92,7 +92,12 @@
     .shot { width: auto; max-width: 100%; max-height: 40dvh; object-fit: contain; }
     .media--multi .shot { max-height: 20dvh; }
     @media (min-width: 900px) {
-      .shot { max-height: 56dvh; }
+      .shot { max-height: 68dvh; }
+      .text p { font-size: clamp(18px, calc(var(--u) * 22), 30px); max-width: 44ch; }
+      .pill h1 { font-size: clamp(56px, calc(var(--u) * 104), 140px); }
+      .pill h2 { font-size: clamp(40px, calc(var(--u) * 54), 72px); }
+      .facts { font-size: clamp(14px, calc(var(--u) * 17), 22px); gap: 12px 36px; margin-top: 16px; }
+      .media--stack .shot--ph { max-height: 34dvh; aspect-ratio: 16 / 8; }
       .media--multi { grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
       .media--multi .shot { width: 100%; max-height: none; }
     }
