@@ -29,6 +29,11 @@
     .nav__link--active { font-size: calc(var(--u) * 25); color: var(--orange-deep); margin-bottom: calc(var(--u) * 2); }
     .nav__link--active::before, .menu__link--active::before { content: ""; flex: none; width: calc(var(--u) * 15); height: calc(var(--u) * 15); background: url(assets/nav-dot.svg) center / 100% 100% no-repeat; }
     .burger, .menu { display: none; }
+    .back { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; color: var(--orange-deep); text-decoration: none; }
+    .back:hover, .back:focus-visible { color: var(--orange); }
+    .back svg { display: block; flex: none; }
+    .back span { display: block; padding-top: 1px; }
+    @media (min-width: 701px) { .logo, .nav { display: none; } }
 
     /* Chapter dots on the right edge: shows where you are, tap to jump */
     .dots { position: fixed; right: 14px; top: 50%; transform: translateY(-50%); z-index: 5; display: grid; gap: 12px; }
@@ -37,10 +42,11 @@
 
     /* Small labels along the edges, same as the work screen */
     .edge { position: fixed; z-index: 4; pointer-events: none; font-size: max(14px, calc(var(--u) * 16)); color: var(--ink); white-space: nowrap; }
-    .edge--top { top: 24px; left: 280px; right: 64px; display: flex; justify-content: space-between; }
-    .edge--bottom { bottom: 22px; left: 24px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; letter-spacing: .02em; color: var(--orange); transition: opacity .3s; }
+    .edge--top { top: 30px; left: 56px; right: 64px; display: flex; justify-content: space-between; align-items: center; }
+    .edge--bottom { bottom: 26px; left: 56px; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); transition: opacity .3s; }
+    .edge--bottom span { display: block; padding-top: 1px; } .edge--bottom svg { display: block; flex: none; }
     .edge--bottom.hide { opacity: 0; }
-    .cue-m { display: none; }
+    .edge--bottom .cue-m { display: none; }
     @media (max-width: 700px) {
       :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); }
       .logo { left: calc(var(--u) * 24); top: calc(var(--u) * 14); width: calc(var(--u) * 112); height: calc(var(--u) * 53); }
@@ -63,9 +69,9 @@
       .menu__link--active::before { width: calc(var(--u) * 20); height: calc(var(--u) * 20); }
       .menu__link:not(.menu__link--active) { filter: blur(calc(var(--u) * 1.4)); color: rgba(35,31,28,.72); }
       .edge--top { top: calc(var(--u) * 76); left: 24px; right: 24px; font-size: 13px; }
-      .edge--top span:nth-child(2) { display: none; }
-      .cue-d { display: none; } .cue-m { display: inline; }
-      .edge--bottom { font-size: 17px; }
+      .edge--top .back, .edge--top span:nth-child(3) { display: none; } .edge--top { justify-content: space-between; }
+      .edge--bottom .cue-d { display: none; } .edge--bottom .cue-m { display: block; }
+      .edge--bottom { font-size: 17px; left: 24px; }
       :root { --pt: calc(var(--u) * 120); }
     }
 
@@ -93,11 +99,16 @@
     .media--multi .shot { max-height: 20dvh; }
     @media (min-width: 900px) {
       .shot { max-height: 68dvh; }
-      .text p { font-size: clamp(18px, calc(var(--u) * 22), 30px); max-width: 44ch; }
+      .text p { font-size: 18px; max-width: 62ch; }
       .pill h1 { font-size: clamp(56px, calc(var(--u) * 104), 140px); }
       .pill h2 { font-size: clamp(40px, calc(var(--u) * 54), 72px); }
-      .facts { font-size: clamp(14px, calc(var(--u) * 17), 22px); gap: 12px 36px; margin-top: 16px; }
-      .media--stack .shot--ph { max-height: 34dvh; aspect-ratio: 16 / 8; }
+      .facts { gap: 12px 36px; margin-top: 16px; }
+      .media--overlap { display: block; position: relative; padding-bottom: 18%; }
+    .media--overlap .fig:first-child { width: 78%; position: relative; z-index: 1; margin: 0; }
+    .media--overlap .fig:last-child { width: 70%; margin: -14% 0 0 auto; position: relative; z-index: 2; }
+    .media--overlap .shot { width: 100%; max-height: none; }
+    .media--overlap .fig:last-child .shot { box-shadow: 0 18px 40px rgba(35,31,28,.28); }
+    .media--stack .shot--ph { max-height: 34dvh; aspect-ratio: 16 / 8; }
       .media--multi { grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
       .media--multi .shot { width: 100%; max-height: none; }
     }
@@ -105,8 +116,8 @@
     .shot--ph { aspect-ratio: 4/3; background: #e6f3ef; display: grid; place-items: center; color: var(--ink); opacity: .7; font-size: 14px; }
 
     @media (min-width: 900px) {
-      .chapter { grid-template-columns: 1fr 1.4fr; align-items: start; align-content: center; gap: 48px; padding: 110px 80px 60px 56px; }
-      .chapter:nth-of-type(even) { grid-template-columns: 1.4fr 1fr; }
+      .chapter { grid-template-columns: 1.3fr 1fr; align-items: start; align-content: center; gap: 48px; padding: 110px 80px 60px 56px; }
+      .chapter:nth-of-type(even) { grid-template-columns: 1fr 1.3fr; }
       .chapter:nth-of-type(even) .media { order: -1; }
       }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
@@ -129,8 +140,8 @@
     <li><a href="#" class="menu__link">Say Hi!</a></li>
     <li><a href="#" class="menu__link">Resume</a></li>
   </ul></nav>
-  <div class="edge edge--top"><span>Selected work</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
-  <div class="edge edge--bottom" id="cue"><span class="cue-d">Scroll &darr;</span><span class="cue-m">Swipe &darr;</span></div>
+  <div class="edge edge--top"><a class="back" id="back" href="index.html"><svg viewBox="0 0 22 14" width="22" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 7H2M8 1.5 2 7l6 5.5"/></svg><span>Back to work</span></a><span>Selected work</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
+  <div class="edge edge--bottom" id="cue"><span class="cue-d">Scroll</span><span class="cue-m">Swipe</span><svg viewBox="0 0 14 22" width="14" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 1v19M1.500 14 7 20l5.500-6"/></svg></div>
   <nav class="dots" id="dots" aria-label="Chapters"></nav>
   <main id="chapters"></main>
 
@@ -156,8 +167,13 @@
               { src: null, alt: "The Django admin panel", caption: "Before: Django's default admin panel." },
             ] },
           { title: "The public site",
-            body: "A visitor comes to look at Italian farm stays, so the first thing they see is one. The hero is a full-width image of an agriturismo, with a search bar and a headline over it. I chose an image over a video because the site has to load fast.",
-            images: [{ src: null, alt: "Agristelle hero", caption: "The hero: one farm stay, one search bar." }] },
+            body: ["A visitor comes to look at Italian farm stays, so the first thing they see is one. The hero is a full-width image of an agriturismo, with a search bar and a headline over it. I chose an image over a video because the site has to load fast.",
+                   "I also chose the typeface and the balance of colour, based on the brand's own colours. The rest of the public site was designed by the second designer on the team."],
+            overlap: true,
+            images: [
+              { src: null, alt: "Agristelle hero", caption: "" },
+              { src: null, alt: "Agristelle public site", caption: "The hero: one farm stay, one search bar." },
+            ] },
           { title: "The admin panel",
             body: "Most of the data was hidden behind tables, with no icons, no colour and no sign of progress. I grouped the information and put the team's main jobs first: approving hosts, listed properties and disputes. The three newest hosts waiting for approval now stand out in urgent colours, big numbers and icons.",
             images: [
@@ -179,7 +195,7 @@
     const p = PROJECTS[slug] || PROJECTS["agristelle"];
     document.title = p.name + " — Nardos";
     const workHref = "index.html" + (PROJECTS[slug] ? "?card=" + slug : "");
-    ["nav-work", "menu-work"].forEach(id => document.getElementById(id).href = workHref);
+    ["back", "nav-work", "menu-work"].forEach(id => document.getElementById(id).href = workHref);
     const menu = document.getElementById("menu"), burger = document.getElementById("burger");
     const setMenu = (open) => { menu.classList.toggle("is-open", open); burger.classList.toggle("is-open", open); burger.setAttribute("aria-expanded", String(open)); menu.setAttribute("aria-hidden", String(!open)); };
     burger.addEventListener("click", () => setMenu(!menu.classList.contains("is-open")));
@@ -200,9 +216,9 @@
       sec.innerHTML = `
         <div class="text">
           <div class="pill"><img src="assets/chapter-blob.svg" alt="">${c.first ? `<h1>${c.title}</h1>` : `<h2>${c.title}</h2>`}</div>
-          <p>${c.body}</p>${facts}
+          ${[].concat(c.body).map(t => `<p>${t}</p>`).join("")}${facts}
         </div>
-        <div class="media${imgs.length > 1 ? (c.stack ? " media--stack" : " media--multi") : ""}">${imgs.map(fig).join("")}</div>`;
+        <div class="media${imgs.length > 1 ? (c.stack ? " media--stack" : c.overlap ? " media--overlap" : " media--multi") : ""}">${imgs.map(fig).join("")}</div>`;
       root.appendChild(sec);
       const d = document.createElement("a"); d.href = "#c" + i; d.setAttribute("aria-label", c.title); dots.appendChild(d);
     });
