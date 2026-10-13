@@ -64,6 +64,14 @@
       .facts b { font-size: max(18px, calc(var(--u) * 18)); }
       .shot, .shot--ph { max-height: 70dvh; }
     }
+    /* A chapter with no image: the text is centred and wider */
+    .chapter--text .chapter__in { max-width: 920px; margin: auto; justify-items: center; text-align: center; }
+    .chapter--text .pill { justify-self: center; }
+    .chapter--text .text { display: grid; justify-items: center; }
+    @media (min-width: 900px) {
+      .chapter--text .chapter__in, .chapter--text:nth-of-type(even) .chapter__in { grid-template-columns: 1fr; }
+      .chapter--text .text p { font-size: max(22px, calc(var(--u) * 24)); max-width: 46ch; }
+    }
     /* Phone */
     @media (max-width: 700px) {
       :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 78px; }
@@ -121,7 +129,7 @@
           { title: "What's next",
             body: ["The site isn't live yet; some backend work remains.",
                    "The host panel on mobile still needs a design of its own, and time and budget didn't allow it. That's the first thing I'd do with more time."],
-            images: [{ src: null, alt: "Host panel on mobile", caption: "" }] },
+            images: [] },
         ],
       },
       "genier": { name: "Genier", role: "Product designer", forWho: "Genier", type: "Placeholder", chapters: SOON },
@@ -148,12 +156,13 @@
       sec.className = "chapter"; sec.id = "c" + i;
       const facts = c.first ? `<div class="facts"><div><b>Role</b>${p.role}</div>${p.timeline ? `<div><b>Timeline</b>${p.timeline}</div>` : ""}${p.team ? `<div><b>Team</b>${p.team}</div>` : ""}<div><b>Type</b>${p.type}</div></div>` : "";
       const imgs = c.images || [{ src: null }];
+      if (!imgs.length) sec.classList.add("chapter--text");
       sec.innerHTML = `<div class="chapter__in">
         <div class="text">
           <div class="pill"><img src="assets/chapter-blob.svg" alt="">${c.first ? `<h1>${c.title}</h1>` : `<h2>${c.title}</h2>`}</div>
           ${[].concat(c.body).map(t => `<p>${t}</p>`).join("")}${facts}
         </div>
-        <div class="media">${imgs.map(fig).join("")}</div></div>`;
+        ${imgs.length ? `<div class="media">${imgs.map(fig).join("")}</div>` : ""}</div>`;
       root.appendChild(sec);
       const d = document.createElement("a"); d.href = "#c" + i; d.setAttribute("aria-label", c.title); d.addEventListener("click", (e) => { e.preventDefault(); goTo(i); }); dots.appendChild(d);
     });
