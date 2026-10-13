@@ -57,10 +57,20 @@
     .facts { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 8px; font-size: 14px; }
     .facts b { display: block; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--orange-deep); }
     .shot { width: 100%; max-width: 560px; border-radius: 12px; box-shadow: 0 14px 34px rgba(35,31,28,.2); display: block; }
+    .fig { margin: 0 0 14px; }
+    .fig figcaption { margin-top: 8px; font-size: 13px; opacity: .75; max-width: 56ch; }
+    .media { display: grid; gap: 4px; }
+    .shot { width: auto; max-width: 100%; max-height: 40dvh; object-fit: contain; }
+    .media--multi .shot { max-height: 20dvh; }
+    @media (min-width: 900px) {
+      .shot { max-height: 56dvh; }
+      .media--multi { grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+      .media--multi .shot { max-height: 54dvh; }
+    }
     .shot--ph { aspect-ratio: 4/3; background: #e6f3ef; display: grid; place-items: center; color: var(--ink); opacity: .7; font-size: 14px; }
 
     @media (min-width: 900px) {
-      .chapter { grid-template-columns: 1fr 1.15fr; align-items: center; gap: 64px; padding: 100px 80px 60px; }
+      .chapter { grid-template-columns: 1fr 1.5fr; align-items: center; gap: 64px; padding: 100px 80px 60px; }
       .chapter:nth-of-type(even) .media { order: -1; }
       }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
@@ -74,46 +84,65 @@
   <main id="chapters"></main>
 
   <script>
-    /* Edit the text and images for each project here. Same shape for every project. */
+    /* Edit the text and images for each project here.
+       Every project lists its own chapters: title, text, optional images (with captions). */
     const LOREM = "Placeholder text. Replace with the real story for this chapter: a few short sentences, not a wall of text.";
+    const SOON = [
+      { title: "Overview" }, { title: "The problem" }, { title: "The process" }, { title: "The result" },
+    ].map(c => ({ ...c, body: LOREM }));
     const PROJECTS = {
       "agristelle": {
-        name: "Agristelle", role: "Product designer", forWho: "Agristelle farm stays", type: "Admin panel · Desktop", blob: "assets/front-blob",
-        shots: ["assets/agristelle-dashboard-01.png", "assets/agristelle-dashboard-02.png"],
-        alts: ["Agristelle admin panel: property owner detail", "Agristelle admin panel: experiences and community overview"],
+        name: "Agristelle", role: "Product designer", forWho: "Agristelle farm stays", type: "Booking platform · Web",
+        timeline: "3 months", team: "2 designers, 5 others",
+        chapters: [
+          { title: "Agristelle", big: true,
+            body: "A booking platform for agriturismi, the working farms in the Italian countryside that rent out a few rooms. I designed the hero of the public site, its type and colour balance, the admin panel and the host panel." },
+          { title: "The problem",
+            body: "The old site looked outdated, and the client wanted a modern look. Behind it, the admin panel was Django's default: dense, hard to read, and hard to act on. The host panel was just as cluttered." },
+          { title: "The public site",
+            body: "A visitor comes to look at Italian farm stays, so the first thing they see is one. The hero is a full-width image of an agriturismo, with a search bar and a headline over it. I chose an image over a video because the site has to load fast.",
+            images: [{ src: null, alt: "Agristelle hero", caption: "The hero: one farm stay, one search bar." }] },
+          { title: "The admin panel",
+            body: "Most of the data was hidden behind tables, with no icons, no colour and no sign of progress. I grouped the information and put the team's main jobs first: approving hosts, listed properties and disputes. The three newest hosts waiting for approval now stand out in urgent colours, big numbers and icons.",
+            images: [
+              { src: "assets/agristelle-dashboard-01.png", alt: "Agristelle admin panel: property owner detail", caption: "Grouped information instead of one long page." },
+              { src: "assets/agristelle-dashboard-02.png", alt: "Agristelle admin panel: experiences and community overview", caption: "Key numbers first, with icons and colour." },
+            ] },
+          { title: "The host panel",
+            body: "Hosts use it to list and manage their properties, answer booking requests and keep their calendar up to date. For hosts with several properties, it is one place to see them all.",
+            images: [{ src: null, alt: "Agristelle host panel", caption: "All of a host's properties in one place." }] },
+          { title: "What's next",
+            body: "The site isn't live yet; some backend work remains. The host panel on mobile still needs a design of its own, and time and budget didn't allow it. That's the first thing I'd do with more time." },
+        ],
       },
-      "genier": { name: "Genier", role: "Product designer", forWho: "Genier", type: "Placeholder", blob: "assets/blob-2", shots: [], alts: [] },
-      "liq-academy": { name: "LIQ Academy", role: "Product designer", forWho: "LIQ Academy", type: "Placeholder", blob: "assets/blob-3", shots: [], alts: [] },
-      "amharic-academy": { name: "Amharic Academy", role: "Product designer", forWho: "Amharic Academy", type: "Placeholder", blob: "assets/blob-4", shots: [], alts: [] },
+      "genier": { name: "Genier", role: "Product designer", forWho: "Genier", type: "Placeholder", chapters: SOON },
+      "liq-academy": { name: "LIQ Academy", role: "Product designer", forWho: "LIQ Academy", type: "Placeholder", chapters: SOON },
+      "amharic-academy": { name: "Amharic Academy", role: "Product designer", forWho: "Amharic Academy", type: "Placeholder", chapters: SOON },
     };
     const slug = new URLSearchParams(location.search).get("p");
     const p = PROJECTS[slug] || PROJECTS["agristelle"];
     document.title = p.name + " — Nardos";
     document.getElementById("back").href = "index.html" + (PROJECTS[slug] ? "?card=" + slug : "");
 
-    const chapters = [
-      { label: "Overview", title: p.name, body: LOREM, facts: true, shot: 0 },
-      { label: "The problem", title: "The problem", body: LOREM, shot: null },
-      { label: "The process", title: "The process", body: LOREM, shot: null },
-      { label: "The result", title: "The result", body: LOREM, shot: 1 },
-    ];
-    const img = (i) => p.shots[i]
-      ? `<img class="shot" src="${p.shots[i]}" alt="${p.alts[i]}">`
-      : `<div class="shot shot--ph">Screenshot goes here</div>`;
+    const chapters = p.chapters.map((c, i) => ({ ...c, first: i === 0 }));
+    const fig = (im) => `<figure class="fig">${im.src
+      ? `<img class="shot" src="${im.src}" alt="${im.alt || ""}">`
+      : `<div class="shot shot--ph">Screenshot goes here</div>`}${im.caption ? `<figcaption>${im.caption}</figcaption>` : ""}</figure>`;
     const root = document.getElementById("chapters");
     const dots = document.getElementById("dots");
     chapters.forEach((c, i) => {
       const sec = document.createElement("section");
       sec.className = "chapter"; sec.id = "c" + i;
+      const facts = c.first ? `<div class="facts"><div><b>Role</b>${p.role}</div>${p.timeline ? `<div><b>Timeline</b>${p.timeline}</div>` : ""}${p.team ? `<div><b>Team</b>${p.team}</div>` : ""}<div><b>Type</b>${p.type}</div></div>` : "";
+      const imgs = c.images || (c.first ? [{ src: p.cover || null }] : [{ src: null }]);
       sec.innerHTML = `
         <div class="text">
-          <div class="pill"><img src="assets/chapter-blob.svg" alt="">${i === 0 ? `<h1>${c.title}</h1>` : `<h2>${c.title}</h2>`}</div>
-          <p>${c.body}</p>
-          ${c.facts ? `<div class="facts"><div><b>Role</b>${p.role}</div><div><b>Designed for</b>${p.forWho}</div><div><b>Type</b>${p.type}</div></div>` : ""}
+          <div class="pill"><img src="assets/chapter-blob.svg" alt="">${c.first ? `<h1>${c.title}</h1>` : `<h2>${c.title}</h2>`}</div>
+          <p>${c.body}</p>${facts}
         </div>
-        <div class="media">${img(c.shot === null ? 99 : c.shot)}</div>`;
+        <div class="media${imgs.length > 1 ? " media--multi" : ""}">${imgs.map(fig).join("")}</div>`;
       root.appendChild(sec);
-      const d = document.createElement("a"); d.href = "#c" + i; d.setAttribute("aria-label", c.label); dots.appendChild(d);
+      const d = document.createElement("a"); d.href = "#c" + i; d.setAttribute("aria-label", c.title); dots.appendChild(d);
     });
     const timeEl = document.getElementById("local-time");
     const tick = () => { timeEl.textContent = "Addis Ababa, " + new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Africa/Addis_Ababa" }).format(new Date()); };
