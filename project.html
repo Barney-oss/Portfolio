@@ -134,7 +134,11 @@
     document.getElementById("back").href = "index.html" + (PROJECTS[slug] ? "?card=" + slug : "");
 
     const chapters = p.chapters.map((c, i) => ({ ...c, first: i === 0 }));
-    const fig = (im) => `<figure class="fig">${im.src
+    /* An image can also carry a short silent video: { video: "assets/clip.mp4", src: "assets/still.png" }.
+       src is the still shown until the video loads, and the only thing shown if the visitor prefers reduced motion. */
+    const fig = (im) => `<figure class="fig">${im.video
+      ? `<video class="shot" data-video="${im.video}" ${im.src ? `poster="${im.src}"` : ""} muted loop playsinline preload="none" aria-label="${im.alt || ""}"></video>`
+      : im.src
       ? `<img class="shot" src="${im.src}" alt="${im.alt || ""}">`
       : `<div class="shot shot--ph">Screenshot goes here</div>`}${im.caption ? `<figcaption>${im.caption}</figcaption>` : ""}</figure>`;
     const root = document.getElementById("chapters");
@@ -160,12 +164,26 @@
        if a chapter is taller than the window it scrolls inside itself first. */
     const secs = [...document.querySelectorAll(".chapter")];
     let cur = -1, busy = false, rel;
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* Videos load and play only while their chapter is on screen, and pause when it leaves. */
+    function playVideos(active) {
+      secs.forEach((el, k) => el.querySelectorAll("video").forEach((v) => {
+        if (k !== active) { v.pause(); return; }
+        if (still) return;
+        if (!v.src) {
+          v.addEventListener("error", () => { if (!v.poster) v.replaceWith(Object.assign(document.createElement("div"), { className: "shot shot--ph", textContent: "Screenshot goes here" })); }, { once: true });
+          v.src = v.dataset.video;
+        }
+        v.play().catch(() => {});
+      }));
+    }
     function show(i) {
       cur = i;
       secs.forEach((el, k) => el.classList.toggle("is-active", k === i));
       [...dots.children].forEach((d, k) => d.classList.toggle("on", k === i));
       document.getElementById("cue").classList.toggle("hide", i === secs.length - 1);
       secs[i].scrollTop = 0;
+      playVideos(i);
       try { history.replaceState(null, "", "#c" + i); } catch (e) {}
     }
     function goTo(i) {
