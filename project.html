@@ -6,140 +6,81 @@
   <title>Case study — Nardos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600&family=Lato:wght@300;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root { --ink:#231F1C; --orange:#EA5B0C; --orange-deep:#D64A1C; --cream:#F7E6D6; }
+    :root { --ink:#231F1C; --orange:#EA5B0C; --orange-deep:#D64A1C; --u: min(calc(100vw / 1440), calc(100dvh / 1080)); --pt: 84px; }
     * { box-sizing: border-box; }
-    html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
-    body {
-      margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif; font-weight: 400;
-      background: #fff url("assets/noise.png") repeat top left / 720px 512px;
-    }
-    :root { --u: min(calc(100vw / 1440), calc(100dvh / 1080)); }
-    /* Logo and navigation, same as the work screen */
-    .logo { position: fixed; z-index: 6; left: calc(var(--u) * 21); top: calc(var(--u) * 24); width: calc(var(--u) * 103); height: calc(var(--u) * 182); display: grid; place-items: center; color: var(--ink); text-decoration: none; }
-    .logo__blob { position: absolute; inset: 0; display: grid; place-items: center; }
-    .logo__d { position: absolute; left: 50%; top: 50%; width: calc(var(--u) * 175); height: calc(var(--u) * 82); transform: translate(-50%, -50%) rotate(-90deg); }
-    .logo__m { display: none; }
-    .logo__text { position: relative; font-family: "Antonio", sans-serif; font-weight: 400; font-size: calc(var(--u) * 40); line-height: 1; writing-mode: vertical-rl; transform: rotate(180deg); }
-    .nav { position: fixed; z-index: 6; left: calc(var(--u) * 160); top: calc(var(--u) * 56); }
-    .nav ul, .menu ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: calc(var(--u) * 2); }
-    .nav__link { display: flex; align-items: center; gap: calc(var(--u) * 8); font-family: "Antonio", sans-serif; font-weight: 600; font-size: calc(var(--u) * 20); color: var(--ink); text-decoration: none; white-space: nowrap; transition: color .2s; }
-    .nav__link:hover, .nav__link:focus-visible { color: var(--orange-deep); }
-    .nav__link--active { font-size: calc(var(--u) * 25); color: var(--orange-deep); margin-bottom: calc(var(--u) * 2); }
-    .nav__link--active::before, .menu__link--active::before { content: ""; flex: none; width: calc(var(--u) * 15); height: calc(var(--u) * 15); background: url(assets/nav-dot.svg) center / 100% 100% no-repeat; }
-    .burger, .menu { display: none; }
+    html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif; font-weight: 400; background: #fff url("assets/noise.png") repeat top left / 720px 512px; }
+
+    /* Small labels along the top and bottom edges, same as the work screen */
+    .edge { position: fixed; z-index: 4; pointer-events: none; font-size: max(14px, calc(var(--u) * 16)); color: var(--ink); white-space: nowrap; }
+    .edge--top { top: 30px; left: 56px; right: 64px; display: flex; justify-content: space-between; align-items: center; }
     .back { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; color: var(--orange-deep); text-decoration: none; }
     .back:hover, .back:focus-visible { color: var(--orange); }
-    .back svg { display: block; flex: none; }
-    .back span { display: block; padding-top: 1px; }
-    @media (min-width: 701px) { .logo, .nav { display: none; } }
+    .back svg, .edge--bottom svg { display: block; flex: none; }
+    .back span, .edge--bottom span { display: block; padding-top: 1px; }
+    .edge--bottom { bottom: 26px; left: 56px; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); transition: opacity .3s; }
+    .edge--bottom.hide { opacity: 0; }
+    .edge--bottom .cue-m { display: none; }
 
-    /* Chapter dots on the right edge: shows where you are, tap to jump */
+    /* Chapter dots on the right edge: where you are, tap to jump */
     .dots { position: fixed; right: 14px; top: 50%; transform: translateY(-50%); z-index: 5; display: grid; gap: 12px; }
     .dots a { width: 15px; height: 15px; background: url(assets/nav-dot-empty.svg) center / 100% 100% no-repeat; }
     .dots a.on { background-image: url(assets/nav-dot.svg); }
 
-    /* Small labels along the edges, same as the work screen */
-    .edge { position: fixed; z-index: 4; pointer-events: none; font-size: max(14px, calc(var(--u) * 16)); color: var(--ink); white-space: nowrap; }
-    .edge--top { top: 30px; left: 56px; right: 64px; display: flex; justify-content: space-between; align-items: center; }
-    .edge--bottom { bottom: 26px; left: 56px; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); transition: opacity .3s; }
-    .edge--bottom span { display: block; padding-top: 1px; } .edge--bottom svg { display: block; flex: none; }
-    .edge--bottom.hide { opacity: 0; }
-    .edge--bottom .cue-m { display: none; }
-    @media (max-width: 700px) {
-      :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); }
-      .logo { left: calc(var(--u) * 24); top: calc(var(--u) * 14); width: calc(var(--u) * 112); height: calc(var(--u) * 53); }
-      .logo__d { display: none; } .logo__m { display: block; width: calc(var(--u) * 112); height: calc(var(--u) * 53); object-fit: fill; }
-      .logo__blob { place-items: stretch; }
-      .logo__text { writing-mode: horizontal-tb; transform: none; font-size: calc(var(--u) * 24); }
-      .nav { display: none; }
-      .burger { display: block; position: fixed; z-index: 40; right: calc(var(--u) * 14); top: calc(var(--u) * 18); padding: calc(var(--u) * 10) calc(var(--u) * 6); background: none; border: 0; color: var(--orange); cursor: pointer; -webkit-tap-highlight-color: transparent; outline: none; }
-      .burger svg { display: block; width: calc(var(--u) * 34); height: calc(var(--u) * 19); }
-      .burger #bp-b { transition: opacity .3s, transform .3s; } .burger.is-open #bp-b { opacity: 0; transform: translateY(-5px); }
-      .burger #bp-a { transition: transform .3s; } .burger.is-open #bp-a { transform: translateY(3px); }
-      .menu { display: block; position: fixed; inset: 0; z-index: 30; background: url("assets/noise.png") repeat top left / 720px 512px, url("assets/noise.png") repeat top left / 720px 512px, #fff; opacity: 0; pointer-events: none; transition: opacity .3s; }
-      .menu.is-open { opacity: 1; pointer-events: auto; }
-      .menu__blob { position: absolute; left: calc(50% - var(--u) * 170); top: calc(var(--u) * 166); width: calc(var(--u) * 340); height: calc(var(--u) * 342); transform: scale(.15) rotate(8deg); transform-origin: 90% 0; opacity: 0; transition: transform .3s, opacity .25s; background: url(assets/menu-blob.svg) center / 100% 100% no-repeat; }
-      .menu.is-open .menu__blob { transform: none; opacity: 1; transition: transform .6s cubic-bezier(.34,1.4,.5,1), opacity .25s; }
-      .menu ul { position: absolute; left: calc(50% - var(--u) * 56); top: calc(var(--u) * 268); gap: calc(var(--u) * 5); }
-      .menu__link { display: flex; align-items: center; gap: calc(var(--u) * 8); font-family: "Antonio", sans-serif; font-weight: 600; font-size: calc(var(--u) * 29); color: var(--ink); text-decoration: none; opacity: 0; transform: translateY(calc(var(--u) * 8)); transition: opacity .2s, transform .2s; }
-      .menu.is-open .menu__link { opacity: 1; transform: none; transition: opacity .35s, transform .45s; }
-      .menu__link--active { font-size: calc(var(--u) * 36); color: var(--orange-deep); margin-bottom: calc(var(--u) * 4); }
-      .menu__link--active::before { width: calc(var(--u) * 20); height: calc(var(--u) * 20); }
-      .menu__link:not(.menu__link--active) { filter: blur(calc(var(--u) * 1.4)); color: rgba(35,31,28,.72); }
-      .edge--top { top: calc(var(--u) * 76); left: 24px; right: 24px; font-size: 13px; }
-      .edge--top .back, .edge--top span:nth-child(3) { display: none; } .edge--top { justify-content: space-between; }
-      .edge--bottom .cue-d { display: none; } .edge--bottom .cue-m { display: block; }
-      .edge--bottom { font-size: 17px; left: 24px; }
-      :root { --pt: calc(var(--u) * 120); }
-    }
-
-    /* One chapter = one full screen */
-    .chapter {
-      min-height: 100dvh; scroll-snap-align: start;
-      display: grid; align-content: center; gap: 18px;
-      padding: var(--pt, 84px) 44px 48px 24px;
-      max-width: 1200px; margin: 0 auto;
-    }
-    /* The chapter title sits on a thin outlined blob, like the logo */
+    /* One chapter = one screen (phone layout first) */
+    .chapter { min-height: 100dvh; scroll-snap-align: start; display: grid; align-content: center; gap: 18px; padding: var(--pt) 44px 56px 24px; }
     .pill { position: relative; display: inline-grid; place-items: center; margin: 0 0 6px; padding: .6em 1.7em .5em; justify-self: start; }
     .pill img { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .pill h1, .pill h2 { position: relative; margin: 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1; color: var(--ink); }
+    .pill h1, .pill h2 { position: relative; margin: 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1; color: var(--ink); white-space: nowrap; }
     .pill h1 { font-size: clamp(40px, 9vw, 84px); }
-    .pill h2 { font-size: clamp(28px, 4vw, 40px); white-space: nowrap; }
-    .text p { margin: 0 0 14px; font-size: 18px; line-height: 1.55; max-width: 46ch; }
-    .facts { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 8px; font-size: 14px; }
+    .pill h2 { font-size: clamp(28px, 7vw, 40px); }
+    .text p { margin: 0 0 14px; font-size: 18px; line-height: 1.55; max-width: 62ch; }
+    .facts { display: flex; flex-wrap: wrap; gap: 10px 32px; margin-top: 14px; font-size: 15px; }
     .facts b { display: block; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--orange-deep); }
-    .shot { width: 100%; max-width: 560px; border-radius: 12px; box-shadow: 0 14px 34px rgba(35,31,28,.2); display: block; }
-    .fig { margin: 0 0 14px; }
-    .fig figcaption { margin-top: 8px; font-size: 13px; opacity: .75; max-width: 56ch; }
-    .media { display: grid; gap: 4px; }
-    .shot { width: auto; max-width: 100%; max-height: 40dvh; object-fit: contain; }
-    .media--multi .shot { max-height: 20dvh; }
-    @media (min-width: 900px) {
-      .shot { max-height: 68dvh; }
-      .text p { font-size: 18px; max-width: 62ch; }
-      .pill h1 { font-size: clamp(56px, calc(var(--u) * 104), 140px); }
-      .pill h2 { font-size: clamp(40px, calc(var(--u) * 54), 72px); }
-      .facts { gap: 12px 36px; margin-top: 16px; }
-      .media--overlap { display: block; position: relative; padding-bottom: 18%; }
-    .media--overlap .fig:first-child { width: 78%; position: relative; z-index: 1; margin: 0; }
-    .media--overlap .fig:last-child { width: 70%; margin: -14% 0 0 auto; position: relative; z-index: 2; }
-    .media--overlap .shot { width: 100%; max-height: none; }
-    .media--overlap .fig:last-child .shot { box-shadow: 0 18px 40px rgba(35,31,28,.28); }
-    .media--stack .shot--ph { max-height: 34dvh; aspect-ratio: 16 / 8; }
-      .media--multi { grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
-      .media--multi .shot { width: 100%; max-height: none; }
-    }
-    .media--stack .shot--ph { aspect-ratio: 16 / 7; max-height: 26dvh; width: 100%; }
-    .shot--ph { aspect-ratio: 4/3; background: #e6f3ef; display: grid; place-items: center; color: var(--ink); opacity: .7; font-size: 14px; }
 
+    .media { display: grid; align-content: start; }
+    .fig { margin: 0; }
+    .fig figcaption { margin-top: 8px; font-size: 13px; opacity: .8; max-width: 56ch; }
+    .shot { display: block; width: auto; max-width: 100%; max-height: 34dvh; border-radius: 12px; box-shadow: 0 14px 34px rgba(35,31,28,.2); }
+    .shot--ph { width: 100%; aspect-ratio: 4 / 3; max-height: 34dvh; background: #e6f3ef; display: grid; place-items: center; font-size: 14px; opacity: .8; }
+    /* Two images, the second overlapping the first */
+    .media--overlap { padding-bottom: 6px; }
+    .media--overlap .fig:first-child { width: 80%; }
+    .media--overlap .fig:first-child .shot { max-height: 22dvh; }
+    .media--overlap .fig:last-child { width: 68%; justify-self: end; margin-top: -14%; position: relative; z-index: 2; }
+    .media--overlap .fig:last-child .shot { max-height: 24dvh; box-shadow: 0 18px 40px rgba(35,31,28,.28); margin-left: auto; }
+
+    /* Desktop: text on one side (wider), images on the other, filling the window */
     @media (min-width: 900px) {
-      .chapter { grid-template-columns: 1.3fr 1fr; align-items: start; align-content: center; gap: 48px; padding: 110px 80px 60px 56px; }
-      .chapter:nth-of-type(even) { grid-template-columns: 1fr 1.3fr; }
+      :root { --pt: 110px; }
+      .chapter { grid-template-columns: 1.15fr 1fr; align-items: start; gap: 56px; padding: 110px 80px 70px 56px; }
+      .chapter:nth-of-type(even) { grid-template-columns: 1fr 1.15fr; }
       .chapter:nth-of-type(even) .media { order: -1; }
-      }
+      .pill h1 { font-size: clamp(56px, calc(var(--u) * 104), 150px); }
+      .pill h2 { font-size: clamp(40px, calc(var(--u) * 54), 80px); }
+      .text p { font-size: max(18px, calc(var(--u) * 18)); }
+      .facts { font-size: max(15px, calc(var(--u) * 16)); }
+      .shot, .shot--ph { max-height: 62dvh; }
+      .media--overlap .fig:first-child { width: 76%; }
+      .media--overlap .fig:first-child .shot { max-height: 36dvh; }
+      .media--overlap .fig:last-child { width: 64%; margin-top: -12%; }
+      .media--overlap .fig:last-child .shot { max-height: 40dvh; }
+    }
+    /* Phone */
+    @media (max-width: 700px) {
+      :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 84px; }
+      .edge--top { top: 22px; left: 24px; right: 24px; font-size: 12px; }
+      .back { font-size: 18px; }
+      .edge--top span:nth-child(3) { display: none; }
+      .edge--bottom { left: 24px; font-size: 17px; }
+      .edge--bottom .cue-d { display: none; } .edge--bottom .cue-m { display: block; }
+    }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   </style>
 </head>
 <body>
-  <a class="logo" id="logo" href="index.html" aria-label="Nardos, home"><span class="logo__blob" aria-hidden="true"><img class="logo__d" src="assets/first-blob.svg" alt=""><img class="logo__m" src="assets/phone-blob.svg" alt=""></span><span class="logo__text">NARDOS</span></a>
-  <nav class="nav" aria-label="Main"><ul>
-    <li><a href="index.html" id="nav-work" class="nav__link nav__link--active" aria-current="page">Work</a></li>
-    <li><a href="#" class="nav__link">About</a></li>
-    <li><a href="#" class="nav__link">Say Hi!</a></li>
-    <li><a href="#" class="nav__link">Resume</a></li>
-  </ul></nav>
-  <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu">
-    <svg viewBox="0 0 32 18" width="34" height="19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path id="bp-a" d="M2 4.5c4-2.2 7 2.2 11 0s7 2.2 11 0 4-1.2 6-.4"/><path id="bp-b" d="M3 14c4-2 6.5 2 10.500 0s7 2 11 0 3.500-1.200 5.500-.3"/></svg>
-  </button>
-  <nav class="menu" id="menu" aria-label="Menu" aria-hidden="true"><div class="menu__blob" aria-hidden="true"></div><ul>
-    <li><a href="index.html" id="menu-work" class="menu__link menu__link--active">Work</a></li>
-    <li><a href="#" class="menu__link">About</a></li>
-    <li><a href="#" class="menu__link">Say Hi!</a></li>
-    <li><a href="#" class="menu__link">Resume</a></li>
-  </ul></nav>
   <div class="edge edge--top"><a class="back" id="back" href="index.html"><svg viewBox="0 0 22 14" width="22" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 7H2M8 1.5 2 7l6 5.5"/></svg><span>Back to work</span></a><span>Selected work</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
   <div class="edge edge--bottom" id="cue"><span class="cue-d">Scroll</span><span class="cue-m">Swipe</span><svg viewBox="0 0 14 22" width="14" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 1v19M1.500 14 7 20l5.500-6"/></svg></div>
   <nav class="dots" id="dots" aria-label="Chapters"></nav>
@@ -147,24 +88,26 @@
 
   <script>
     /* Edit the text and images for each project here.
-       Every project lists its own chapters: title, text, optional images (with captions). */
+       Every project lists its own chapters: a title, one or two paragraphs, and images with captions.
+       overlap: true puts two images on top of each other. */
     const LOREM = "Placeholder text. Replace with the real story for this chapter: a few short sentences, not a wall of text.";
-    const SOON = [
-      { title: "Overview" }, { title: "The problem" }, { title: "The process" }, { title: "The result" },
-    ].map(c => ({ ...c, body: LOREM }));
+    const SOON = ["Overview", "The problem", "The process", "The result"].map(t => ({ title: t, body: [LOREM, LOREM], images: [{ src: null }] }));
     const PROJECTS = {
       "agristelle": {
         name: "Agristelle", role: "Product designer", forWho: "Agristelle farm stays", type: "Booking platform · Web",
         timeline: "3 months", team: "2 designers, 5 others",
         chapters: [
           { title: "Agristelle", big: true,
-            body: "A booking platform for agriturismi, the working farms in the Italian countryside that rent out a few rooms. I designed the hero of the public site, its type and colour balance, the admin panel and the host panel." },
+            body: ["A booking platform for agriturismi, the working farms in the Italian countryside that rent out a few rooms. I designed the hero of the public site, its type and colour balance, the admin panel and the host panel.",
+                   "It was a three-month project in a team of seven: two designers, a backend developer, a front-end developer, a project manager, a QA tester and a tech lead. My feedback came from the other designer and the tech lead."],
+            images: [{ src: null, alt: "Agristelle", caption: "" }] },
           { title: "The problem",
-            body: "The old site looked outdated, and the client wanted a modern look. Behind it, the admin panel was Django's default: dense, hard to read, and hard to act on. The host panel was just as cluttered.",
-            stack: true,
+            body: ["The old site looked outdated, and the client wanted a modern look. Behind it, the admin panel was Django's default: dense, hard to read, and hard to act on. The host panel was just as cluttered.",
+                   "The Django admin panel turned out to be the heaviest part of the project: close to two of the three months went into it."],
+            overlap: true,
             images: [
-              { src: null, alt: "The old Agristelle site", caption: "Before: the old public site." },
-              { src: null, alt: "The Django admin panel", caption: "Before: Django's default admin panel." },
+              { src: null, alt: "The old Agristelle site", caption: "" },
+              { src: null, alt: "The Django admin panel", caption: "Before: the old site, and Django's default admin panel." },
             ] },
           { title: "The public site",
             body: ["A visitor comes to look at Italian farm stays, so the first thing they see is one. The hero is a full-width image of an agriturismo, with a search bar and a headline over it. I chose an image over a video because the site has to load fast.",
@@ -175,16 +118,21 @@
               { src: null, alt: "Agristelle public site", caption: "The hero: one farm stay, one search bar." },
             ] },
           { title: "The admin panel",
-            body: "Most of the data was hidden behind tables, with no icons, no colour and no sign of progress. I grouped the information and put the team's main jobs first: approving hosts, listed properties and disputes. The three newest hosts waiting for approval now stand out in urgent colours, big numbers and icons.",
+            body: ["Most of the data was hidden behind tables. The front was dense, with no icons or colour and no clear sign of progress where data was entered. Everything sat on one scrollable page, with nothing to show where one group of data ended and the next began.",
+                   "I grouped the information and put the team's main jobs first: approving hosts, listed properties and disputes. The three newest hosts waiting for approval now stand out, in urgent colours, big numbers and icons."],
+            overlap: true,
             images: [
-              { src: "assets/agristelle-dashboard-01.png", alt: "Agristelle admin panel: property owner detail", caption: "Grouped information instead of one long page." },
-              { src: "assets/agristelle-dashboard-02.png", alt: "Agristelle admin panel: experiences and community overview", caption: "Key numbers first, with icons and colour." },
+              { src: "assets/agristelle-dashboard-01.png", alt: "Agristelle admin panel: property owner detail", caption: "" },
+              { src: "assets/agristelle-dashboard-02.png", alt: "Agristelle admin panel: experiences and community overview", caption: "Grouped information, with the key numbers first." },
             ] },
           { title: "The host panel",
-            body: "Hosts use it to list and manage their properties, answer booking requests and keep their calendar up to date. For hosts with several properties, it is one place to see them all.",
+            body: ["Hosts use it to list and manage their properties, answer booking requests and keep their calendar up to date, which shows when each farm is available.",
+                   "For hosts with several properties it is one place to see them all. It was cluttered too, so I organised it the same way as the admin panel. The panel and the hero took close to a month together."],
             images: [{ src: null, alt: "Agristelle host panel", caption: "All of a host's properties in one place." }] },
           { title: "What's next",
-            body: "The site isn't live yet; some backend work remains. The host panel on mobile still needs a design of its own, and time and budget didn't allow it. That's the first thing I'd do with more time." },
+            body: ["The site isn't live yet; some backend work remains.",
+                   "The host panel on mobile still needs a design of its own, and time and budget didn't allow it. That's the first thing I'd do with more time."],
+            images: [{ src: null, alt: "Host panel on mobile", caption: "" }] },
         ],
       },
       "genier": { name: "Genier", role: "Product designer", forWho: "Genier", type: "Placeholder", chapters: SOON },
@@ -194,13 +142,7 @@
     const slug = new URLSearchParams(location.search).get("p");
     const p = PROJECTS[slug] || PROJECTS["agristelle"];
     document.title = p.name + " — Nardos";
-    const workHref = "index.html" + (PROJECTS[slug] ? "?card=" + slug : "");
-    ["back", "nav-work", "menu-work"].forEach(id => document.getElementById(id).href = workHref);
-    const menu = document.getElementById("menu"), burger = document.getElementById("burger");
-    const setMenu = (open) => { menu.classList.toggle("is-open", open); burger.classList.toggle("is-open", open); burger.setAttribute("aria-expanded", String(open)); menu.setAttribute("aria-hidden", String(!open)); };
-    burger.addEventListener("click", () => setMenu(!menu.classList.contains("is-open")));
-    menu.addEventListener("click", (e) => { if (e.target.closest("a") || !e.target.closest("ul, .menu__blob")) setMenu(false); });
-    addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
+    document.getElementById("back").href = "index.html" + (PROJECTS[slug] ? "?card=" + slug : "");
 
     const chapters = p.chapters.map((c, i) => ({ ...c, first: i === 0 }));
     const fig = (im) => `<figure class="fig">${im.src
@@ -212,13 +154,13 @@
       const sec = document.createElement("section");
       sec.className = "chapter"; sec.id = "c" + i;
       const facts = c.first ? `<div class="facts"><div><b>Role</b>${p.role}</div>${p.timeline ? `<div><b>Timeline</b>${p.timeline}</div>` : ""}${p.team ? `<div><b>Team</b>${p.team}</div>` : ""}<div><b>Type</b>${p.type}</div></div>` : "";
-      const imgs = c.images || (c.first ? [{ src: p.cover || null }] : [{ src: null }]);
+      const imgs = c.images || [{ src: null }];
       sec.innerHTML = `
         <div class="text">
           <div class="pill"><img src="assets/chapter-blob.svg" alt="">${c.first ? `<h1>${c.title}</h1>` : `<h2>${c.title}</h2>`}</div>
           ${[].concat(c.body).map(t => `<p>${t}</p>`).join("")}${facts}
         </div>
-        <div class="media${imgs.length > 1 ? (c.stack ? " media--stack" : c.overlap ? " media--overlap" : " media--multi") : ""}">${imgs.map(fig).join("")}</div>`;
+        <div class="media${c.overlap && imgs.length > 1 ? " media--overlap" : ""}">${imgs.map(fig).join("")}</div>`;
       root.appendChild(sec);
       const d = document.createElement("a"); d.href = "#c" + i; d.setAttribute("aria-label", c.title); dots.appendChild(d);
     });
