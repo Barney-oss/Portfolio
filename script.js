@@ -29,9 +29,9 @@ const PROJECTS = [
   {
     slug: "genier",
     title: "Genier",
-    designedFor: "Genier (placeholder)",
+    designedFor: "Genier",
     role: "Product designer",
-    type: "Placeholder text for the second project. Replace this with the real project type.",
+    type: "A machinery inspection app, redesigned. A new look, animated icons, two themes, and two screens it never had.",
     side: "assets/right-blob.svg", tint: "0deg", ph: "#e6f3ef", blob: "assets/blob-2.svg",
   },
   {
