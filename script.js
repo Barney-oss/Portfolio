@@ -8,12 +8,18 @@ const PROJECTS = [
     title: "Agristelle",
     designedFor: "Agristelle farm stays",
     role: "Product designer",
-    type: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus dui augue, ac volutpat elit eleifend quis. Phasellus non erat a augue",
+    type: "Booking platform for Italian farm stays. The public site, the admin panel and the host panel.",
     side: "assets/right-blob.svg", tint: "60deg", blob: "assets/front-blob.svg",
-    shots: {
-      back:  { src: "assets/agristelle-dashboard-02.png", alt: "Agristelle admin panel: experiences and community overview" },
-      front: { src: "assets/agristelle-dashboard-01.png", alt: "Agristelle admin panel: property owner detail" },
-    },
+    cover: { src: "assets/web-agristelle-overview.webp", alt: "Agristelle: the public site, the admin panel and the host panel" },
+  },
+  {
+    slug: "amharic-academy",
+    title: "Amharic Academy",
+    designedFor: "Amharic Academy",
+    role: "Product designer",
+    type: "A learning app for the Amharic script and language, built for the diaspora. Live on the Play Store.",
+    side: "assets/left-blob.svg", tint: "0deg", blob: "assets/blob-4.svg",
+    cover: { src: "assets/web-amharic-overview.webp", alt: "Amharic Academy: the alphabet hub, the home screen and the pattern lab" },
   },
   {
     slug: "genier",
@@ -30,14 +36,6 @@ const PROJECTS = [
     role: "Product designer",
     type: "Placeholder text for the third project. Replace this with the real project type.",
     side: "assets/left-blob.svg", tint: "150deg", ph: "#e8eef7", blob: "assets/blob-3.svg",
-  },
-  {
-    slug: "amharic-academy",
-    title: "Amharic Academy",
-    designedFor: "Amharic Academy (placeholder)",
-    role: "Product designer",
-    type: "Placeholder text for the fourth project. Replace this with the real project type.",
-    side: "assets/left-blob.svg", tint: "0deg", ph: "#f7ece4", blob: "assets/blob-4.svg",
   },
 ];
 
@@ -73,6 +71,8 @@ const MOBILE_SHOTS = {
   back:  { x: 63,    y: 49,   w: 186.2, h: 214 },
   front: { x: 146.6, y: 98.8, w: 178.9, h: 146.6 },
 };
+const DESKTOP_COVER = { x: 112, y: 116, w: 550, h: 420 };
+const MOBILE_COVER = { x: 54, y: 56, w: 280, h: 215 };
 const DESKTOP_SHOTS = {
   back:  { x: 125, y: 103, w: 371, h: 426 },
   front: { x: 294, y: 202, w: 355, h: 291 },
@@ -80,6 +80,7 @@ const DESKTOP_SHOTS = {
 const MOBILE_SIDE = { "assets/right-blob.svg": "assets/m-side-teal.svg", "assets/left-blob.svg": "assets/m-side-dark.svg" };
 const slots = isPhone ? MOBILE_SLOTS : SLOTS;
 const shotBox = isPhone ? MOBILE_SHOTS : DESKTOP_SHOTS;
+const coverBox = isPhone ? MOBILE_COVER : DESKTOP_COVER;
 const box = (b) => `--x:${b.x}; --y:${b.y}; --w:${b.w};` + (b.h ? ` --h:${b.h};` : "");
 
 const stage = document.querySelector(".stage");
@@ -106,7 +107,9 @@ const cardEls = PROJECTS.map((p, i) => {
   a.innerHTML = `
     <div class="card__front">
       <div class="card__blob" aria-hidden="true"><img class="card__blob-fill" src="${p.blob.replace('.svg', '-fill.svg')}" alt=""><img class="card__blob-line" src="${p.blob.replace('.svg', '-line.svg')}" alt=""></div>
-      ${p.shots ? `
+      ${p.cover ? `
+        <img class="card__shot card__shot--cover layer" style="${box(coverBox)}" src="${p.cover.src}" alt="${p.cover.alt}">`
+      : p.shots ? `
         <img class="card__shot card__shot--back layer" style="${box(shotBox.back)}" src="${p.shots.back.src}" alt="${p.shots.back.alt}">
         <img class="card__shot card__shot--front layer" style="${box(shotBox.front)}" src="${p.shots.front.src}" alt="${p.shots.front.alt}">`
       : `

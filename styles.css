@@ -117,6 +117,7 @@ p, dl, dd { margin: 0; }
 .card:not([data-slot="0"]) .card__blob-line { opacity: 0; }       /* the orange outline belongs to the card in focus only */
 
 .card__shot { object-fit: cover; box-shadow: 0 calc(var(--u) * 4) calc(var(--u) * 40) rgba(6, 95, 70, 0.2); }
+.card__shot--cover { object-fit: contain; box-shadow: none; border-radius: 0; }
 .card__shot--back { border-radius: calc(var(--u) * 12); }
 .card__shot--front { border-radius: calc(var(--u) * 27); }
 
