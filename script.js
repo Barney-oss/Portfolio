@@ -83,9 +83,9 @@ phone.addEventListener("change", () => location.reload());
 
 const MOBILE_SLOTS = {
   0: { x: 13.6, y: 275.5, w: 388.5, h: 326.5 },
-  1: { x: -36.8, y: 236, w: 293, h: 272 },      /* upper left, bleeding off the edge */
+  1: { x: -36.8, y: 280, w: 293, h: 272 },      /* upper left, bleeding off the edge */
   2: { x: 60, y: 330, w: 290, h: 250 },
-  3: { x: 174.1, y: 377, w: 289, h: 251 },      /* lower right, bleeding off the edge */
+  3: { x: 174.1, y: 359, w: 289, h: 251 },      /* lower right, bleeding off the edge */
 };
 const MOBILE_SHOTS = {
   back:  { x: 63,    y: 49,   w: 186.2, h: 214 },
