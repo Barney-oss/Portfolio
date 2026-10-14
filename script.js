@@ -217,13 +217,14 @@ let introBusy = false;
    blends its Antonio outline into the BBH Sans Bartle one (flubber), and back again when the cursor leaves.
    The h1 keeps aria-label="Nardos", so screen readers still read the name. */
 const INK = [35, 31, 28], ORANGE = [234, 91, 12];
+const LOCKED_LETTER = 2;                               /* the R of NARDOS: always drawn in BBH Sans Bartle */
 const MORPH_MS = 280;                                  /* how long one letter takes to change */
 const easeIO = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const mix = (a, b, t) => a + (b - a) * t;
 let letters = [];                                      /* one state object per letter, filled in once the outlines load */
 let wordSvg = null, wordK = 0.275, wordRunning = false, wordLast = 0;
 
-function setHot(s, on) { s.target = on ? 1 : 0; runWord(); }
+function setHot(s, on) { if (s.locked) return; s.target = on ? 1 : 0; runWord(); }
 function heat(on) { if (!on) letters.forEach((s) => setHot(s, false)); }
 
 function buildWord(data) {
@@ -236,7 +237,8 @@ function buildWord(data) {
   };
   const rings = (g) => g.rings.map((d) => ({ d, a: sizeOf(d) })).sort((p, q) => q.a - p.a).map((r) => r.d);
   const defs = el("defs"), body = el("g"), hits = el("g");
-  letters = [..."NARDOS"].map((ch) => {
+  letters = [..."NARDOS"].map((ch, i) => {
+    const locked = i === LOCKED_LETTER;                 /* this one stays in BBH Sans Bartle */
     const A = data.antonio[ch], B = data.bartle[ch];
     const from = rings(A), to = rings(B);
     /* at rest the exact outline is drawn; only in between is the shape blended */
@@ -254,9 +256,11 @@ function buildWord(data) {
     body.appendChild(path);
     const hit = el("rect", { y: -1008, height: 1000, fill: "transparent" });
     hits.appendChild(hit);
-    const s = { path, blur, fid, hit, morphs, advA: A.adv, advB: B.adv, p: 0, target: 0 };
-    hit.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") setHot(s, true); });
-    hit.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") setHot(s, false); });
+    const s = { path, blur, fid, hit, morphs, advA: A.adv, advB: B.adv, p: locked ? 1 : 0, target: locked ? 1 : 0, locked };
+    if (!locked) {
+      hit.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") setHot(s, true); });
+      hit.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") setHot(s, false); });
+    }
     return s;
   });
   const totalA = letters.reduce((t, s) => t + s.advA, 0);
