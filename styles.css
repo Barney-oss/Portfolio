@@ -423,9 +423,9 @@ p, dl, dd { margin: 0; }
     transform-origin: 90% 0%; transform: scale(.15) rotate(8deg); opacity: 0;
     transition: transform .3s ease, opacity .25s ease;
   }
-  .menu__blob::before {                 /* cream shape with the scribbled orange outline; it breathes like the entry blob */
+  .menu__blob::before {                 /* the scribbled orange outline on its own; it breathes like the entry blob */
     content: ""; position: absolute; inset: 0;
-    background: url(assets/menu-blob.svg) center / 100% 100% no-repeat;
+    background: url(assets/menu-blob-line.svg) center / 100% 100% no-repeat;
     animation: pulse 4.5s ease-in-out infinite; animation-play-state: paused;
   }
   .menu.is-open .menu__blob::before { animation-play-state: running; }
@@ -446,9 +446,9 @@ p, dl, dd { margin: 0; }
   .menu.is-open li:nth-child(3) .menu__link { transition-delay: .30s; }
   .menu.is-open li:nth-child(4) .menu__link { transition-delay: .36s; }
   .menu__link--active { font-size: calc(var(--u) * 36); color: var(--orange-deep); margin-bottom: calc(var(--u) * 4); }
-  /* The pages you are not on sit slightly out of focus; touching one brings it into focus. */
-  .menu__link:not(.menu__link--active) { filter: blur(calc(var(--u) * 1.4)); color: rgba(35, 31, 28, .72); transition: filter .25s ease, color .25s ease, opacity .35s ease, transform .45s cubic-bezier(.2, .8, .3, 1); }
-  .menu__link:not(.menu__link--active):active { filter: none; color: var(--ink); }
+  /* The pages you are not on sit a little lighter; touching one brings it to full ink. */
+  .menu__link:not(.menu__link--active) { color: rgba(35, 31, 28, .72); transition: color .25s ease, opacity .35s ease, transform .45s cubic-bezier(.2, .8, .3, 1); }
+  .menu__link:not(.menu__link--active):active { color: var(--ink); }
   .menu__link--active::before {
     content: ""; flex: none; width: calc(var(--u) * 20); height: calc(var(--u) * 20);
     background: url(assets/nav-dot.svg) center / 100% 100% no-repeat;
