@@ -40,7 +40,7 @@
     .pill h1, .pill h2 { position: relative; margin: 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1; color: var(--ink); white-space: nowrap; }
     .pill h1 { font-size: clamp(40px, 9vw, 84px); }
     .pill h2 { font-size: clamp(28px, 7vw, 40px); }
-    .text p { margin: 0 0 12px; font-size: 16px; line-height: 1.5; max-width: 62ch; }
+    .text p { margin: 0 0 12px; font-size: 16px; line-height: 1.5; max-width: 62ch; text-wrap: pretty; }
     .facts { display: flex; flex-wrap: wrap; gap: 14px 32px; margin-top: 18px; font-size: 16px; }
     .facts b { display: block; margin-bottom: 6px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; color: var(--orange-deep); }
 
@@ -66,12 +66,12 @@
       .shot, .shot--ph { max-height: 70dvh; }
     }
     /* A chapter with no image: the text is centred and wider */
-    .chapter--text .chapter__in { max-width: 920px; margin: auto; justify-items: center; text-align: center; }
+    .chapter--text .chapter__in { max-width: 1060px; margin: auto; justify-items: center; text-align: center; }
     .chapter--text .pill { justify-self: center; }
     .chapter--text .text { display: grid; justify-items: center; }
     @media (min-width: 900px) {
       .chapter--text .chapter__in, .chapter--text:nth-of-type(even) .chapter__in { grid-template-columns: 1fr; }
-      .chapter--text .text p { font-size: max(22px, calc(var(--u) * 24)); max-width: 46ch; }
+      .chapter--text .text p { font-size: max(22px, calc(var(--u) * 24)); max-width: 60ch; }
     }
     /* Phone */
     @media (max-width: 700px) {
