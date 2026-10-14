@@ -32,9 +32,9 @@ const PROJECTS = [
   {
     slug: "liq-academy",
     title: "LIQ Academy",
-    designedFor: "LIQ Academy (placeholder)",
+    designedFor: "LIQ Academy",
     role: "Product designer",
-    type: "Placeholder text for the third project. Replace this with the real project type.",
+    type: "A study platform for Ethiopian students preparing for the university entrance exam. Lessons and past exams.",
     side: "assets/left-blob.svg", tint: "150deg", ph: "#e8eef7", blob: "assets/blob-3.svg",
   },
 ];
