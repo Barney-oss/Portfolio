@@ -32,7 +32,13 @@ const PROJECTS = [
     designedFor: "Genier",
     role: "Product designer",
     type: "A machinery inspection app, redesigned. A new look, a light theme for working in daylight, and two screens it never had.",
-    side: "assets/right-blob.svg", tint: "0deg", ph: "#e6f3ef", blob: "assets/blob-2.svg",
+    side: "assets/right-blob.svg", tint: "0deg", blob: "assets/blob-2.svg",
+    cover: { src: "assets/web-genier-overview.webp", alt: "Genier: the home screen and an inspection step" },
+    screens: [
+      { src: "assets/card-genier-1.webp", alt: "The home screen" },
+      { src: "assets/card-genier-2.webp", alt: "An inspection step" },
+      { src: "assets/card-genier-3.webp", alt: "Choosing a machine" },
+    ],
   },
   {
     slug: "liq-academy",
