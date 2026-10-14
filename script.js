@@ -36,7 +36,7 @@ const PROJECTS = [
     role: "Product designer",
     type: "A study platform for Ethiopian students preparing for the university entrance exam. Lessons and past exams.",
     side: "assets/left-blob.svg", tint: "150deg", blob: "assets/blob-3.svg",
-    cover: { src: "assets/web-liq-overview.webp", alt: "LIQ Academy: a lesson, the exam cards and a question" },
+    cover: { src: "assets/web-liq-overview.webp?v=2", alt: "LIQ Academy: a lesson, the exam cards and a question" },
   },
 ];
 
