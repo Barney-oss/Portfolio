@@ -19,7 +19,7 @@ const PROJECTS = [
     role: "Product designer",
     type: "A learning app for the Amharic script and language, built for the diaspora. Live on the Play Store.",
     side: "assets/left-blob.svg", tint: "0deg", blob: "assets/blob-4.svg",
-    cover: { src: "assets/web-amharic-overview.webp", alt: "Amharic Academy: the alphabet hub, the home screen and the pattern lab" },
+    cover: { src: "assets/web-amharic-overview.webp?v=2", alt: "Amharic Academy: the alphabet hub, the home screen and the pattern lab" },
   },
   {
     slug: "genier",
