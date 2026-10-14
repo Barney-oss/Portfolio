@@ -20,6 +20,11 @@ const PROJECTS = [
     type: "A learning app for the Amharic script and language, built for the diaspora. Live on the Play Store.",
     side: "assets/left-blob.svg", tint: "0deg", blob: "assets/blob-4.svg",
     cover: { src: "assets/web-amharic-overview.webp?v=2", alt: "Amharic Academy: the alphabet hub, the home screen and the pattern lab" },
+    screens: [
+      { src: "assets/card-amharic-1.webp", alt: "The alphabet hub" },
+      { src: "assets/card-amharic-2.webp", alt: "The learning path" },
+      { src: "assets/card-amharic-3.webp", alt: "The pattern lab" },
+    ],
   },
   {
     slug: "genier",
@@ -37,6 +42,11 @@ const PROJECTS = [
     type: "A study platform for Ethiopian students preparing for the university entrance exam. Lessons and past exams.",
     side: "assets/left-blob.svg", tint: "150deg", blob: "assets/blob-3.svg",
     cover: { src: "assets/web-liq-overview.webp?v=2", alt: "LIQ Academy: a lesson, the exam cards and a question" },
+    screens: [
+      { src: "assets/card-liq-1.webp", alt: "A lesson playing" },
+      { src: "assets/card-liq-2.webp", alt: "Exams by year" },
+      { src: "assets/card-liq-3.webp", alt: "A question and its explanation" },
+    ],
   },
 ];
 
@@ -73,6 +83,17 @@ const MOBILE_SHOTS = {
   front: { x: 146.6, y: 98.8, w: 178.9, h: 146.6 },
 };
 const DESKTOP_COVER = { x: 112, y: 116, w: 550, h: 420 };
+/* Three screens side by side inside the card, in card design pixels. */
+const DESKTOP_SCREENS = [
+  { x: 101, y: 82, w: 253, h: 487 },
+  { x: 261, y: 82, w: 253, h: 487 },
+  { x: 421, y: 82, w: 253, h: 487 },
+];
+const MOBILE_SCREENS = [
+  { x: 51,  y: 41, w: 127, h: 245 },
+  { x: 131, y: 41, w: 127, h: 245 },
+  { x: 211, y: 41, w: 127, h: 245 },
+];
 const MOBILE_COVER = { x: 54, y: 56, w: 280, h: 215 };
 const DESKTOP_SHOTS = {
   back:  { x: 125, y: 103, w: 371, h: 426 },
@@ -82,6 +103,7 @@ const MOBILE_SIDE = { "assets/right-blob.svg": "assets/m-side-teal.svg", "assets
 const slots = isPhone ? MOBILE_SLOTS : SLOTS;
 const shotBox = isPhone ? MOBILE_SHOTS : DESKTOP_SHOTS;
 const coverBox = isPhone ? MOBILE_COVER : DESKTOP_COVER;
+const screenBoxes = isPhone ? MOBILE_SCREENS : DESKTOP_SCREENS;
 const box = (b) => `--x:${b.x}; --y:${b.y}; --w:${b.w};` + (b.h ? ` --h:${b.h};` : "");
 
 const stage = document.querySelector(".stage");
@@ -108,7 +130,9 @@ const cardEls = PROJECTS.map((p, i) => {
   a.innerHTML = `
     <div class="card__front">
       <div class="card__blob" aria-hidden="true"><img class="card__blob-fill" src="${p.blob.replace('.svg', '-fill.svg')}" alt=""><img class="card__blob-line" src="${p.blob.replace('.svg', '-line.svg')}" alt=""></div>
-      ${p.cover ? `
+      ${p.screens ? p.screens.map((sc, n) => `
+        <img class="card__screen layer" style="${box(screenBoxes[n])} --i:${n}" src="${sc.src}" alt="${sc.alt}">`).join("")
+      : p.cover ? `
         <img class="card__shot card__shot--cover layer" style="${box(coverBox)}" src="${p.cover.src}" alt="${p.cover.alt}">`
       : p.shots ? `
         <img class="card__shot card__shot--back layer" style="${box(shotBox.back)}" src="${p.shots.back.src}" alt="${p.shots.back.alt}">
