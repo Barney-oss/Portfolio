@@ -31,7 +31,7 @@ const PROJECTS = [
     title: "Genier",
     designedFor: "Genier",
     role: "Product designer",
-    type: "A machinery inspection app, redesigned. A new look, animated icons, two themes, and two screens it never had.",
+    type: "A machinery inspection app, redesigned. A new look, a light theme for working in daylight, and two screens it never had.",
     side: "assets/right-blob.svg", tint: "0deg", ph: "#e6f3ef", blob: "assets/blob-2.svg",
   },
   {
