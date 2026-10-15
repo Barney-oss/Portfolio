@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Say hi · Nardos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#231F1C; --orange:#EA5B0C; --orange-deep:#D64A1C; --u: min(calc(100vw / 1440), calc(100dvh / 1080)); }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+    body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif; font-weight: 400;
+           background: #fff url("assets/noise.png") repeat top left / 720px 512px; }
+
+    /* Small labels along the top edge, same as the work screen */
+    .edge { position: fixed; z-index: 4; pointer-events: none; font-size: max(14px, calc(var(--u) * 16)); color: var(--ink); white-space: nowrap; }
+    .edge--top { top: 30px; left: 56px; right: 64px; display: flex; justify-content: space-between; align-items: center; }
+    .back { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; color: var(--orange-deep); text-decoration: none; }
+    .back:hover, .back:focus-visible { color: var(--orange); }
+    .back svg { display: block; flex: none; }
+    .back span { display: block; padding-top: 1px; }
+
+    /* One screen: the picture on one side, a few lines on the other. Nothing scrolls. */
+    main { height: 100dvh; display: grid; place-items: center; padding: 110px 56px 56px; }
+    .in { width: 100%; max-width: 760px; text-align: center; justify-items: center; display: grid; }
+
+    .pill { position: relative; display: inline-grid; place-items: center; margin: 0 0 22px; padding: .6em 1.7em .5em; }
+    .pill img { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .pill h1 { position: relative; margin: 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1;
+               color: var(--ink); white-space: nowrap; font-size: clamp(40px, calc(var(--u) * 64), 92px); }
+
+    p { margin: 0 0 14px; font-size: max(17px, calc(var(--u) * 18)); line-height: 1.55; max-width: 44ch; }
+    p:last-of-type { margin-bottom: 0; }
+    .say { margin-top: 26px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: max(18px, calc(var(--u) * 20));
+           color: var(--orange-deep); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .say:hover, .say:focus-visible { color: var(--orange); }
+
+    .mail { display: inline-block; margin: 34px 0 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1;
+            font-size: clamp(28px, calc(var(--u) * 54), 76px); color: var(--ink); text-decoration: none;
+            border-bottom: 3px solid var(--orange); padding-bottom: .08em; transition: color .2s; }
+    .mail:hover, .mail:focus-visible { color: var(--orange-deep); }
+    .elsewhere { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 34px; margin-top: 38px;
+                 font-family: "Antonio", sans-serif; font-weight: 600; font-size: max(17px, calc(var(--u) * 19));
+                 letter-spacing: .04em; text-transform: uppercase; }
+    .elsewhere a { color: var(--orange-deep); text-decoration: none; }
+    .elsewhere a:hover, .elsewhere a:focus-visible { color: var(--orange); }
+    .facts { display: flex; flex-wrap: wrap; gap: 18px 40px; margin-top: 40px; font-size: max(16px, calc(var(--u) * 17)); }
+    .facts b { display: block; margin-bottom: 6px; font-family: "Antonio", sans-serif; font-weight: 600;
+               font-size: max(17px, calc(var(--u) * 18)); letter-spacing: .06em; text-transform: uppercase; color: var(--orange-deep); }
+
+    .shot { display: block; width: 100%; height: auto; max-height: 68dvh; object-fit: contain; }
+    .shot--ph { aspect-ratio: 4 / 5; background: #e6f3ef; display: grid; place-items: center;
+                border-radius: 12px; font-size: 14px; opacity: .8; }
+
+    @media (max-width: 900px) {
+      :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); }
+      .edge--top { top: 22px; left: 24px; right: 24px; font-size: 12px; }
+      .edge--top span:nth-child(3) { display: none; }
+      .back { font-size: 15px; }
+      main { padding: 74px 24px 26px; align-items: start; }
+      .in { gap: 18px; }
+      .media { order: -1; }
+      .shot { max-height: 24dvh; margin: 0 auto; width: auto; }
+      .shot--ph { width: 46vw; max-height: 24dvh; }
+      .pill { margin-bottom: 14px; }
+      .pill h1 { font-size: clamp(32px, calc(var(--u) * 42), 56px); }
+      p { font-size: 16px; max-width: none; margin-bottom: 10px; }
+      .mail { margin-top: 26px; }
+      .elsewhere { margin-top: 28px; font-size: 16px; gap: 12px 24px; }
+      .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; margin-top: 18px; font-size: 15px; }
+      .facts b { font-size: 15px; margin-bottom: 3px; }
+      .say { margin-top: 18px; font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="edge edge--top"><a class="back" href="index.html"><svg viewBox="0 0 22 14" width="22" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 7H2M8 1.5 2 7l6 5.5"/></svg><span>Back to work</span></a><span>Say hi</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
+
+  <main>
+    <div class="in">
+      <div class="pill"><img src="assets/chapter-blob.svg" alt=""><h1>Say hi</h1></div>
+      <p>A role, a project, or a question about any of the work. Write to me and I will answer.</p>
+      <a class="mail" href="mailto:REPLACE@EXAMPLE.COM">REPLACE@EXAMPLE.COM</a>
+      <nav class="elsewhere" aria-label="Elsewhere">
+        <a href="#">LinkedIn</a>
+      </nav>
+    </div>
+  </main>
+
+  <script>
+    const timeEl = document.getElementById("local-time");
+    const tick = () => { timeEl.textContent = "Addis Ababa, " + new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Africa/Addis_Ababa" }).format(new Date()); };
+    tick(); setInterval(tick, 30000);
+  </script>
+</body>
+</html>
