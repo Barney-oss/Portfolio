@@ -8,206 +8,91 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root { --ink:#231F1C; --orange:#EA5B0C; --orange-deep:#D64A1C; --u: min(calc(100vw / 1440), calc(100dvh / 1080)); --pt: 84px; }
+    :root { --ink:#231F1C; --orange:#EA5B0C; --orange-deep:#D64A1C; --u: min(calc(100vw / 1440), calc(100dvh / 1080)); }
     * { box-sizing: border-box; }
     html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
-    body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif; font-weight: 400; background: #fff url("assets/noise.png") repeat top left / 720px 512px; }
+    body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif; font-weight: 400;
+           background: #fff url("assets/noise.png") repeat top left / 720px 512px; }
 
-    /* Small labels along the top and bottom edges, same as the work screen */
+    /* Small labels along the top edge, same as the work screen */
     .edge { position: fixed; z-index: 4; pointer-events: none; font-size: max(14px, calc(var(--u) * 16)); color: var(--ink); white-space: nowrap; }
     .edge--top { top: 30px; left: 56px; right: 64px; display: flex; justify-content: space-between; align-items: center; }
     .back { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; color: var(--orange-deep); text-decoration: none; }
     .back:hover, .back:focus-visible { color: var(--orange); }
-    .back svg, .edge--bottom svg { display: block; flex: none; }
-    .back span, .edge--bottom span { display: block; padding-top: 1px; }
-    .edge--bottom { bottom: 26px; left: 56px; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); transition: opacity .3s; }
-    .edge--bottom.hide { opacity: 0; }
-    .edge--bottom .cue-m { display: none; }
+    .back svg { display: block; flex: none; }
+    .back span { display: block; padding-top: 1px; }
 
-    /* Chapter dots on the right edge: where you are, tap to jump */
-    .dots { position: fixed; right: 14px; top: 50%; transform: translateY(-50%); z-index: 5; display: grid; gap: 12px; }
-    .dots a { width: 15px; height: 15px; background: url(assets/nav-dot-empty.svg) center / 100% 100% no-repeat; }
-    .dots a.on { background-image: url(assets/nav-dot.svg); }
+    /* One screen: the picture on one side, a few lines on the other. Nothing scrolls. */
+    main { height: 100dvh; display: grid; place-items: center; padding: 110px 56px 56px; }
+    .in { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+          width: 100%; max-width: 1100px; }
 
-    /* One chapter = one whole screen. Only one is ever visible; the page never scrolls between them. */
-    #chapters { position: fixed; inset: 0; }
-    .chapter { position: absolute; inset: 0; display: flex; flex-direction: column; overflow-y: auto; padding: var(--pt) 44px 56px 24px;
-      opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .2s ease, visibility 0s .2s; }
-    .chapter.is-active { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .3s ease .2s, visibility 0s .2s; }
-    .chapter__in { margin: auto 0; display: grid; gap: 18px; width: 100%; }
     .pill { position: relative; display: inline-grid; place-items: center; margin: 0 0 22px; padding: .6em 1.7em .5em; justify-self: start; }
     .pill img { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .pill h1, .pill h2 { position: relative; margin: 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1; color: var(--ink); white-space: nowrap; }
-    .pill h1 { font-size: clamp(40px, 9vw, 84px); }
-    .pill h2 { font-size: clamp(28px, 7vw, 40px); }
-    .text p { margin: 0 0 12px; font-size: 16px; line-height: 1.5; max-width: 62ch; text-wrap: pretty; }
-    .facts { display: flex; flex-wrap: wrap; gap: 14px 32px; margin-top: 18px; font-size: 16px; }
-    .facts b { display: block; margin-bottom: 6px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; color: var(--orange-deep); }
+    .pill h1 { position: relative; margin: 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1;
+               color: var(--ink); white-space: nowrap; font-size: clamp(40px, calc(var(--u) * 64), 92px); }
 
-    .media { display: grid; align-content: start; }
-    .fig { margin: 0; }
-    .fig figcaption { margin-top: 8px; font-size: 13px; opacity: .8; max-width: 56ch; }
-    .shot { display: block; width: auto; max-width: 100%; max-height: 34dvh; border-radius: 12px; box-shadow: 0 14px 34px rgba(35,31,28,.2); }
-    .shot--bare { border-radius: 0; box-shadow: none; }
-    .shot--ph { width: 100%; aspect-ratio: 4 / 3; max-height: 34dvh; background: #e6f3ef; display: grid; place-items: center; font-size: 14px; opacity: .8; }
+    p { margin: 0 0 14px; font-size: max(17px, calc(var(--u) * 18)); line-height: 1.55; max-width: 46ch; }
+    p:last-of-type { margin-bottom: 0; }
+    .say { margin-top: 26px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: max(18px, calc(var(--u) * 20));
+           color: var(--orange-deep); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .say:hover, .say:focus-visible { color: var(--orange); }
 
-    /* Desktop: text on one side (wider), one big image on the other */
-    @media (min-width: 900px) {
-      :root { --pt: 110px; }
-      .chapter { padding: 100px 80px 70px 56px; }
-      .chapter__in { grid-template-columns: 1.15fr 1fr; align-items: start; gap: 56px; }
-      .chapter:nth-of-type(even) .chapter__in { grid-template-columns: 1fr 1.15fr; }
-      .chapter:nth-of-type(even) .media { order: -1; }
-      .pill h1 { font-size: clamp(56px, calc(var(--u) * 104), 150px); }
-      .pill h2 { font-size: clamp(40px, calc(var(--u) * 54), 80px); }
-      .text p { font-size: max(18px, calc(var(--u) * 18)); line-height: 1.55; margin-bottom: 14px; }
-      .facts { font-size: max(17px, calc(var(--u) * 17)); gap: 18px 40px; margin-top: 52px; }
-      .facts b { font-size: max(18px, calc(var(--u) * 18)); }
-      .shot, .shot--ph { max-height: 70dvh; }
-    }
-    /* A chapter with no image: the text is centred and wider */
-    .chapter--text .chapter__in { max-width: 1060px; margin: auto; justify-items: center; text-align: center; }
-    .chapter--text .pill { justify-self: center; }
-    .chapter--text .text { display: grid; justify-items: center; }
-    @media (min-width: 900px) {
-      .chapter--text .chapter__in, .chapter--text:nth-of-type(even) .chapter__in { grid-template-columns: 1fr; }
-      .chapter--text .text p { font-size: max(22px, calc(var(--u) * 24)); max-width: 60ch; }
-    }
-    /* Phone */
-    @media (max-width: 700px) {
-      :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 78px; }
+    .facts { display: flex; flex-wrap: wrap; gap: 18px 40px; margin-top: 40px; font-size: max(16px, calc(var(--u) * 17)); }
+    .facts b { display: block; margin-bottom: 6px; font-family: "Antonio", sans-serif; font-weight: 600;
+               font-size: max(17px, calc(var(--u) * 18)); letter-spacing: .06em; text-transform: uppercase; color: var(--orange-deep); }
+
+    .shot { display: block; width: 100%; height: auto; max-height: 68dvh; object-fit: contain; }
+    .shot--ph { aspect-ratio: 4 / 5; background: #e6f3ef; display: grid; place-items: center;
+                border-radius: 12px; font-size: 14px; opacity: .8; }
+
+    @media (max-width: 900px) {
+      :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); }
       .edge--top { top: 22px; left: 24px; right: 24px; font-size: 12px; }
-      .back { font-size: 18px; }
       .edge--top span:nth-child(3) { display: none; }
-      .edge--bottom { left: 24px; font-size: 17px; }
-      .edge--bottom .cue-d { display: none; } .edge--bottom .cue-m { display: block; }
-      .chapter { padding-bottom: 64px; }
-      .chapter__in { gap: 14px; } .pill { margin-bottom: 14px; }
-      .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; margin-top: 20px; font-size: 15px; }
-      .facts b { font-size: 15px; margin-bottom: 4px; }
-      .shot, .shot--ph { max-height: 30dvh; }
+      .back { font-size: 15px; }
+      main { padding: 74px 24px 26px; align-items: start; }
+      .in { grid-template-columns: 1fr; gap: 18px; }
+      .media { order: -1; }
+      .shot { max-height: 24dvh; margin: 0 auto; width: auto; }
+      .shot--ph { width: 46vw; max-height: 24dvh; }
+      .pill { margin-bottom: 14px; }
+      .pill h1 { font-size: clamp(32px, calc(var(--u) * 42), 56px); }
+      p { font-size: 16px; max-width: none; margin-bottom: 10px; }
+      .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; margin-top: 18px; font-size: 15px; }
+      .facts b { font-size: 15px; margin-bottom: 3px; }
+      .say { margin-top: 18px; font-size: 17px; }
     }
-    @media (prefers-reduced-motion: reduce) { .chapter, .chapter.is-active { transition: none; } }
   </style>
 </head>
 <body>
-  <div class="edge edge--top"><a class="back" id="back" href="index.html"><svg viewBox="0 0 22 14" width="22" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 7H2M8 1.5 2 7l6 5.5"/></svg><span>Back to work</span></a><span>About</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
-  <div class="edge edge--bottom" id="cue"><span class="cue-d">Scroll</span><span class="cue-m">Swipe</span><svg viewBox="0 0 14 22" width="14" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 1v19M1.500 14 7 20l5.500-6"/></svg></div>
-  <nav class="dots" id="dots" aria-label="Chapters"></nav>
-  <main id="chapters"></main>
+  <div class="edge edge--top"><a class="back" href="index.html"><svg viewBox="0 0 22 14" width="22" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 7H2M8 1.5 2 7l6 5.5"/></svg><span>Back to work</span></a><span>About</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
+
+  <main>
+    <div class="in">
+      <div class="text">
+        <div class="pill"><img src="assets/chapter-blob.svg" alt=""><h1>Hi, I&rsquo;m Nardos</h1></div>
+        <p>A product designer in Addis Ababa. I design apps and the structure underneath them, and I have been the only designer on most of what I have made, so I do the thinking as well as the screens.</p>
+        <p>Away from screens I make leather goods by hand.</p>
+        <div class="facts">
+          <div><b>Based</b>Addis Ababa</div>
+          <div><b>Open to</b>Roles and freelance</div>
+          <div><b>Work</b>Remote or in person</div>
+        </div>
+        <a class="say" href="#">Say hi
+          <svg viewBox="0 0 22 14" width="20" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 7h19M14 1.5 20 7l-6 5.5"/></svg>
+        </a>
+      </div>
+      <div class="media">
+        <div class="shot shot--ph">Picture goes here</div>
+      </div>
+    </div>
+  </main>
 
   <script>
-    /* Edit the text and images for each project here.
-       Every project lists its own chapters: a title, one or two paragraphs, and images with captions.
-       overlap: true puts two images on top of each other. */
-    const LOREM = "Placeholder text. Replace with the real story for this chapter: a few short sentences, not a wall of text.";
-    const ABOUT = {
-      name: "Nardos", role: "Product designer", forWho: "Addis Ababa", type: "Roles and freelance",
-      chapters: [
-        { title: "Hi, I\u2019m Nardos", big: true,
-          body: ["A product designer in Addis Ababa. I design apps and the structure underneath them: how a product is organised, how someone moves through it, and what each screen looks like when they get there.",
-                 "Open to product design roles and freelance work, remote or in Addis."],
-          images: [{ src: null, bare: true, alt: "Nardos", caption: "" }] },
-        { title: "How I work",
-          body: ["I have been the only designer on most of what I have made, which means doing the thinking as well as the screens. On Amharic Academy I spent the first of three weeks on the experience architecture and more than fifty pages of wireframes, unpaid, because the two weeks left would not have been enough without them.",
-                 "When I disagree with a client I bring a reason. On that app I argued for states instead of labels and buttons. On LIQ Academy I argued for a colour of its own for each subject instead of the one brand colour. Both shipped that way."],
-          images: [] },
-        { title: "Leather",
-          body: ["Away from screens I make leather goods by hand: cutting, stitching, edging and finishing, start to finish."],
-          images: [{ src: null, bare: true, alt: "Leather work", caption: "" }] },
-        { title: "Say hi",
-          body: ["A role, a project, or a question about any of the work: my email is on the contact page."],
-          images: [] },
-      ],
-    };
-    const p = ABOUT;
-    document.title = "About \u00b7 Nardos";
-    document.getElementById("back").href = "index.html";
-
-    const chapters = p.chapters.map((c, i) => ({ ...c, first: i === 0 }));
-    /* An image can also carry a short silent video: { video: "assets/clip.mp4", src: "assets/still.png" }.
-       src is the still shown until the video loads, and the only thing shown if the visitor prefers reduced motion. */
-    const fig = (im) => `<figure class="fig">${im.video
-      ? `<video class="shot" data-video="${im.video}" ${im.src ? `poster="${im.src}"` : ""} muted loop playsinline preload="none" aria-label="${im.alt || ""}"></video>`
-      : im.src
-      ? `<img class="shot${im.bare ? " shot--bare" : ""}" src="${im.src}" alt="${im.alt || ""}">`
-      : `<div class="shot shot--ph">Screenshot goes here</div>`}${im.caption ? `<figcaption>${im.caption}</figcaption>` : ""}</figure>`;
-    const root = document.getElementById("chapters");
-    const dots = document.getElementById("dots");
-    chapters.forEach((c, i) => {
-      const sec = document.createElement("section");
-      sec.className = "chapter"; sec.id = "c" + i;
-      const facts = c.first ? `<div class="facts"><div><b>Based</b>Addis Ababa</div><div><b>Open to</b>Roles and freelance</div><div><b>Work</b>Remote or in person</div></div>` : "";
-      const imgs = c.images || [{ src: null }];
-      if (!imgs.length) sec.classList.add("chapter--text");
-      sec.innerHTML = `<div class="chapter__in">
-        <div class="text">
-          <div class="pill"><img src="assets/chapter-blob.svg" alt="">${c.first ? `<h1>${c.title}</h1>` : `<h2>${c.title}</h2>`}</div>
-          ${[].concat(c.body).map(t => `<p>${t}</p>`).join("")}${facts}
-        </div>
-        ${imgs.length ? `<div class="media">${imgs.map(fig).join("")}</div>` : ""}</div>`;
-      root.appendChild(sec);
-      const d = document.createElement("a"); d.href = "#c" + i; d.setAttribute("aria-label", c.title); d.addEventListener("click", (e) => { e.preventDefault(); goTo(i); }); dots.appendChild(d);
-    });
     const timeEl = document.getElementById("local-time");
     const tick = () => { timeEl.textContent = "Addis Ababa, " + new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Africa/Addis_Ababa" }).format(new Date()); };
     tick(); setInterval(tick, 30000);
-    /* The pager: exactly one chapter is on screen. Wheel, swipe, arrow keys and the dots all change chapter;
-       if a chapter is taller than the window it scrolls inside itself first. */
-    const secs = [...document.querySelectorAll(".chapter")];
-    let cur = -1, busy = false, rel;
-    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    /* Videos load and play only while their chapter is on screen, and pause when it leaves. */
-    function playVideos(active) {
-      secs.forEach((el, k) => el.querySelectorAll("video").forEach((v) => {
-        if (k !== active) { v.pause(); return; }
-        if (still) return;
-        if (!v.src) {
-          v.addEventListener("error", () => { if (!v.poster) v.replaceWith(Object.assign(document.createElement("div"), { className: "shot shot--ph", textContent: "Screenshot goes here" })); }, { once: true });
-          v.src = v.dataset.video;
-        }
-        v.play().catch(() => {});
-      }));
-    }
-    function show(i) {
-      cur = i;
-      secs.forEach((el, k) => el.classList.toggle("is-active", k === i));
-      [...dots.children].forEach((d, k) => d.classList.toggle("on", k === i));
-      document.getElementById("cue").classList.toggle("hide", i === secs.length - 1);
-      secs[i].scrollTop = 0;
-      playVideos(i);
-      try { history.replaceState(null, "", "#c" + i); } catch (e) {}
-    }
-    function goTo(i) {
-      if (i < 0 || i >= secs.length || i === cur) return;
-      busy = true; clearTimeout(rel); rel = setTimeout(() => busy = false, 750);
-      show(i);
-    }
-    const canScroll = (dir) => { const el = secs[cur]; return dir > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 2 : el.scrollTop > 2; };
-    addEventListener("wheel", (e) => {
-      if (Math.abs(e.deltaY) < 3) return;
-      const dir = e.deltaY > 0 ? 1 : -1;
-      if (canScroll(dir) && !busy) return;           // let a tall chapter scroll itself
-      e.preventDefault();
-      if (busy) { clearTimeout(rel); rel = setTimeout(() => busy = false, 180); return; }
-      goTo(cur + dir);
-    }, { passive: false });
-    let ty = 0, edgeStart = 0;
-    addEventListener("touchstart", (e) => { ty = e.touches[0].clientY; const el = secs[cur]; edgeStart = (el.scrollTop <= 2 ? -1 : 0) + (el.scrollTop + el.clientHeight >= el.scrollHeight - 2 ? 1 : 0); }, { passive: true });
-    addEventListener("touchend", (e) => {
-      const dy = ty - e.changedTouches[0].clientY;
-      if (Math.abs(dy) < 50 || busy) return;
-      const dir = dy > 0 ? 1 : -1;
-      const atEdge = dir > 0 ? (edgeStart === 1 || edgeStart === 0 && false) || !canScroll(1) && edgeStart >= 1 : !canScroll(-1) && edgeStart <= -1;
-      const fits = secs[cur].scrollHeight <= secs[cur].clientHeight + 2;
-      if (fits || atEdge) goTo(cur + dir);
-    }, { passive: true });
-    addEventListener("keydown", (e) => {
-      if (["ArrowDown", "PageDown", " "].includes(e.key) && !canScroll(1)) { e.preventDefault(); goTo(cur + 1); }
-      else if (["ArrowUp", "PageUp"].includes(e.key) && !canScroll(-1)) { e.preventDefault(); goTo(cur - 1); }
-    });
-    const start = /^#c(\d+)$/.exec(location.hash);
-    show(start && +start[1] < secs.length ? +start[1] : 0);
   </script>
 </body>
 </html>
