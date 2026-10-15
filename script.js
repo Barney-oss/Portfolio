@@ -224,7 +224,8 @@ const mix = (a, b, t) => a + (b - a) * t;
 let letters = [];                                      /* one state object per letter, filled in once the outlines load */
 let wordSvg = null, wordK = 0.275, wordRunning = false, wordLast = 0;
 
-function setHot(s, on) { if (s.locked) return; s.target = on ? 1 : 0; runWord(); }
+const NAME_ANIMATES = false;                         /* switch to true to bring back the hover and phone letter animation */
+function setHot(s, on) { if (s.locked || !NAME_ANIMATES) return; s.target = on ? 1 : 0; runWord(); }
 function heat(on) { if (!on) letters.forEach((s) => setHot(s, false)); }
 
 function buildWord(data) {
@@ -315,7 +316,7 @@ fetch("assets/glyphs.json").then((r) => r.json()).then(buildWord).then(playLette
 /* Phones have no hover, so the letters play once on their own, one at a time, then rest. */
 let autoplay = 0;
 function playLetters() {
-  if (!isPhone || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!NAME_ANIMATES || !isPhone || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const run = ++autoplay;
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   (async () => {

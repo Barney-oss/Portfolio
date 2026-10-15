@@ -328,7 +328,7 @@ p, dl, dd { margin: 0; }
 .stage.is-leaving .intro__blob img, .stage.is-leaving .intro__blob.is-fallback::before { animation-play-state: paused; }
 
 .intro__hello, .intro__bio { margin: 0; color: var(--ink); text-align: center; transition: opacity .35s ease .5s; }
-.intro__hello { font: 400 calc(var(--u) * 38)/1 "Kaushan Script", "Caveat", cursive; color: var(--orange); transform: rotate(-4deg); }
+.intro__hello { font: 400 calc(var(--u) * 38)/1 "Kaushan Script", "Caveat", cursive; color: var(--orange); transform: rotate(-4deg); transform-origin: 0 50%; text-align: left; }
 .intro__bio { font: 400 calc(var(--u) * 16)/1.4 var(--font-body); }
 
 .intro__name {
@@ -338,6 +338,9 @@ p, dl, dd { margin: 0; }
   filter: url(#grain);
 }
 .intro__cue { display: none; }
+/* The small labels along the top go soft with the rest of the page while the entry screen is open. */
+.edge--top { transition: filter .5s ease .45s; }
+.stage.is-intro:not(.is-leaving) .edge--top { filter: blur(calc(var(--u) * 6)); transition-delay: 0s; }
 /* Leaving: texts and glass fade, the blob and name are moved by script.js. */
 .stage.is-leaving .intro__glass,
 .stage.is-leaving .intro__hello,
@@ -489,7 +492,7 @@ p, dl, dd { margin: 0; }
     to   { transform: translate(calc(var(--u) * 28), calc(var(--u) * -22)) rotate(4deg); }
   }
   .intro__blob  { --x: 11.8 !important;  --y: 226.3 !important; --w: 401 !important; --h: 309 !important; }
-  .intro__hello { --x: 64 !important;  --y: 325 !important; --w: 110 !important; text-align: left; }
+  .intro__hello { --x: 62 !important;  --y: 325 !important; --w: 110 !important; text-align: left; }
   .intro__name  { --x: 0 !important;   --y: 329 !important; --w: 412 !important; --h: 120 !important; }
   .intro__bio   { --x: 56 !important; --y: 433 !important; --w: 300 !important; }
 }
