@@ -398,7 +398,8 @@ intro.addEventListener("click", leaveIntro);
 document.querySelector(".logo").addEventListener("click", (e) => { e.preventDefault(); enterIntro(); });
 
 /* Coming back from a project page goes straight to the work. */
-if (new URLSearchParams(location.search).has("card")) {
+const sp = new URLSearchParams(location.search);
+if (sp.has("card") || sp.has("work")) {
   stage.classList.remove("is-intro");
   introBlob.style.transform = "translate(0,0) scale(.15)";
   introName.style.transform = "scale(.2)";
