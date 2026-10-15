@@ -18,6 +18,13 @@
   --cw: 1440; --ch: 1080;   /* canvas size in design pixels */
 }
 
+/* Wide windows (16:9 and wider): the 4:3 canvas would leave wide empty margins, so it is drawn a little larger.
+   The top and bottom few design pixels of the canvas hold nothing important, so they may run past the window. */
+@media (min-aspect-ratio: 8/5) and (min-width: 701px) {
+  :root { --u: min(calc(100vw / 1440), calc(100dvh / 980)); }
+  .fact--type { --y: 925 !important; }   /* keeps the project text clear of the bottom edge */
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body { margin: 0; }
