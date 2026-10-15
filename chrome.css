@@ -1,0 +1,151 @@
+/* Shared top-of-page chrome: logo, navigation, phone menu. Copied from styles.css so About and Say hi look the same as the work screen. */
+:root { --font-display: "Antonio", "Anton", sans-serif; --font-body: "Lato", system-ui, sans-serif; --ox: 0px; --paper: #FFFFFF; }
+img { max-width: none; }
+ul { margin: 0; padding: 0; list-style: none; }
+.chrome { position: fixed; inset: 0; z-index: 50; pointer-events: none; }
+.chrome .logo, .chrome .nav a, .chrome .burger { pointer-events: auto; }
+.layer {
+  position: absolute;
+  left: calc(var(--u) * var(--x));
+  top: calc(var(--u) * var(--y));
+  width: calc(var(--u) * var(--w));
+  height: calc(var(--u) * var(--h, 0));
+}
+.layer:not([style*="--h"]) { height: auto; }
+.logo {
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  text-decoration: none;
+}
+.logo__blob {
+  position: absolute;
+  inset: 0;
+  background: #F7E6D6;                                   /* apricot cream, until the real shape is dropped in */
+  border-radius: 48% 52% 50% 50% / 30% 32% 68% 70%;
+}
+.logo__blob:has(img) { background: none; border-radius: 0; display: grid; place-items: center; }
+/* The logo blob is the big entry blob, turned a quarter and squeezed, so the two always match. */
+.logo__blob img { width: calc(var(--u) * 175); height: calc(var(--u) * 82); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); object-fit: fill; }
+.logo__text {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: calc(var(--u) * 40);
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+/* The name, with its R in BBH Sans Bartle, turned the same quarter as the blob. */
+.logo__r { display: block; width: calc(var(--u) * 118); height: calc(var(--u) * 28); transform: rotate(-90deg); }
+
+.nav { z-index: 5; }
+.nav ul { display: flex; flex-direction: column; gap: calc(var(--u) * 2); }
+
+.nav__link {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 8);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: calc(var(--u) * 20);
+  line-height: normal;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+.nav__link:hover,
+.nav__link:focus-visible { color: var(--orange-deep); }
+
+.nav__link--active {
+  font-size: calc(var(--u) * 25);
+  color: var(--orange-deep);
+  margin-bottom: calc(var(--u) * 2);
+}
+.nav__link--active::before {
+  content: "";
+  flex: none;                                             /* don't let the dot squash when the row is tight */
+  width: calc(var(--u) * 15);
+  height: calc(var(--u) * 15);
+  background: url(assets/nav-dot.svg) center / 100% 100% no-repeat;
+}
+
+
+/* Small labels along the top edge */
+.edge { position: absolute; z-index: 25; pointer-events: none; display: flex; justify-content: space-between; font-family: var(--font-body); font-weight: 400; font-size: calc(var(--u) * 16); color: var(--ink); white-space: nowrap; }
+.edge--top { top: calc(var(--u) * 58); left: calc(var(--u) * 420); right: calc(var(--u) * 40); }
+.burger, .menu, .logo__blob-m { display: none; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+@media (max-width: 700px) {
+  :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --ox: calc((100vw - var(--u) * 412) / 2); }
+  .nav, .edge--top { display: none !important; }
+  .chrome > .layer { left: calc(var(--ox) + var(--u) * var(--x)); top: calc(var(--u) * var(--y)); }
+  /* logo: wide apricot pill, name across it, hugging the left margin */
+  .logo { --x: 24 !important; --y: 14 !important; --w: 112 !important; --h: 53 !important; }
+  .logo { justify-content: center; }
+  .logo__blob { justify-content: start; right: auto; left: calc(var(--u) * -16); width: calc(var(--u) * 112); }   /* the word, not the blob, lines up with the texts below */
+  .logo__blob img:not(.logo__blob-m) { display: none; }
+  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 112); height: calc(var(--u) * 53); position: static; transform: none; object-fit: fill; }
+  .logo__text { font-size: calc(var(--u) * 24); }
+  .logo__r { width: calc(var(--u) * 72); height: calc(var(--u) * 17); transform: translateX(calc(var(--u) * -16)); }
+
+  /* menu button and menu */
+  .burger {
+    display: block; position: absolute; z-index: 40;
+    right: calc(var(--ox) + var(--u) * 18); top: calc(var(--u) * 18);
+    padding: calc(var(--u) * 10) calc(var(--u) * 6);
+    background: none; border: 0; color: var(--orange); cursor: pointer; -webkit-tap-highlight-color: transparent; outline: none;
+  }
+  .burger svg { display: block; width: calc(var(--u) * 34); height: calc(var(--u) * 19); }
+  .menu {
+    display: block;
+    position: absolute; inset: 0; z-index: 30;
+    /* No blur: the menu is a plain sheet of the site's own grainy paper, so nothing behind it shows through. */
+    background:
+      url("assets/noise.png") repeat top left / 720px 512px,
+      url("assets/noise.png") repeat top left / 720px 512px,
+      var(--paper);
+    opacity: 0; pointer-events: none; transition: opacity .3s ease;
+  }
+  .menu.is-open { opacity: 1; pointer-events: auto; }
+  /* The blob grows out of the menu button (top right) and settles in the middle. */
+  .menu__blob {
+    position: absolute;
+    left: calc(var(--ox) + var(--u) * 53); top: calc(var(--u) * 166);
+    width: calc(var(--u) * 340); height: calc(var(--u) * 342);
+    transform-origin: 90% 0%; transform: scale(.15) rotate(8deg); opacity: 0;
+    transition: transform .3s ease, opacity .25s ease;
+  }
+  .menu__blob::before {                 /* the scribbled orange outline on its own; it breathes like the entry blob */
+    content: ""; position: absolute; inset: 0;
+    background: url(assets/menu-blob-line.svg) center / 100% 100% no-repeat;
+    animation: pulse 4.5s ease-in-out infinite; animation-play-state: paused;
+  }
+  .menu.is-open .menu__blob::before { animation-play-state: running; }
+  .menu.is-open .menu__blob { transform: none; opacity: 1; transition: transform .6s cubic-bezier(.34, 1.4, .5, 1), opacity .25s ease; }
+  .menu ul {
+    position: absolute; left: calc(var(--ox) + var(--u) * 150); top: calc(var(--u) * 268);
+    display: flex; flex-direction: column; gap: calc(var(--u) * 5); margin: 0; padding: 0; list-style: none;
+  }
+  .menu__link {
+    display: flex; align-items: center; gap: calc(var(--u) * 8);
+    font-family: var(--font-display); font-weight: 600; font-size: calc(var(--u) * 29); line-height: normal;
+    color: var(--ink); text-decoration: none; -webkit-tap-highlight-color: transparent;
+    opacity: 0; transform: translateY(calc(var(--u) * 8)); transition: opacity .2s ease, transform .2s ease;
+  }
+  .menu.is-open .menu__link { opacity: 1; transform: none; transition: opacity .35s ease, transform .45s cubic-bezier(.2, .8, .3, 1); }
+  .menu.is-open li:nth-child(1) .menu__link { transition-delay: .18s; }
+  .menu.is-open li:nth-child(2) .menu__link { transition-delay: .24s; }
+  .menu.is-open li:nth-child(3) .menu__link { transition-delay: .30s; }
+  .menu.is-open li:nth-child(4) .menu__link { transition-delay: .36s; }
+  .menu__link--active { font-size: calc(var(--u) * 36); color: var(--orange-deep); margin-bottom: calc(var(--u) * 4); }
+  /* The pages you are not on sit a little lighter; touching one brings it to full ink. */
+  .menu__link:not(.menu__link--active) { color: rgba(35, 31, 28, .72); transition: color .25s ease, opacity .35s ease, transform .45s cubic-bezier(.2, .8, .3, 1); }
+  .menu__link:not(.menu__link--active):active { color: var(--ink); }
+  .menu__link--active::before {
+    content: ""; flex: none; width: calc(var(--u) * 20); height: calc(var(--u) * 20);
+    background: url(assets/nav-dot.svg) center / 100% 100% no-repeat;
+}

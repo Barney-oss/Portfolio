@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="chrome.css?v=1">
   <style>
     :root { --ink:#231F1C; --orange:#EA5B0C; --orange-deep:#D64A1C; --u: min(calc(100vw / 1440), calc(100dvh / 1080)); }
     * { box-sizing: border-box; }
@@ -14,16 +15,9 @@
     body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif; font-weight: 400;
            background: #fff url("assets/noise.png") repeat top left / 720px 512px; }
 
-    /* Small labels along the top edge, same as the work screen */
-    .edge { position: fixed; z-index: 4; pointer-events: none; font-size: max(14px, calc(var(--u) * 16)); color: var(--ink); white-space: nowrap; }
-    .edge--top { top: 30px; left: 56px; right: 64px; display: flex; justify-content: space-between; align-items: center; }
-    .back { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; color: var(--orange-deep); text-decoration: none; }
-    .back:hover, .back:focus-visible { color: var(--orange); }
-    .back svg { display: block; flex: none; }
-    .back span { display: block; padding-top: 1px; }
 
     /* One screen: the picture on one side, a few lines on the other. Nothing scrolls. */
-    main { height: 100dvh; display: grid; place-items: center; padding: 110px 56px 56px; }
+    main { height: 100dvh; display: grid; place-items: center; padding: 120px 56px 56px; }
     .in { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
           width: 100%; max-width: 1100px; }
 
@@ -38,47 +32,65 @@
            color: var(--orange-deep); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
     .say:hover, .say:focus-visible { color: var(--orange); }
 
-    .facts { display: flex; flex-wrap: wrap; gap: 18px 40px; margin-top: 40px; font-size: max(16px, calc(var(--u) * 17)); }
-    .facts b { display: block; margin-bottom: 6px; font-family: "Antonio", sans-serif; font-weight: 600;
                font-size: max(17px, calc(var(--u) * 18)); letter-spacing: .06em; text-transform: uppercase; color: var(--orange-deep); }
 
     .shot { display: block; width: 100%; height: auto; max-height: 68dvh; object-fit: contain; }
-    .shot--ph { aspect-ratio: 4 / 5; background: #e6f3ef; display: grid; place-items: center;
+    .shot--ph { aspect-ratio: 4 / 5; width: auto; height: min(62dvh, 560px); justify-self: center; max-height: none; background: #e6f3ef; display: grid; place-items: center;
                 border-radius: 12px; font-size: 14px; opacity: .8; }
 
-    @media (max-width: 900px) {
+    @media (max-width: 700px) {
       :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); }
-      .edge--top { top: 22px; left: 24px; right: 24px; font-size: 12px; }
-      .edge--top span:nth-child(3) { display: none; }
-      .back { font-size: 15px; }
-      main { padding: 74px 24px 26px; align-items: start; }
+      main { padding: 84px 24px 26px; align-items: start; }
       .in { grid-template-columns: 1fr; gap: 18px; }
       .media { order: -1; }
       .shot { max-height: 24dvh; margin: 0 auto; width: auto; }
-      .shot--ph { width: 46vw; max-height: 24dvh; }
+      .shot--ph { height: 24dvh; margin: 0 auto; }
       .pill { margin-bottom: 14px; }
       .pill h1 { font-size: clamp(32px, calc(var(--u) * 42), 56px); }
       p { font-size: 16px; max-width: none; margin-bottom: 10px; }
-      .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; margin-top: 18px; font-size: 15px; }
-      .facts b { font-size: 15px; margin-bottom: 3px; }
       .say { margin-top: 18px; font-size: 17px; }
     }
   </style>
 </head>
 <body>
-  <div class="edge edge--top"><a class="back" href="index.html"><svg viewBox="0 0 22 14" width="22" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 7H2M8 1.5 2 7l6 5.5"/></svg><span>Back to work</span></a><span>About</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
+  <div class="chrome">
+    <a class="layer logo" href="index.html" style="--x:21; --y:24; --w:103; --h:182;" aria-label="Nardos, home">
+      <span class="logo__blob" aria-hidden="true"><img src="assets/first-blob.svg" alt=""><img class="logo__blob-m" src="assets/phone-blob.svg" alt=""></span>
+      <span class="logo__text" aria-hidden="true"><img class="logo__r" src="assets/logo-word.svg" alt=""></span>
+    </a>
+    <nav class="layer nav" style="--x:160; --y:56; --w:71;" aria-label="Main">
+      <ul>
+        <li><a href="index.html" class="nav__link">Work</a></li>
+        <li><a href="about.html" class="nav__link nav__link--active" aria-current="page">About</a></li>
+        <li><a href="say-hi.html" class="nav__link">Say Hi!</a></li>
+        <li><a href="#" class="nav__link">Resume</a></li>
+      </ul>
+    </nav>
+    <div class="edge edge--top"><span>About</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
+    <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 32 18" width="32" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+        <path id="burger-a" d="M2 4.5c4-2.2 7 2.2 11 0s7 2.2 11 0 4-1.2 6-.4"/>
+        <path id="burger-b" d="M3 14c4-2 6.5 2 10.500 0s7 2 11 0 3.500-1.200 5.500-.3"/>
+      </svg>
+    </button>
+    <nav class="menu" id="menu" aria-label="Menu" aria-hidden="true">
+      <div class="menu__blob" aria-hidden="true"></div>
+      <ul>
+        <li><a href="index.html" class="menu__link">Work</a></li>
+        <li><a href="about.html" class="menu__link menu__link--active" aria-current="page">About</a></li>
+        <li><a href="say-hi.html" class="menu__link">Say Hi!</a></li>
+        <li><a href="#" class="menu__link">Resume</a></li>
+      </ul>
+    </nav>
+  </div>
+
 
   <main>
     <div class="in">
       <div class="text">
         <div class="pill"><img src="assets/chapter-blob.svg" alt=""><h1>Hi, I&rsquo;m Nardos</h1></div>
-        <p>A product designer in Addis Ababa. I design apps and the structure underneath them, and I have been the only designer on most of what I have made, so I do the thinking as well as the screens.</p>
-        <p>Away from screens I make leather goods by hand.</p>
-        <div class="facts">
-          <div><b>Based</b>Addis Ababa</div>
-          <div><b>Open to</b>Roles and freelance</div>
-          <div><b>Work</b>Remote or in person</div>
-        </div>
+        <p>I am a product designer based in Addis Ababa. I design apps and the structure underneath them, from the first question to the last screen, with real care for the people who use them every day.</p>
+        <p>I am open to roles and freelance, remotely or in person. Away from screens I make leather goods by hand.</p>
         <a class="say" href="say-hi.html">Say hi
           <svg viewBox="0 0 22 14" width="20" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 7h19M14 1.5 20 7l-6 5.5"/></svg>
         </a>
@@ -89,6 +101,7 @@
     </div>
   </main>
 
+  <script src="chrome.js?v=1"></script>
   <script>
     const timeEl = document.getElementById("local-time");
     const tick = () => { timeEl.textContent = "Addis Ababa, " + new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Africa/Addis_Ababa" }).format(new Date()); };
