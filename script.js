@@ -97,21 +97,36 @@ const DESKTOP_COVER = { x: 112, y: 116, w: 550, h: 420 };
    screens starts (screenLeft, measured against the 775 x 652 card). The
    row is 547 wide and sits in the band where that blob is widest. */
 const SCREEN_ROW = { w: 203, h: 390, y: 130, step: 172 };
-const screenRow = (left) => [0, 1, 2].map((n) => ({
-  x: (left + n * SCREEN_ROW.step) * (isPhone ? 0.5013 : 1),
-  y: SCREEN_ROW.y * (isPhone ? 0.5013 : 1),
-  w: SCREEN_ROW.w * (isPhone ? 0.5013 : 1),
-  h: SCREEN_ROW.h * (isPhone ? 0.5013 : 1),
-}));
+const screenRow = (left) => {
+  if (isWide) {                                          /* bigger screens, same shape, spread across the wider blob */
+    const w = SCREEN_ROW.w * WIDE_S, h = SCREEN_ROW.h * WIDE_S, step = w * 0.95;
+    const rowW = w + 2 * step, mid = (left + 273.5) * WIDE_K;   /* keep the row's centre at the same place in the blob */
+    const y = SCREEN_ROW.y + SCREEN_ROW.h / 2 - h / 2;
+    return [0, 1, 2].map((n) => ({ x: mid - rowW / 2 + n * step, y, w, h }));
+  }
+  return [0, 1, 2].map((n) => ({
+    x: (left + n * SCREEN_ROW.step) * (isPhone ? 0.5013 : 1),
+    y: SCREEN_ROW.y * (isPhone ? 0.5013 : 1),
+    w: SCREEN_ROW.w * (isPhone ? 0.5013 : 1),
+    h: SCREEN_ROW.h * (isPhone ? 0.5013 : 1),
+  }));
+};
 const MOBILE_COVER = { x: 54, y: 56, w: 280, h: 215 };
 const DESKTOP_SHOTS = {
   back:  { x: 125, y: 103, w: 371, h: 426 },
   front: { x: 294, y: 202, w: 355, h: 291 },
 };
 const MOBILE_SIDE = { "assets/right-blob.svg": "assets/m-side-teal.svg", "assets/left-blob.svg": "assets/m-side-dark.svg" };
-const slots = isPhone ? MOBILE_SLOTS : SLOTS;
+/* Wide windows (16:9 and wider): the blobs are stretched sideways by WIDE_K, and the screens inside get a little bigger
+   (not stretched) and spread out to use the room. The same media query as in styles.css. */
+const wide = window.matchMedia("(min-aspect-ratio: 8/5) and (min-width: 701px)");
+const isWide = wide.matches;
+wide.addEventListener("change", () => location.reload());
+const WIDE_K = 1.25, WIDE_S = 1.1;
+const stretchX = (b) => ({ ...b, x: 720 + (b.x + b.w / 2 - 720) * WIDE_K - (b.w * WIDE_K) / 2, w: b.w * WIDE_K });
+const slots = isPhone ? MOBILE_SLOTS : isWide ? Object.fromEntries(Object.entries(SLOTS).map(([k, b]) => [k, stretchX(b)])) : SLOTS;
 const shotBox = isPhone ? MOBILE_SHOTS : DESKTOP_SHOTS;
-const coverBox = isPhone ? MOBILE_COVER : DESKTOP_COVER;
+const coverBox = isPhone ? MOBILE_COVER : isWide ? { x: (112 + 275) * WIDE_K - (550 * WIDE_K * 0.95) / 2, y: 326 - 231, w: 550 * WIDE_K * 0.95, h: 462 } : DESKTOP_COVER;
 const box = (b) => `--x:${b.x}; --y:${b.y}; --w:${b.w};` + (b.h ? ` --h:${b.h};` : "");
 
 const stage = document.querySelector(".stage");
