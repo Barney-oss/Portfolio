@@ -38,8 +38,8 @@
     .pill h1, .pill h2 { position: relative; margin: 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1; color: var(--ink); white-space: nowrap; }
     .pill h1 { font-size: clamp(40px, 9vw, 84px); }
     .pill h2 { font-size: clamp(28px, 7vw, 40px); }
-    .text p { margin: 0 0 12px; font-size: 16px; line-height: 1.5; max-width: 62ch; text-wrap: pretty; }
-    .facts { display: flex; flex-wrap: wrap; gap: 14px 32px; margin-top: 18px; font-size: 16px; }
+    .text p { margin: 0 0 12px; font-size: 17px; line-height: 1.5; max-width: 62ch; text-wrap: pretty; }
+    .facts { display: flex; flex-wrap: wrap; gap: 14px 32px; margin-top: 18px; font-size: 17px; }
     .facts b { display: block; margin-bottom: 6px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; color: var(--orange-deep); }
 
     .media { display: grid; align-content: start; }
@@ -58,8 +58,8 @@
       .chapter:nth-of-type(even) .media { order: -1; }
       .pill h1 { font-size: clamp(56px, calc(var(--u) * 104), 150px); }
       .pill h2 { font-size: clamp(40px, calc(var(--u) * 54), 80px); }
-      .text p { font-size: max(18px, calc(var(--u) * 18)); line-height: 1.55; margin-bottom: 14px; }
-      .facts { font-size: max(17px, calc(var(--u) * 17)); gap: 18px 40px; margin-top: 52px; }
+      .text p { font-size: max(19px, calc(var(--u) * 18 + 1px)); line-height: 1.55; margin-bottom: 14px; }
+      .facts { font-size: max(18px, calc(var(--u) * 17 + 1px)); gap: 18px 40px; margin-top: 52px; }
       .facts b { font-size: max(18px, calc(var(--u) * 18)); }
       .shot, .shot--ph { max-height: 70dvh; }
     }
@@ -73,22 +73,25 @@
     }
     /* Phone */
     @media (max-width: 700px) {
-      :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 44px; }
-      .logo, .burger, .menu { display: none !important; }   /* no logo or menu on the phone's work detail page */
+      :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 58px; }
+      .logo, .burger, .menu { display: none !important; }
+      .back { display: inline-flex !important; }   /* no logo or menu on the phone's work detail page */
       .edge--bottom { left: 24px; font-size: 17px; }
       .edge--bottom .cue-d { display: none; } .edge--bottom .cue-m { display: block; }
       .chapter { padding-bottom: 64px; }
       .chapter__in { gap: 14px; } .pill { margin-bottom: 14px; }
-      .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; margin-top: 20px; font-size: 15px; }
+      .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; margin-top: 20px; font-size: 16px; }
       .facts b { font-size: 15px; margin-bottom: 4px; }
       .shot, .shot--ph { max-height: 30dvh; }
     }
+    .back { display: none; position: fixed; z-index: 6; top: 14px; left: 24px; align-items: center; gap: 6px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 20px; line-height: 1; letter-spacing: .02em; color: var(--orange); text-decoration: none; }
     @media (prefers-reduced-motion: reduce) { .chapter, .chapter.is-active { transition: none; } }
   </style>
-  <link rel="stylesheet" href="chrome.css?v=4">
+  <link rel="stylesheet" href="chrome.css?v=5">
   <script src="wash.js?v=8"></script>
 </head>
 <body>
+<a class="back" href="index.html?work" data-home>← Back to work</a>
 <div class="chrome">
     <a class="layer logo" href="index.html" style="--x:21; --y:24; --w:103; --h:182;" aria-label="Nardos, home">
       <span class="logo__blob" aria-hidden="true"><img src="assets/first-blob.svg" alt=""><img class="logo__blob-m" src="assets/phone-blob.svg" alt=""></span>

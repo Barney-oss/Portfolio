@@ -22,8 +22,9 @@
    The top and bottom few design pixels of the canvas hold nothing important, so they may run past the window. */
 @media (min-aspect-ratio: 8/5) and (min-width: 701px) {
   :root { --u: min(calc(100vw / 1440), calc(100dvh / 980)); }
-  .fact--for { --x: -80 !important; }                    /* a wide window has room past the canvas edges */
-  .fact--role { --x: 1280 !important; }
+  .fact--for { --x: -125 !important; }                    /* a wide window has room past the canvas edges */
+  .fact--for { left: max(24px, calc(var(--u) * var(--x))) !important; }   /* never closer than 24px to the window edge */
+  .fact--role { --x: 1340 !important; }
   .fact--type { --y: 925 !important; --x: 440 !important; --w: 560 !important; }   /* clear of the bottom edge, and wide enough for two lines */
 }
 
@@ -192,7 +193,7 @@ p, dl, dd { margin: 0; }
 }
 .logo__blob:has(img) { background: none; border-radius: 0; display: grid; place-items: center; }
 /* The logo blob is the big entry blob, turned a quarter and squeezed, so the two always match. */
-.logo__blob img { width: calc(var(--u) * 175); height: calc(var(--u) * 82); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); object-fit: fill; }
+.logo__blob img { width: calc(var(--u) * 210); height: calc(var(--u) * 100); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); object-fit: fill; }
 .logo__text {
   position: relative;
   font-family: var(--font-display);
@@ -246,7 +247,7 @@ p, dl, dd { margin: 0; }
 /* ------------------------------------------------------------
    Project facts and counter
    ------------------------------------------------------------ */
-.fact { z-index: 5; font-size: calc(var(--u) * 18); line-height: 1.3; }
+.fact { z-index: 5; font-size: calc(var(--u) * 18 + 1px); line-height: 1.3; }
 
 .fact dt,
 .fact__label {
@@ -258,7 +259,7 @@ p, dl, dd { margin: 0; }
 }
 .fact dd { white-space: nowrap; }                          /* the short facts sit on one line in the design */
 .fact--center { text-align: center; }
-@media (min-width: 701px) { .fact--role { text-align: right; } }     /* the two side facts flank the cards, the right one lined up with the right margin */
+     /* the two side facts flank the cards, the right one lined up with the right margin */
 .fact--center .fact__label { margin-bottom: calc(var(--u) * 9); }
 
 /* The big number is the anchor of the page, like a page number in a book. */
@@ -402,7 +403,8 @@ p, dl, dd { margin: 0; }
   .card__ph { font-size: calc(var(--u) * 13); }
 
   /* facts: label in Antonio, text in Lato Light */
-  .fact { font-size: calc(var(--u) * 11.5); }
+  .fact { font-size: calc(var(--u) * 11.5 + 1px); }
+  .fact--role { margin-left: calc(var(--u) * -30); }   /* keeps the left-aligned role text inside the screen */
   .fact dt, .fact__label { font-size: calc(var(--u) * 13.5); margin-bottom: calc(var(--u) * 4); }
   .fact--center .fact__label { margin-bottom: calc(var(--u) * 8); }
   .fact--for  { --x: 24 !important;  --y: 120 !important; --w: 260 !important; }
@@ -410,13 +412,13 @@ p, dl, dd { margin: 0; }
   .fact--type { --x: 30 !important;  --w: 352 !important; top: auto !important; bottom: calc(var(--u) * 116); }
 
   /* logo: wide apricot pill, name across it, hugging the left margin */
-  .logo { --x: 24 !important; --y: 14 !important; --w: 112 !important; --h: 53 !important; }
+  .logo { --x: 24 !important; --y: 10 !important; --w: 140 !important; --h: 66 !important; }
   .logo { justify-content: center; }
-  .logo__blob { justify-content: start; right: auto; left: calc(var(--u) * -16); width: calc(var(--u) * 112); }   /* the word, not the blob, lines up with the texts below */
+  .logo__blob { justify-content: start; right: auto; left: calc(var(--u) * -16); width: calc(var(--u) * 140); }   /* the word, not the blob, lines up with the texts below */
   .logo__blob img:not(.logo__blob-m) { display: none; }
-  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 112); height: calc(var(--u) * 53); position: static; transform: none; object-fit: fill; }
-  .logo__text { font-size: calc(var(--u) * 24); }
-  .logo__r { width: calc(var(--u) * 72); height: calc(var(--u) * 17); transform: translateX(calc(var(--u) * -16)); }
+  .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 140); height: calc(var(--u) * 66); position: static; transform: none; object-fit: fill; }
+  .logo__text { font-size: calc(var(--u) * 28); }
+  .logo__r { width: calc(var(--u) * 88); height: calc(var(--u) * 21); transform: translateX(calc(var(--u) * -16)); }
 
   /* menu button and menu */
   .burger {
@@ -497,7 +499,7 @@ p, dl, dd { margin: 0; }
   .intro__blob img { width: 100%; height: 100%; object-fit: fill; }   /* stand-in shape until the phone blob is exported */
   .intro__hello { font-size: calc(var(--u) * 15); }
   .intro__name { font-size: calc(var(--u) * 80); }
-  .intro__bio { font-size: calc(var(--u) * 10); }
+  .intro__bio { font-size: calc(var(--u) * 10 + 1px); }
   .stage.is-intro .burger { opacity: 0; }
   .stage.is-intro.is-leaving .burger { opacity: 1; transition: opacity .3s .65s; }
   /* the cue is the same one as desktop: crisp above the entry screen, reading "Scroll" */
