@@ -65,6 +65,11 @@
                        run(deepBlob, [{ transform: sc(full) }, { transform: sc(0.02) }], { duration: ms, delay: 60 })]);
     el.classList.remove("on");
   }
+  /* opening without shrinking back: the cover simply melts away */
+  async function melt(ms) {
+    await el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: ms, easing: "ease-out", fill: "forwards" }).finished;
+    el.classList.remove("on"); el.getAnimations().forEach((a) => a.cancel());
+  }
   const coverNow = (x, y) => { const full = place(x, y); el.classList.add("on"); [deepBlob, mainBlob].forEach((s) => (s.style.transform = sc(full))); };
 
   /* ---- a band sweeping across, for chapter changes ---- */
@@ -90,10 +95,10 @@
   /* ---- between pages ---- */
   const KEY = "wash";
   let leaving = false;
-  async function go(url, x, y) {
+  async function go(url, x, y, mode) {
     if (still || leaving) { location.href = url; return; }
     leaving = true;
-    try { sessionStorage.setItem(KEY, JSON.stringify({ x, y })); } catch (e) {}
+    try { sessionStorage.setItem(KEY, JSON.stringify({ x, y, mode })); } catch (e) {}
     try { await grow(x, y, 380); } catch (e) {}
     location.href = url;
   }
@@ -107,7 +112,7 @@
     e.preventDefault();
     const r = a.getBoundingClientRect();
     const nav = a.matches(".nav__link, .menu__link");     /* menu links: the orange dot beside the word is where it starts */
-    go(u.href, nav ? r.left + 10 : r.left + r.width / 2, r.top + r.height / 2);
+    go(u.href, nav ? r.left + 10 : r.left + r.width / 2, r.top + r.height / 2, nav ? "melt" : "shrink");
   });
 
   /* arriving: if the last page covered the screen, start covered and open from the same spot */
@@ -124,7 +129,7 @@
       new Promise((r) => setTimeout(r, 400)),
     ]);
     Promise.race([built.then(() => requestAnimationFrame(() => pictures())).then(() => pictures()), new Promise((r) => setTimeout(r, 1000))])
-      .then(() => requestAnimationFrame(() => shrink(arrival.x, arrival.y, 460)));
+      .then(() => requestAnimationFrame(() => (arrival.mode === "melt" ? melt(420) : shrink(arrival.x, arrival.y, 460))));
     setTimeout(() => el.classList.remove("on"), 2500);   /* never leave the page covered */
   }
   /* coming back with the browser's back button must not show a covered page */
