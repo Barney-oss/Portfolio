@@ -247,7 +247,7 @@ p, dl, dd { margin: 0; }
 /* ------------------------------------------------------------
    Project facts and counter
    ------------------------------------------------------------ */
-.fact { z-index: 5; font-size: calc(var(--u) * 18 + 1px); line-height: 1.3; }
+.fact { z-index: 5; font-size: calc(var(--u) * 18); line-height: 1.3; }
 
 .fact dt,
 .fact__label {
@@ -403,7 +403,7 @@ p, dl, dd { margin: 0; }
   .card__ph { font-size: calc(var(--u) * 13); }
 
   /* facts: label in Antonio, text in Lato Light */
-  .fact { font-size: calc(var(--u) * 11.5 + 1px); }
+  .fact { font-size: calc(var(--u) * 11.5); }
   .fact--role { margin-left: calc(var(--u) * -30); }   /* keeps the left-aligned role text inside the screen */
   .fact dt, .fact__label { font-size: calc(var(--u) * 13.5); margin-bottom: calc(var(--u) * 4); }
   .fact--center .fact__label { margin-bottom: calc(var(--u) * 8); }
@@ -499,7 +499,7 @@ p, dl, dd { margin: 0; }
   .intro__blob img { width: 100%; height: 100%; object-fit: fill; }   /* stand-in shape until the phone blob is exported */
   .intro__hello { font-size: calc(var(--u) * 15); }
   .intro__name { font-size: calc(var(--u) * 80); }
-  .intro__bio { font-size: calc(var(--u) * 10 + 1px); }
+  .intro__bio { font-size: calc(var(--u) * 10); }
   .stage.is-intro .burger { opacity: 0; }
   .stage.is-intro.is-leaving .burger { opacity: 1; transition: opacity .3s .65s; }
   /* the cue is the same one as desktop: crisp above the entry screen, reading "Scroll" */
@@ -515,3 +515,6 @@ p, dl, dd { margin: 0; }
   .intro__name  { --x: 0 !important;   --y: 329 !important; --w: 412 !important; --h: 120 !important; }
   .intro__bio   { --x: 56 !important; --y: 433 !important; --w: 300 !important; }
 }
+
+/* Lato has no weight between regular (400) and bold (700), so a hairline stroke gives it one step more weight. */
+.fact dd, .intro__bio, .fact:not(:has(dt)) { -webkit-text-stroke: .35px currentColor; }
