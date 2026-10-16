@@ -44,7 +44,7 @@ body {
     var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
-  font-weight: 400;
+  font-weight: 300;
 }
 
 img { display: block; max-width: none; }
@@ -517,4 +517,5 @@ p, dl, dd { margin: 0; }
 }
 
 /* Lato has no weight between regular (400) and bold (700), so a hairline stroke gives it one step more weight. */
-@media (max-width: 700px) { .fact dd, .intro__bio, .fact:not(:has(dt)) { -webkit-text-stroke: .35px currentColor; } }   /* phone only */
+.fact dd, #fact-type { font-weight: 400; }   /* the Designed for, Role and Project type texts are a step heavier than the rest */
+@media (max-width: 700px) { .fact dd, #fact-type { -webkit-text-stroke: .35px currentColor; } }   /* and on the phone one more step */
