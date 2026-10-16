@@ -115,10 +115,17 @@
   try { arrival = JSON.parse(sessionStorage.getItem(KEY) || "null"); sessionStorage.removeItem(KEY); } catch (e) {}
   if (arrival && !still) {
     coverNow(arrival.x, arrival.y);
-    const ready = new Promise((r) => (document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", r) : r()))
-      .then(() => (document.fonts && document.fonts.ready) || null);
-    Promise.race([ready, new Promise((r) => setTimeout(r, 1400))]).then(() => requestAnimationFrame(() => shrink(arrival.x, arrival.y, 460)));
-    setTimeout(() => el.classList.remove("on"), 4000);   /* never leave the page covered */
+    /* Open as soon as the page itself is built. Fonts are not waited for (they swap in when they arrive). Pictures that are
+       already in view get a short moment, at most 400 ms, so they do not pop in under the opening blob. */
+    const built = new Promise((r) => (document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", r) : r()));
+    const pictures = () => Promise.race([
+      Promise.all([...document.images].filter((i) => !i.complete && i.getBoundingClientRect().top < innerHeight && i.getBoundingClientRect().bottom > 0)
+        .map((i) => new Promise((r) => { i.addEventListener("load", r, { once: true }); i.addEventListener("error", r, { once: true }); }))),
+      new Promise((r) => setTimeout(r, 400)),
+    ]);
+    Promise.race([built.then(() => requestAnimationFrame(() => pictures())).then(() => pictures()), new Promise((r) => setTimeout(r, 1000))])
+      .then(() => requestAnimationFrame(() => shrink(arrival.x, arrival.y, 460)));
+    setTimeout(() => el.classList.remove("on"), 2500);   /* never leave the page covered */
   }
   /* coming back with the browser's back button must not show a covered page */
   addEventListener("pageshow", (e) => { if (e.persisted) { leaving = false; el.classList.remove("on"); root.classList.remove("washing"); } });
