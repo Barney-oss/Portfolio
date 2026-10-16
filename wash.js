@@ -6,7 +6,7 @@
 (() => {
   const root = document.documentElement;
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const ORANGE = "#EA5B0C", DEEP = "#D64A1C";
+  const ORANGE = "#F8E9DB", DEEP = "#F2B48C";   /* the site's own apricot cream, with a soft peach-orange leading edge */
   const NS = "http://www.w3.org/2000/svg";
 
   const style = document.createElement("style");
@@ -78,8 +78,8 @@
     const start = d > 0 ? H : -2.5 * H, mid = -0.75 * H, end = d > 0 ? -2.5 * H : H;
     const lead = -d * 0.12 * H;                           /* the darker edge goes a little ahead of the main band */
     const T = (y) => `translateY(${y}px)`;
-    const cover = (s, off, delay) => run(s, [{ transform: T(start + off) }, { transform: T(mid + off) }], { duration: 300, delay, easing: "cubic-bezier(.55,.05,.7,.45)" });
-    const open = (s, off, delay) => run(s, [{ transform: T(mid + off) }, { transform: T(end + off) }], { duration: 340, delay, easing: "cubic-bezier(.3,.55,.35,1)" });
+    const cover = (s, off, delay) => run(s, [{ transform: T(start + off) }, { transform: T(mid + off) }], { duration: 260, delay, easing: "cubic-bezier(.55,.05,.7,.45)" });
+    const open = (s, off, delay) => run(s, [{ transform: T(mid + off) }, { transform: T(end + off) }], { duration: 300, delay, easing: "cubic-bezier(.3,.55,.35,1)" });
     await Promise.all([cover(deepBand, lead, 0), cover(mainBand, 0, 70)]);
     change();
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -94,7 +94,7 @@
     if (still || leaving) { location.href = url; return; }
     leaving = true;
     try { sessionStorage.setItem(KEY, JSON.stringify({ x, y })); } catch (e) {}
-    try { await grow(x, y, 420); } catch (e) {}
+    try { await grow(x, y, 380); } catch (e) {}
     location.href = url;
   }
 
@@ -117,7 +117,7 @@
     coverNow(arrival.x, arrival.y);
     const ready = new Promise((r) => (document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", r) : r()))
       .then(() => (document.fonts && document.fonts.ready) || null);
-    Promise.race([ready, new Promise((r) => setTimeout(r, 1400))]).then(() => requestAnimationFrame(() => shrink(arrival.x, arrival.y, 520)));
+    Promise.race([ready, new Promise((r) => setTimeout(r, 1400))]).then(() => requestAnimationFrame(() => shrink(arrival.x, arrival.y, 460)));
     setTimeout(() => el.classList.remove("on"), 4000);   /* never leave the page covered */
   }
   /* coming back with the browser's back button must not show a covered page */
