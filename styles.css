@@ -204,16 +204,20 @@ p, dl, dd { margin: 0; }
 .logo__r { display: block; width: calc(var(--u) * 118); height: calc(var(--u) * 28); transform: rotate(-90deg); }
 
 .nav { z-index: 5; }
-.nav ul { display: flex; flex-direction: column; gap: calc(var(--u) * 2); }
+.nav ul { display: flex; flex-direction: column; gap: calc(var(--u) * 6); }
 
+/* Every link is the same height, so the rows are evenly spaced whichever one is active.
+   Every word starts at the same left edge; the orange dot has a column of its own, to the left of the words. */
 .nav__link {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: calc(var(--u) * 8);
+  height: calc(var(--u) * 30);
+  padding-left: calc(var(--u) * 24);
   font-family: var(--font-display);
   font-weight: 600;
   font-size: calc(var(--u) * 20);
-  line-height: normal;
+  line-height: 1;
   color: var(--ink);
   text-decoration: none;
   white-space: nowrap;
@@ -225,13 +229,15 @@ p, dl, dd { margin: 0; }
 .nav__link--active {
   font-size: calc(var(--u) * 25);
   color: var(--orange-deep);
-  margin-bottom: calc(var(--u) * 2);
 }
 .nav__link--active::before {
   content: "";
-  flex: none;                                             /* don't let the dot squash when the row is tight */
+  position: absolute;
+  left: 0;
+  top: 50%;
   width: calc(var(--u) * 15);
   height: calc(var(--u) * 15);
+  transform: translateY(-50%);
   background: url(assets/nav-dot.svg) center / 100% 100% no-repeat;
 }
 
