@@ -22,6 +22,8 @@
    The top and bottom few design pixels of the canvas hold nothing important, so they may run past the window. */
 @media (min-aspect-ratio: 8/5) and (min-width: 701px) {
   :root { --u: min(calc(100vw / 1440), calc(100dvh / 980)); }
+  .fact--for { --x: -20 !important; }                    /* a wide window has room past the canvas edges */
+  .fact--role { --x: 1220 !important; }
   .fact--type { --y: 925 !important; --x: 440 !important; --w: 560 !important; }   /* clear of the bottom edge, and wide enough for two lines */
 }
 
@@ -41,7 +43,7 @@ body {
     var(--paper);
   color: var(--ink);
   font-family: var(--font-body);
-  font-weight: 300;
+  font-weight: 400;
 }
 
 img { display: block; max-width: none; }
@@ -244,18 +246,19 @@ p, dl, dd { margin: 0; }
 /* ------------------------------------------------------------
    Project facts and counter
    ------------------------------------------------------------ */
-.fact { z-index: 5; font-size: calc(var(--u) * 17); line-height: 1.3; }
+.fact { z-index: 5; font-size: calc(var(--u) * 21); line-height: 1.3; }
 
 .fact dt,
 .fact__label {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: calc(var(--u) * 19);
+  font-size: calc(var(--u) * 24);
   color: var(--orange);
   margin-bottom: calc(var(--u) * 6);
 }
 .fact dd { white-space: nowrap; }                          /* the short facts sit on one line in the design */
 .fact--center { text-align: center; }
+@media (min-width: 701px) { .fact--role { text-align: right; } }     /* the two side facts flank the cards, the right one lined up with the right margin */
 .fact--center .fact__label { margin-bottom: calc(var(--u) * 9); }
 
 /* The big number is the anchor of the page, like a page number in a book. */
