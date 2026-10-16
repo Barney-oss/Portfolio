@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600&family=Lato:wght@400;700&display=swap" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600&family=Lato:wght@400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="chrome.css?v=2">
+  <link rel="stylesheet" href="chrome.css?v=4">
   <style>
     :root { --ink:#231F1C; --orange:#EA5B0C; --orange-deep:#D64A1C; --u: min(calc(100vw / 1440), calc(100dvh / 1080)); }
     * { box-sizing: border-box; }
@@ -52,7 +52,7 @@
       .say { margin-top: 18px; font-size: 17px; }
     }
   </style>
-  <script src="wash.js?v=5"></script>
+  <script src="wash.js?v=6"></script>
 </head>
 <body>
   <div class="chrome">
@@ -62,7 +62,8 @@
     </a>
     <nav class="layer nav" style="--x:146; --y:56; --w:120;" aria-label="Main">
       <ul>
-        <li><a href="index.html?work" class="nav__link">Work</a></li>
+        <li><a href="index.html?work" class="nav__link" data-home>Home</a></li>
+        <li><a href="project.html?p=agristelle" class="nav__link" data-work>Work</a></li>
         <li><a href="about.html" class="nav__link nav__link--active" aria-current="page">About</a></li>
         <li><a href="say-hi.html" class="nav__link">Say Hi!</a></li>
         <li><a href="#" class="nav__link">Resume</a></li>
@@ -78,7 +79,8 @@
     <nav class="menu" id="menu" aria-label="Menu" aria-hidden="true">
       <div class="menu__blob" aria-hidden="true"></div>
       <ul>
-        <li><a href="index.html?work" class="menu__link">Work</a></li>
+        <li><a href="index.html?work" class="menu__link" data-home>Home</a></li>
+        <li><a href="project.html?p=agristelle" class="menu__link" data-work>Work</a></li>
         <li><a href="about.html" class="menu__link menu__link--active" aria-current="page">About</a></li>
         <li><a href="say-hi.html" class="menu__link">Say Hi!</a></li>
         <li><a href="#" class="menu__link">Resume</a></li>

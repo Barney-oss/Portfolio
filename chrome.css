@@ -42,7 +42,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .logo__r { display: block; width: calc(var(--u) * 118); height: calc(var(--u) * 28); transform: rotate(-90deg); }
 
 .nav { z-index: 5; }
-.nav ul { display: flex; flex-direction: column; gap: calc(var(--u) * 6); }
+.nav ul { display: flex; flex-direction: column; gap: calc(var(--u) * 2); }
 
 /* Every link is the same height, so the rows are evenly spaced whichever one is active.
    Every word starts at the same left edge; the orange dot has a column of its own, to the left of the words. */
@@ -50,7 +50,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   position: relative;
   display: flex;
   align-items: center;
-  height: calc(var(--u) * 30);
+  height: calc(var(--u) * 31);
   padding-left: calc(var(--u) * 24);
   font-family: var(--font-display);
   font-weight: 600;
@@ -147,6 +147,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .menu.is-open li:nth-child(2) .menu__link { transition-delay: .24s; }
   .menu.is-open li:nth-child(3) .menu__link { transition-delay: .30s; }
   .menu.is-open li:nth-child(4) .menu__link { transition-delay: .36s; }
+  .menu.is-open li:nth-child(5) .menu__link { transition-delay: .42s; }
   .menu__link--active { font-size: calc(var(--u) * 36); color: var(--orange-deep); margin-bottom: calc(var(--u) * 4); }
   /* The pages you are not on sit a little lighter; touching one brings it to full ink. */
   .menu__link:not(.menu__link--active) { color: rgba(35, 31, 28, .72); transition: color .25s ease, opacity .35s ease, transform .45s cubic-bezier(.2, .8, .3, 1); }

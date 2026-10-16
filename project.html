@@ -16,11 +16,8 @@
 
     /* Small labels along the top and bottom edges, same as the work screen */
     .edge { position: fixed; z-index: 4; pointer-events: none; font-size: max(14px, calc(var(--u) * 16)); color: var(--ink); white-space: nowrap; }
-    .edge--top { top: 30px; left: 56px; right: 64px; display: flex; justify-content: space-between; align-items: center; }
-    .back { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; color: var(--orange-deep); text-decoration: none; }
-    .back:hover, .back:focus-visible { color: var(--orange); }
-    .back svg, .edge--bottom svg { display: block; flex: none; }
-    .back span, .edge--bottom span { display: block; padding-top: 1px; }
+    .edge--bottom svg { display: block; flex: none; }
+    .edge--bottom span { display: block; padding-top: 1px; }
     .edge--bottom { bottom: 26px; left: 56px; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); transition: opacity .3s; }
     .edge--bottom.hide { opacity: 0; }
     .edge--bottom .cue-m { display: none; }
@@ -54,8 +51,8 @@
 
     /* Desktop: text on one side (wider), one big image on the other */
     @media (min-width: 900px) {
-      :root { --pt: 110px; }
-      .chapter { padding: 100px 80px 70px 56px; }
+      :root { --pt: max(120px, calc(var(--u) * 215)); }   /* clears the logo and the five nav links */
+      .chapter { padding: var(--pt) 80px 70px 56px; }
       .chapter__in { grid-template-columns: 1.15fr 1fr; align-items: start; gap: 56px; }
       .chapter:nth-of-type(even) .chapter__in { grid-template-columns: 1fr 1.15fr; }
       .chapter:nth-of-type(even) .media { order: -1; }
@@ -77,9 +74,6 @@
     /* Phone */
     @media (max-width: 700px) {
       :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 78px; }
-      .edge--top { top: 22px; left: 24px; right: 24px; font-size: 12px; }
-      .back { font-size: 18px; }
-      .edge--top span:nth-child(3) { display: none; }
       .edge--bottom { left: 24px; font-size: 17px; }
       .edge--bottom .cue-d { display: none; } .edge--bottom .cue-m { display: block; }
       .chapter { padding-bottom: 64px; }
@@ -90,10 +84,42 @@
     }
     @media (prefers-reduced-motion: reduce) { .chapter, .chapter.is-active { transition: none; } }
   </style>
-  <script src="wash.js?v=5"></script>
+  <link rel="stylesheet" href="chrome.css?v=4">
+  <script src="wash.js?v=6"></script>
 </head>
 <body>
-  <div class="edge edge--top"><a class="back" id="back" href="index.html"><svg viewBox="0 0 22 14" width="22" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 7H2M8 1.5 2 7l6 5.5"/></svg><span>Back to work</span></a><span>Selected work</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
+<div class="chrome">
+    <a class="layer logo" href="index.html" style="--x:21; --y:24; --w:103; --h:182;" aria-label="Nardos, home">
+      <span class="logo__blob" aria-hidden="true"><img src="assets/first-blob.svg" alt=""><img class="logo__blob-m" src="assets/phone-blob.svg" alt=""></span>
+      <span class="logo__text" aria-hidden="true"><img class="logo__r" src="assets/logo-word.svg" alt=""></span>
+    </a>
+    <nav class="layer nav" style="--x:146; --y:56; --w:120;" aria-label="Main">
+      <ul>
+        <li><a href="index.html?work" class="nav__link" data-home>Home</a></li>
+        <li><a href="project.html?p=agristelle" class="nav__link nav__link--active" aria-current="page" data-work>Work</a></li>
+        <li><a href="about.html" class="nav__link">About</a></li>
+        <li><a href="say-hi.html" class="nav__link">Say Hi!</a></li>
+        <li><a href="#" class="nav__link">Resume</a></li>
+      </ul>
+    </nav>
+    <div class="edge edge--top"><span>Selected work</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
+    <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 32 18" width="32" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+        <path id="burger-a" d="M2 4.5c4-2.2 7 2.2 11 0s7 2.2 11 0 4-1.2 6-.4"/>
+        <path id="burger-b" d="M3 14c4-2 6.5 2 10.500 0s7 2 11 0 3.500-1.200 5.500-.3"/>
+      </svg>
+    </button>
+    <nav class="menu" id="menu" aria-label="Menu" aria-hidden="true">
+      <div class="menu__blob" aria-hidden="true"></div>
+      <ul>
+        <li><a href="index.html?work" class="menu__link" data-home>Home</a></li>
+        <li><a href="project.html?p=agristelle" class="menu__link menu__link--active" aria-current="page" data-work>Work</a></li>
+        <li><a href="about.html" class="menu__link">About</a></li>
+        <li><a href="say-hi.html" class="menu__link">Say Hi!</a></li>
+        <li><a href="#" class="menu__link">Resume</a></li>
+      </ul>
+    </nav>
+  </div>
   <div class="edge edge--bottom" id="cue"><span class="cue-d">Scroll</span><span class="cue-m">Swipe</span><svg viewBox="0 0 14 22" width="14" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 1v19M1.500 14 7 20l5.500-6"/></svg></div>
   <nav class="dots" id="dots" aria-label="Chapters"></nav>
   <main id="chapters"></main>
@@ -233,7 +259,8 @@
     const slug = new URLSearchParams(location.search).get("p");
     const p = PROJECTS[slug] || PROJECTS["agristelle"];
     document.title = p.name + " \u00b7 Nardos";
-    document.getElementById("back").href = "index.html" + (PROJECTS[slug] ? "?card=" + slug : "");
+    try { if (PROJECTS[slug]) localStorage.setItem("lastProject", slug); } catch (e) {}
+    const homeLink = document.querySelector("a[data-home]"); if (homeLink) homeLink.href = "index.html" + (PROJECTS[slug] ? "?card=" + slug : "?work");
 
     const chapters = p.chapters.map((c, i) => ({ ...c, first: i === 0 }));
     /* An image can also carry a short silent video: { video: "assets/clip.mp4", src: "assets/still.png" }.
@@ -321,5 +348,6 @@
     const start = /^#c(\d+)$/.exec(location.hash);
     show(start && +start[1] < secs.length ? +start[1] : 0);
   </script>
+  <script src="chrome.js?v=1"></script>
 </body>
 </html>

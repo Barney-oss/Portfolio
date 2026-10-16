@@ -135,5 +135,14 @@
   /* coming back with the browser's back button must not show a covered page */
   addEventListener("pageshow", (e) => { if (e.persisted) { leaving = false; el.classList.remove("on"); root.classList.remove("washing"); } });
 
+  /* "Work" opens the project you looked at last (or the first one); "Home" returns to the work screen, on that project's card */
+  const fixLinks = () => {
+    let last = null; try { last = localStorage.getItem("lastProject"); } catch (e) {}
+    if (!/^[a-z-]+$/.test(last || "")) last = null;
+    document.querySelectorAll("a[data-work]").forEach((a) => (a.href = "project.html?p=" + (last || "agristelle")));
+    document.querySelectorAll("a[data-home]").forEach((a) => (a.href = last ? "index.html?card=" + last : "index.html?work"));
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fixLinks); else fixLinks();
+
   window.Wash = { sweep, go };
 })();
