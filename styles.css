@@ -23,7 +23,7 @@
 @media (min-aspect-ratio: 8/5) and (min-width: 701px) {
   :root { --u: min(calc(100vw / 1440), calc(100dvh / 980)); }
   .fact--for { --x: -125 !important; }                    /* a wide window has room past the canvas edges */
-  .fact--for { left: max(24px, calc(var(--u) * var(--x))) !important; }   /* never closer than 24px to the window edge */
+  .fact--for { left: max(calc(var(--u) * var(--x)), calc(24px - (100vw - var(--u) * 1440) / 2)) !important; }   /* never closer than 24px to the window edge */
   .fact--role { --x: 1340 !important; }
   .fact--type { --y: 925 !important; --x: 440 !important; --w: 560 !important; }   /* clear of the bottom edge, and wide enough for two lines */
 }
