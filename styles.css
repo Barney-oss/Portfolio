@@ -24,7 +24,7 @@
   :root { --u: min(calc(100vw / 1440), calc(100dvh / 980)); }
   .fact--for { --x: -125 !important; }                    /* a wide window has room past the canvas edges */
   .fact--for { left: max(calc(var(--u) * var(--x)), calc(24px - (100vw - var(--u) * 1440) / 2)) !important; }   /* never closer than 24px to the window edge */
-  .fact--role { --x: 1340 !important; }
+  .fact--role { --x: 1410 !important; }
   .fact--type { --y: 925 !important; --x: 440 !important; --w: 560 !important; }   /* clear of the bottom edge, and wide enough for two lines */
 }
 
@@ -517,4 +517,4 @@ p, dl, dd { margin: 0; }
 }
 
 /* Lato has no weight between regular (400) and bold (700), so a hairline stroke gives it one step more weight. */
-.fact dd, .intro__bio, .fact:not(:has(dt)) { -webkit-text-stroke: .35px currentColor; }
+@media (max-width: 700px) { .fact dd, .intro__bio, .fact:not(:has(dt)) { -webkit-text-stroke: .35px currentColor; } }   /* phone only */

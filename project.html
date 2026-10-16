@@ -84,12 +84,11 @@
       .facts b { font-size: 15px; margin-bottom: 4px; }
       .shot, .shot--ph { max-height: 30dvh; }
     }
-    .text p, .facts { -webkit-text-stroke: .35px currentColor; }
-    .facts b { -webkit-text-stroke: 0; }
+    @media (max-width: 700px) { .text p, .facts { -webkit-text-stroke: .35px currentColor; } .facts b { -webkit-text-stroke: 0; } }
     .back { display: none; position: fixed; z-index: 6; top: 14px; left: 24px; align-items: center; gap: 6px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 20px; line-height: 1; letter-spacing: .02em; color: var(--orange); text-decoration: none; }
     @media (prefers-reduced-motion: reduce) { .chapter, .chapter.is-active { transition: none; } }
   </style>
-  <link rel="stylesheet" href="chrome.css?v=6">
+  <link rel="stylesheet" href="chrome.css?v=7">
   <script src="wash.js?v=8"></script>
 </head>
 <body>

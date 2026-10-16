@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600&family=Lato:wght@400;700&display=swap" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600&family=Lato:wght@400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="chrome.css?v=6">
+  <link rel="stylesheet" href="chrome.css?v=7">
   <style>
     :root { --ink:#231F1C; --orange:#EA5B0C; --orange-deep:#D64A1C; --u: min(calc(100vw / 1440), calc(100dvh / 1080)); }
     * { box-sizing: border-box; }
@@ -26,7 +26,7 @@
     .pill h1 { position: relative; margin: 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1;
                color: var(--ink); white-space: nowrap; font-size: clamp(40px, calc(var(--u) * 64), 92px); }
 
-    p { -webkit-text-stroke: .35px currentColor; }
+    @media (max-width: 700px) { p { -webkit-text-stroke: .35px currentColor; } }
     p { margin: 0 0 14px; font-size: max(17px, calc(var(--u) * 18)); line-height: 1.55; max-width: 44ch; }
     p:last-of-type { margin-bottom: 0; }
     .say { margin-top: 26px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: max(18px, calc(var(--u) * 20));
