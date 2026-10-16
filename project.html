@@ -89,6 +89,7 @@
     }
     @media (prefers-reduced-motion: reduce) { .chapter, .chapter.is-active { transition: none; } }
   </style>
+  <script src="wash.js?v=2"></script>
 </head>
 <body>
   <div class="edge edge--top"><a class="back" id="back" href="index.html"><svg viewBox="0 0 22 14" width="22" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 7H2M8 1.5 2 7l6 5.5"/></svg><span>Back to work</span></a><span>Selected work</span><span id="local-time">Addis Ababa</span><span>Product designer</span></div>
@@ -290,7 +291,8 @@
     function goTo(i) {
       if (i < 0 || i >= secs.length || i === cur) return;
       busy = true; clearTimeout(rel); rel = setTimeout(() => busy = false, 750);
-      show(i);
+      const dir = i > cur ? 1 : -1;
+      if (still || !window.Wash) show(i); else Wash.sweep(dir, () => show(i));
     }
     const canScroll = (dir) => { const el = secs[cur]; return dir > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 2 : el.scrollTop > 2; };
     addEventListener("wheel", (e) => {
