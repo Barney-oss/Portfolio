@@ -408,7 +408,7 @@ p, dl, dd { margin: 0; }
   .fact dt, .fact__label { font-size: calc(var(--u) * 13.5); margin-bottom: calc(var(--u) * 4); }
   .fact--center .fact__label { margin-bottom: calc(var(--u) * 8); }
   .fact--for  { --x: 24 !important;  --y: 120 !important; --w: 260 !important; }
-  .fact--role { --x: 308 !important; --y: 176 !important; --w: 100 !important; }
+  .fact--role { --x: 308 !important; --y: 160 !important; --w: 100 !important; }   /* both facts sit in one band: Role ends where Designed for's band ends */
   .fact--type { --x: 30 !important;  --w: 352 !important; top: auto !important; bottom: calc(var(--u) * 116); }
 
   /* logo: wide apricot pill, name across it, hugging the left margin */
