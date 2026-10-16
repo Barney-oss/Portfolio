@@ -73,7 +73,8 @@
     }
     /* Phone */
     @media (max-width: 700px) {
-      :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 78px; }
+      :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 44px; }
+      .logo, .burger, .menu { display: none !important; }   /* no logo or menu on the phone's work detail page */
       .edge--bottom { left: 24px; font-size: 17px; }
       .edge--bottom .cue-d { display: none; } .edge--bottom .cue-m { display: block; }
       .chapter { padding-bottom: 64px; }
@@ -85,7 +86,7 @@
     @media (prefers-reduced-motion: reduce) { .chapter, .chapter.is-active { transition: none; } }
   </style>
   <link rel="stylesheet" href="chrome.css?v=4">
-  <script src="wash.js?v=7"></script>
+  <script src="wash.js?v=8"></script>
 </head>
 <body>
 <div class="chrome">
