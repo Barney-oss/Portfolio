@@ -7,7 +7,7 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
 .edge { position: fixed; z-index: 4; pointer-events: none; font-size: max(14px, calc(var(--u) * 16)); color: var(--ink); white-space: nowrap; }
 .edge--bottom svg { display: block; flex: none; }
 .edge--bottom span { display: block; padding-top: 1px; }
-.edge--bottom { bottom: 26px; left: 56px; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); transition: opacity .3s; }
+.edge.edge--bottom { bottom: 26px; left: 56px; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); transition: opacity .3s; }
 .edge--bottom.hide { opacity: 0; }
 .edge--bottom .cue-m { display: none; }
 
@@ -40,7 +40,7 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
 
 /* Desktop: text on one side (wider), one big image on the other */
 @media (min-width: 900px) {
-  :root { --pt: max(120px, calc(var(--u) * 215)); }   /* clears the logo and the five nav links */
+  :root { --pt: max(100px, calc(var(--u) * 150)); }   /* clears the Back to home link */
   .chapter { padding: var(--pt) 80px 70px 56px; }
   .chapter__in { grid-template-columns: 1.15fr 1fr; align-items: start; gap: 56px; }
   .chapter:nth-of-type(even) .chapter__in { grid-template-columns: 1fr 1.15fr; }
@@ -63,9 +63,8 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
 /* Phone */
 @media (max-width: 700px) {
   :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 58px; }
-  .logo, .burger, .menu { display: none !important; }
-  .back { display: inline-flex !important; }   /* no logo or menu on the phone's work detail page */
-  .edge--bottom { left: 24px; font-size: 17px; }
+  .edge.edge--bottom { left: 24px; font-size: 17px; }
+  html .back { top: 14px; left: 24px; font-size: 20px; }
   .edge--bottom .cue-d { display: none; } .edge--bottom .cue-m { display: block; }
   .chapter { padding-bottom: 64px; }
   .chapter__in { gap: 14px; } .pill { margin-bottom: 14px; }
@@ -73,5 +72,5 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
   .facts b { font-size: 15px; margin-bottom: 4px; }
   .shot, .shot--ph { max-height: 30dvh; }
 }
-.back { display: none; position: fixed; z-index: 6; top: 14px; left: 24px; align-items: center; gap: 6px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 20px; line-height: 1; letter-spacing: .02em; color: var(--orange); text-decoration: none; }
+.back { position: fixed; z-index: 6; top: 45px; left: 56px; display: inline-flex; align-items: center; gap: 6px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); text-decoration: none; }
 @media (prefers-reduced-motion: reduce) { .chapter, .chapter.is-active { transition: none; } }
