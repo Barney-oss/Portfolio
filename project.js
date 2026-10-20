@@ -193,7 +193,7 @@ function goTo(i) {
   if (i < 0 || i >= secs.length || i === cur) return;
   busy = true; clearTimeout(rel); rel = setTimeout(() => busy = false, 750);
   const dir = i > cur ? 1 : -1;
-  if (still || !window.Wash) show(i); else Wash.sweep(dir, () => show(i));
+  if (still || !window.Fade) show(i); else Fade.swap(() => show(i));
 }
 const canScroll = (dir) => { const el = secs[cur]; return dir > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 2 : el.scrollTop > 2; };
 addEventListener("wheel", (e) => {
