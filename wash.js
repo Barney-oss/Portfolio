@@ -130,8 +130,8 @@
   const fixLinks = () => {
     let last = null; try { last = localStorage.getItem("lastProject"); } catch (e) {}
     if (!/^[a-z-]+$/.test(last || "")) last = null;
-    document.querySelectorAll("a[data-work]").forEach((a) => (a.href = "project.html?p=" + (last || "agristelle")));
-    document.querySelectorAll("a[data-home]").forEach((a) => (a.href = last ? "index.html?card=" + last : "index.html?work"));
+    document.querySelectorAll("a[data-work]").forEach((a) => (a.href = last || "agristelle"));
+    document.querySelectorAll("a[data-home]").forEach((a) => (a.href = last ? "./?card=" + last : "./?work"));
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fixLinks); else fixLinks();
 

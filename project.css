@@ -1,0 +1,77 @@
+:root { --ink:#231F1C; --orange:#EA5B0C; --orange-deep:#D64A1C; --u: min(calc(100vw / 1440), calc(100dvh / 1080)); --pt: 84px; }
+* { box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif; font-weight: 400; background: #fff url("assets/noise.png") repeat top left / 720px 512px; }
+
+/* Small labels along the top and bottom edges, same as the work screen */
+.edge { position: fixed; z-index: 4; pointer-events: none; font-size: max(14px, calc(var(--u) * 16)); color: var(--ink); white-space: nowrap; }
+.edge--bottom svg { display: block; flex: none; }
+.edge--bottom span { display: block; padding-top: 1px; }
+.edge--bottom { bottom: 26px; left: 56px; display: inline-flex; align-items: center; gap: 8px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); transition: opacity .3s; }
+.edge--bottom.hide { opacity: 0; }
+.edge--bottom .cue-m { display: none; }
+
+/* Chapter dots on the right edge: where you are, tap to jump */
+.dots { position: fixed; right: 14px; top: 50%; transform: translateY(-50%); z-index: 5; display: grid; gap: 12px; }
+.dots a { width: 15px; height: 15px; background: url(assets/nav-dot-empty.svg) center / 100% 100% no-repeat; }
+.dots a.on { background-image: url(assets/nav-dot.svg); }
+
+/* One chapter = one whole screen. Only one is ever visible; the page never scrolls between them. */
+#chapters { position: fixed; inset: 0; }
+.chapter { position: absolute; inset: 0; display: flex; flex-direction: column; overflow-y: auto; padding: var(--pt) 44px 56px 24px;
+  opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .2s ease, visibility 0s .2s; }
+.chapter.is-active { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .3s ease .2s, visibility 0s .2s; }
+.chapter__in { margin: auto 0; display: grid; gap: 18px; width: 100%; }
+.pill { position: relative; display: inline-grid; place-items: center; margin: 0 0 22px; padding: .6em 1.7em .5em; justify-self: start; }
+.pill img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pill h1, .pill h2 { position: relative; margin: 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1; color: var(--ink); white-space: nowrap; }
+.pill h1 { font-size: clamp(40px, 9vw, 84px); }
+.pill h2 { font-size: clamp(28px, 7vw, 40px); }
+.text p { margin: 0 0 12px; font-size: 16px; line-height: 1.5; max-width: 62ch; text-wrap: pretty; }
+.facts { display: flex; flex-wrap: wrap; gap: 14px 32px; margin-top: 18px; font-size: 16px; }
+.facts b { display: block; margin-bottom: 6px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; color: var(--orange-deep); }
+
+.media { display: grid; align-content: start; }
+.fig { margin: 0; }
+.fig figcaption { margin-top: 8px; font-size: 13px; opacity: .8; max-width: 56ch; }
+.shot { display: block; width: auto; max-width: 100%; max-height: 34dvh; border-radius: 12px; box-shadow: 0 14px 34px rgba(35,31,28,.2); }
+.shot--bare { border-radius: 0; box-shadow: none; }
+.shot--ph { width: 100%; aspect-ratio: 4 / 3; max-height: 34dvh; background: #e6f3ef; display: grid; place-items: center; font-size: 14px; opacity: .8; }
+
+/* Desktop: text on one side (wider), one big image on the other */
+@media (min-width: 900px) {
+  :root { --pt: max(120px, calc(var(--u) * 215)); }   /* clears the logo and the five nav links */
+  .chapter { padding: var(--pt) 80px 70px 56px; }
+  .chapter__in { grid-template-columns: 1.15fr 1fr; align-items: start; gap: 56px; }
+  .chapter:nth-of-type(even) .chapter__in { grid-template-columns: 1fr 1.15fr; }
+  .chapter:nth-of-type(even) .media { order: -1; }
+  .pill h1 { font-size: clamp(56px, calc(var(--u) * 104), 150px); }
+  .pill h2 { font-size: clamp(40px, calc(var(--u) * 54), 80px); }
+  .text p { font-size: max(18px, calc(var(--u) * 18)); line-height: 1.55; margin-bottom: 14px; }
+  .facts { font-size: max(17px, calc(var(--u) * 17)); gap: 18px 40px; margin-top: 52px; }
+  .facts b { font-size: max(18px, calc(var(--u) * 18)); }
+  .shot, .shot--ph { max-height: 70dvh; }
+}
+/* A chapter with no image: the text is centred and wider */
+.chapter--text .chapter__in { max-width: 1060px; margin: auto; justify-items: center; text-align: center; }
+.chapter--text .pill { justify-self: center; }
+.chapter--text .text { display: grid; justify-items: center; }
+@media (min-width: 900px) {
+  .chapter--text .chapter__in, .chapter--text:nth-of-type(even) .chapter__in { grid-template-columns: 1fr; }
+  .chapter--text .text p { font-size: max(22px, calc(var(--u) * 24)); max-width: 60ch; }
+}
+/* Phone */
+@media (max-width: 700px) {
+  :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 58px; }
+  .logo, .burger, .menu { display: none !important; }
+  .back { display: inline-flex !important; }   /* no logo or menu on the phone's work detail page */
+  .edge--bottom { left: 24px; font-size: 17px; }
+  .edge--bottom .cue-d { display: none; } .edge--bottom .cue-m { display: block; }
+  .chapter { padding-bottom: 64px; }
+  .chapter__in { gap: 14px; } .pill { margin-bottom: 14px; }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; margin-top: 20px; font-size: 15px; }
+  .facts b { font-size: 15px; margin-bottom: 4px; }
+  .shot, .shot--ph { max-height: 30dvh; }
+}
+.back { display: none; position: fixed; z-index: 6; top: 14px; left: 24px; align-items: center; gap: 6px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 20px; line-height: 1; letter-spacing: .02em; color: var(--orange); text-decoration: none; }
+@media (prefers-reduced-motion: reduce) { .chapter, .chapter.is-active { transition: none; } }

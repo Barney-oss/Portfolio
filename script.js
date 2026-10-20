@@ -148,7 +148,7 @@ const cardEls = PROJECTS.map((p, i) => {
   const a = document.createElement("a");
   a.className = "layer card";
   a.setAttribute("style", box(slots[0]));   /* every card starts as the centre box */
-  a.href = "project.html?p=" + p.slug;
+  a.href = p.slug;
   a.setAttribute("aria-label", `${p.title}, project ${i + 1} of ${total}`);
   a.innerHTML = `
     <div class="card__front">
