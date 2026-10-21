@@ -193,7 +193,7 @@ p, dl, dd { margin: 0; }
 }
 .logo__blob:has(img) { background: none; border-radius: 0; display: grid; place-items: center; }
 /* The logo blob is the big entry blob, turned a quarter and squeezed, so the two always match. */
-.logo__blob img { width: calc(var(--u) * 226); height: calc(var(--u) * 68); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); object-fit: fill; }
+.logo__blob img { width: calc(var(--u) * 164); height: calc(var(--u) * 68); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); object-fit: fill; }
 .logo__text {
   position: relative;
   font-family: var(--font-display);
