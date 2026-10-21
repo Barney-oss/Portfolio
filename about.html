@@ -47,7 +47,7 @@
                font-size: max(17px, calc(var(--u) * 18)); letter-spacing: .06em; text-transform: uppercase; color: var(--orange-deep); }
 
     .shot { display: block; width: 100%; height: auto; max-height: 68dvh; object-fit: contain; }
-    .shot--ph img { width: 96%; height: auto; display: block; }
+    .shot--ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .shot--ph { aspect-ratio: 1; width: min(100%, 520px); height: auto; justify-self: center; max-height: none; display: grid; place-items: center; background: #F7E6D6; -webkit-mask: url(assets/blob-3-fill.svg) center / 100% 100% no-repeat; mask: url(assets/blob-3-fill.svg) center / 100% 100% no-repeat; color: #6b5d52; font-size: 14px; }   /* the picture sits in a blob, like the rest of the site */
 
     @media (max-width: 700px) {
@@ -108,7 +108,7 @@
         </a>
       </div>
       <div class="media">
-        <div class="shot shot--ph"><img src="assets/about-leather.svg" alt="A leather card holder, cut and marked for stitching but not sewn yet"></div>
+        <div class="shot shot--ph"><img src="assets/about-leather.webp" alt="A leather card holder cut and marked for stitching, with a stitching chisel and an edge beveler beside it"></div>
       </div>
     </div>
   </main>
