@@ -422,12 +422,13 @@ if (sp.has("card") || sp.has("work")) {
 
 /* ---------- input: wheel, touch, keys ---------- */
 let locked = false;
-function step(direction) {
+function step(direction, fromTouch) {
   if (stage.classList.contains("is-intro")) {      /* on the entry screen, scrolling down opens the work */
-    if (direction > 0) { locked = true; leaveIntro(); setTimeout(() => (locked = false), 1100); }
+    if (direction > 0 && !(locked && !fromTouch)) { locked = true; leaveIntro(); setTimeout(() => (locked = false), 1100); }
     return;
   }
-  if (locked) return;
+  if (fromTouch) { direction > 0 ? next() : prev(); return; }   /* a swipe on a phone always moves a card, however quickly the last one came */
+  if (locked) return;      /* wheels and keys fire many times per gesture, so they still move one card at a time */
   locked = true;
   direction > 0 ? next() : prev();
   setTimeout(() => (locked = false), 550);   /* one move per gesture; just after the card has landed */
@@ -449,14 +450,14 @@ window.addEventListener("touchstart", (e) => {
 window.addEventListener("touchmove", (e) => {
   if (touchStartY === null) return;
   const dy = touchStartY - e.touches[0].clientY;
-  if (Math.abs(dy) > 40) { touchStartY = null; step(dy); }          /* far enough: go now, while the finger is still down */
+  if (Math.abs(dy) > 40) { touchStartY = null; step(dy, true); }          /* far enough: go now, while the finger is still down */
 }, { passive: true });
 window.addEventListener("touchend", (e) => {
   if (touchStartY === null) return;
   const dy = touchStartY - e.changedTouches[0].clientY;
   const speed = Math.abs(dy) / Math.max(performance.now() - touchStartT, 1);   /* pixels per millisecond */
   touchStartY = null;
-  if (Math.abs(dy) > 40 || (Math.abs(dy) > 16 && speed > 0.3)) step(dy);       /* a short, quick flick counts too */
+  if (Math.abs(dy) > 40 || (Math.abs(dy) > 16 && speed > 0.3)) step(dy, true);       /* a short, quick flick counts too */
 }, { passive: true });
 window.addEventListener("touchcancel", () => { touchStartY = null; }, { passive: true });
 
