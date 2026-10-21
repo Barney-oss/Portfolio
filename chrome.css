@@ -28,7 +28,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .logo__blob:has(img) { background: none; border-radius: 0; display: grid; place-items: center; }
 /* The logo blob is the big entry blob, turned a quarter and squeezed, so the two always match. */
-.logo__blob img { width: calc(var(--u) * 210); height: calc(var(--u) * 74); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); object-fit: fill; }
+.logo__blob img { width: calc(var(--u) * 226); height: calc(var(--u) * 68); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); object-fit: fill; }
 .logo__text {
   position: relative;
   font-family: var(--font-display);
@@ -39,7 +39,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   place-items: center;
 }
 /* The name, with its R in BBH Sans Bartle, turned the same quarter as the blob. */
-.logo__r { display: block; width: calc(var(--u) * 118); height: calc(var(--u) * 28); transform: rotate(-90deg); }
+.logo__r { display: block; width: calc(var(--u) * 104); height: calc(var(--u) * 25); transform: rotate(-90deg); }
 
 .nav { z-index: 5; }
 .nav ul { display: flex; flex-direction: column; gap: calc(var(--u) * 2); }
