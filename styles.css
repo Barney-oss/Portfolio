@@ -520,8 +520,9 @@ p, dl, dd { margin: 0; }
 .fact dd, #fact-type { font-weight: 400; }   /* the Designed for, Role and Project type texts are a step heavier than the rest */
 @media (max-width: 700px) { .fact dd, #fact-type { -webkit-text-stroke: .35px currentColor; } }   /* and on the phone one more step */
 
-/* Entry screen on larger windows: "Hi, I am" sits a little lower, and the bio is left aligned with it */
+/* Entry screen on larger windows: "Hi, I am" is set into the notch above the R, in the same black as the name,
+   and the bio is centred under the name */
 @media (min-width: 701px) {
-  .intro__hello { --y: 366 !important; }
-  .intro__bio { --x: 360 !important; --w: 620 !important; text-align: left; text-wrap: balance; }
+  .intro__hello { --x: 536 !important; --y: 421 !important; --w: 300 !important; font-size: calc(var(--u) * 30); color: var(--ink); text-align: center; transform: rotate(-3deg); transform-origin: 50% 50%; line-height: 1; }
+  .intro__bio { --x: 433 !important; --w: 600 !important; text-align: center; text-wrap: balance; }
 }
