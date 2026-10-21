@@ -383,7 +383,7 @@ p, dl, dd { margin: 0; }
     --u: min(calc(100vw / 412), calc(100dvh / 780));
     --ox: calc((100vw - var(--u) * 412) / 2);
   }
-  html, body { overscroll-behavior: none; }
+  html, body { overscroll-behavior: none; touch-action: pinch-zoom; }   /* swipes belong to the cards, not the browser; pinch to zoom still works */
 
   .nav, .edge--top { display: none !important; }
 

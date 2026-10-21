@@ -430,7 +430,7 @@ function step(direction) {
   if (locked) return;
   locked = true;
   direction > 0 ? next() : prev();
-  setTimeout(() => (locked = false), 900);   /* one move per gesture */
+  setTimeout(() => (locked = false), 550);   /* one move per gesture; just after the card has landed */
 }
 
 window.addEventListener("wheel", (e) => {
@@ -439,14 +439,26 @@ window.addEventListener("wheel", (e) => {
   step(d);
 }, { passive: true });
 
-let touchStartY = null;
-window.addEventListener("touchstart", (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+/* Touch: a swipe counts as soon as the finger has moved far enough, or fast enough, so it never depends on the
+   browser delivering the moment the finger lifts. One swipe moves one card. */
+let touchStartY = null, touchStartT = 0;
+window.addEventListener("touchstart", (e) => {
+  touchStartY = e.touches.length === 1 ? e.touches[0].clientY : null;
+  touchStartT = performance.now();
+}, { passive: true });
+window.addEventListener("touchmove", (e) => {
+  if (touchStartY === null) return;
+  const dy = touchStartY - e.touches[0].clientY;
+  if (Math.abs(dy) > 40) { touchStartY = null; step(dy); }          /* far enough: go now, while the finger is still down */
+}, { passive: true });
 window.addEventListener("touchend", (e) => {
   if (touchStartY === null) return;
   const dy = touchStartY - e.changedTouches[0].clientY;
+  const speed = Math.abs(dy) / Math.max(performance.now() - touchStartT, 1);   /* pixels per millisecond */
   touchStartY = null;
-  if (Math.abs(dy) > 50) step(dy);
+  if (Math.abs(dy) > 40 || (Math.abs(dy) > 16 && speed > 0.3)) step(dy);       /* a short, quick flick counts too */
 }, { passive: true });
+window.addEventListener("touchcancel", () => { touchStartY = null; }, { passive: true });
 
 window.addEventListener("keydown", (e) => {
   if (["ArrowDown", "ArrowRight", "PageDown", "Enter", " "].includes(e.key) && stage.classList.contains("is-intro")) { e.preventDefault(); step(1); return; }
