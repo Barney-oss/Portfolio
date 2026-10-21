@@ -64,12 +64,18 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
 @media (max-width: 700px) {
   :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 58px; }
   .edge.edge--bottom { left: 24px; font-size: 17px; }
-  html .back { top: 14px; left: 24px; font-size: 20px; gap: 8px; }
+  html .back { top: 14px; left: 24px; font-size: 18px; gap: 7px; }
+  .back .arr { width: 20px; height: 13px; }
   .edge--bottom .cue-d { display: none; } .edge--bottom .cue-m { display: block; }
+  .dots { gap: 9px; }
+  .dots a { width: 15px; height: 15px; }   /* a tad smaller */
   .chapter { padding-bottom: 64px; }
   .chapter__in { gap: 14px; } .pill { margin-bottom: 14px; }
-  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; margin-top: 20px; font-size: 15px; }
-  .facts b { font-size: 15px; margin-bottom: 4px; }
+  .pill h1 { font-size: 36px; } .pill h2 { font-size: 26px; }   /* every text one step smaller on the phone */
+  .text p { font-size: 15px; }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; margin-top: 20px; font-size: 14px; }
+  .facts b { font-size: 14px; margin-bottom: 4px; }
+  .fig figcaption { font-size: 12px; }
   .shot, .shot--ph { max-height: 30dvh; }
 }
 .back { position: fixed; z-index: 6; top: calc(var(--u) * 67.6 - 11px); left: 56px; display: inline-flex; align-items: center; gap: 10px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); text-decoration: none; }
