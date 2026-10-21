@@ -442,7 +442,7 @@ p, dl, dd { margin: 0; }
   /* The blob grows out of the menu button (top right) and settles in the middle. */
   .menu__blob {
     position: absolute;
-    left: calc(var(--ox) + var(--u) * 53); top: calc(var(--u) * 166);
+    left: calc(50% - var(--u) * 170); top: calc(50% - var(--u) * 171);   /* the middle of the screen, whatever its size */
     width: calc(var(--u) * 340); height: calc(var(--u) * 342);
     transform-origin: 90% 0%; transform: scale(.15) rotate(8deg); opacity: 0;
     transition: transform .3s ease, opacity .25s ease;
@@ -457,7 +457,7 @@ p, dl, dd { margin: 0; }
   /* Laid out exactly like the desktop navigation: every row the same height, every word on the same left edge,
      the orange dot in a column of its own to the left of the words. */
   .menu ul {
-    position: absolute; left: calc(var(--ox) + var(--u) * 158); top: calc(var(--u) * 271);
+    position: absolute; left: calc(50% - var(--u) * 54); top: calc(50% - var(--u) * 66);
     display: flex; flex-direction: column; gap: calc(var(--u) * 3); margin: 0; padding: 0; list-style: none;
   }
   .menu__link {
