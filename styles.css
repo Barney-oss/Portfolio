@@ -511,9 +511,9 @@ p, dl, dd { margin: 0; }
     to   { transform: translate(calc(var(--u) * 28), calc(var(--u) * -22)) rotate(4deg); }
   }
   .intro__blob  { --x: 11.8 !important;  --y: 226.3 !important; --w: 401 !important; --h: 309 !important; }
-  .intro__hello { --x: 62 !important;  --y: 325 !important; --w: 110 !important; text-align: left; }
+  .intro__hello { --x: 134 !important; --y: 351 !important; --w: 110 !important; font-size: calc(var(--u) * 14); color: var(--ink); text-align: center; transform-origin: 50% 50%; transform: rotate(-3deg); line-height: 1; }   /* in the notch above the R, like on desktop */
   .intro__name  { --x: 0 !important;   --y: 329 !important; --w: 412 !important; --h: 120 !important; }
-  .intro__bio   { --x: 56 !important; --y: 433 !important; --w: 300 !important; }
+  .intro__bio   { --x: 56 !important; --y: 443 !important; --w: 300 !important; }
 }
 
 /* Lato has no weight between regular (400) and bold (700), so a hairline stroke gives it one step more weight. */
@@ -523,6 +523,6 @@ p, dl, dd { margin: 0; }
 /* Entry screen on larger windows: "Hi, I am" is set into the notch above the R, in the same black as the name,
    and the bio is centred under the name */
 @media (min-width: 701px) {
-  .intro__hello { --x: 536 !important; --y: 421 !important; --w: 300 !important; font-size: calc(var(--u) * 30); color: var(--ink); text-align: center; transform: rotate(-3deg); transform-origin: 50% 50%; line-height: 1; }
+  .intro__hello { --x: 536 !important; --y: 414 !important; --w: 300 !important; font-size: calc(var(--u) * 30); color: var(--ink); text-align: center; transform: rotate(-3deg); transform-origin: 50% 50%; line-height: 1; }
   .intro__bio { --x: 433 !important; --w: 600 !important; text-align: center; text-wrap: balance; }
 }
