@@ -83,9 +83,9 @@ phone.addEventListener("change", () => location.reload());
 
 const MOBILE_SLOTS = {
   0: { x: 13.6, y: 275.5, w: 388.5, h: 326.5 },
-  1: { x: -36.8, y: 280, w: 293, h: 272 },      /* upper left, bleeding off the edge */
+  1: { x: -36.8, y: 236, w: 293, h: 272 },      /* upper left, bleeding off the edge */
   2: { x: 60, y: 330, w: 290, h: 250 },
-  3: { x: 174.1, y: 359, w: 289, h: 251 },      /* lower right, bleeding off the edge */
+  3: { x: 174.1, y: 405, w: 289, h: 251 },      /* lower right, bleeding off the edge */
 };
 const MOBILE_SHOTS = {
   back:  { x: 63,    y: 49,   w: 186.2, h: 214 },
@@ -347,11 +347,11 @@ function playLetters() {
   })();
 }
 
-/* The phone blob is a separate drawing: if assets/phone-blob.svg exists it replaces the stand-in. */
+/* The phone blob is a separate drawing: if assets/phone-blob-flex.svg exists it replaces the stand-in. */
 if (isPhone) {
   const probe = new Image();
   probe.onload = () => { const img = introBlob.querySelector("img"); if (img) img.src = probe.src; };
-  probe.src = "assets/phone-blob.svg";
+  probe.src = "assets/phone-blob-flex.svg";   /* the stretchable copy, so a shorter box makes a shorter blob, not a narrower one */
 }
 
 const centre = (r) => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });

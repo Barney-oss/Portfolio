@@ -95,7 +95,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .logo__blob { justify-content: start; right: auto; left: calc(var(--u) * -16); width: calc(var(--u) * 128); }   /* the word, not the blob, lines up with the texts below */
   .logo__blob img:not(.logo__blob-m) { display: none; }
   .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 128); height: calc(var(--u) * 54); position: static; transform: none; object-fit: fill; }
-  .logo__text { font-size: calc(var(--u) * 28); }
+  .logo__text { font-size: calc(var(--u) * 28); transform: translateX(calc(var(--u) * -5.5)); }   /* the name sits in the middle of the blob */
   .logo__r { width: calc(var(--u) * 88); height: calc(var(--u) * 21); transform: translateX(calc(var(--u) * -16)); }
 
   /* menu button and menu */

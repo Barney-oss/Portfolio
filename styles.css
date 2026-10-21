@@ -417,7 +417,7 @@ p, dl, dd { margin: 0; }
   .logo__blob { justify-content: start; right: auto; left: calc(var(--u) * -16); width: calc(var(--u) * 128); }   /* the word, not the blob, lines up with the texts below */
   .logo__blob img:not(.logo__blob-m) { display: none; }
   .logo__blob img.logo__blob-m { display: block; width: calc(var(--u) * 128); height: calc(var(--u) * 54); position: static; transform: none; object-fit: fill; }
-  .logo__text { font-size: calc(var(--u) * 28); }
+  .logo__text { font-size: calc(var(--u) * 28); transform: translateX(calc(var(--u) * -5.5)); }   /* the name sits in the middle of the blob */
   .logo__r { width: calc(var(--u) * 88); height: calc(var(--u) * 21); transform: translateX(calc(var(--u) * -16)); }
 
   /* menu button and menu */
@@ -512,7 +512,7 @@ p, dl, dd { margin: 0; }
     from { transform: translate(calc(var(--u) * -28), calc(var(--u) * 20)) rotate(-4deg); }
     to   { transform: translate(calc(var(--u) * 28), calc(var(--u) * -22)) rotate(4deg); }
   }
-  .intro__blob  { --x: 11.8 !important;  --y: 284 !important; --w: 401 !important; --h: 255 !important; }
+  .intro__blob  { --x: -16 !important;  --y: 282 !important; --w: 440 !important; --h: 262 !important; }
   .intro__hello { --x: 134 !important; --y: 351 !important; --w: 110 !important; font-size: calc(var(--u) * 14); color: var(--ink); text-align: center; transform-origin: 50% 50%; transform: rotate(-3deg); line-height: 1; }   /* in the notch above the R, like on desktop */
   .intro__name  { --x: 0 !important;   --y: 329 !important; --w: 412 !important; --h: 120 !important; }
   .intro__bio   { --x: 56 !important; --y: 443 !important; --w: 300 !important; }
