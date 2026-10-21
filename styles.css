@@ -193,7 +193,7 @@ p, dl, dd { margin: 0; }
 }
 .logo__blob:has(img) { background: none; border-radius: 0; display: grid; place-items: center; }
 /* The logo blob is the big entry blob, turned a quarter and squeezed, so the two always match. */
-.logo__blob img { width: calc(var(--u) * 210); height: calc(var(--u) * 100); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); object-fit: fill; }
+.logo__blob img { width: calc(var(--u) * 210); height: calc(var(--u) * 74); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); object-fit: fill; }
 .logo__text {
   position: relative;
   font-family: var(--font-display);
@@ -519,3 +519,9 @@ p, dl, dd { margin: 0; }
 /* Lato has no weight between regular (400) and bold (700), so a hairline stroke gives it one step more weight. */
 .fact dd, #fact-type { font-weight: 400; }   /* the Designed for, Role and Project type texts are a step heavier than the rest */
 @media (max-width: 700px) { .fact dd, #fact-type { -webkit-text-stroke: .35px currentColor; } }   /* and on the phone one more step */
+
+/* Entry screen on larger windows: "Hi, I am" sits a little lower, and the bio is left aligned with it */
+@media (min-width: 701px) {
+  .intro__hello { --y: 366 !important; }
+  .intro__bio { --x: 360 !important; --w: 470 !important; text-align: left; }
+}

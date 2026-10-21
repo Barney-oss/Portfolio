@@ -12,9 +12,9 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
 .edge--bottom .cue-m { display: none; }
 
 /* Chapter dots on the right edge: where you are, tap to jump */
-.dots { position: fixed; right: 14px; top: 50%; transform: translateY(-50%); z-index: 5; display: grid; gap: 12px; }
-.dots a { width: 15px; height: 15px; background: url(assets/nav-dot-empty.svg) center / 100% 100% no-repeat; }
-.dots a.on { background-image: url(assets/nav-dot.svg); }
+.dots { position: fixed; right: 13px; top: 50%; transform: translateY(-50%); z-index: 5; display: grid; gap: 10px; }
+.dots a { width: 17px; height: 17px; background: url(assets/nav-dot-empty.svg) center / 100% 100% no-repeat; }   /* 1px of room around each blob so its edge is never cut */
+.dots a.on { background-image: url(assets/nav-dot-pad.svg); }
 
 /* One chapter = one whole screen. Only one is ever visible; the page never scrolls between them. */
 #chapters { position: fixed; inset: 0; }
@@ -64,7 +64,7 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
 @media (max-width: 700px) {
   :root { --u: min(calc(100vw / 412), calc(100dvh / 780)); --pt: 58px; }
   .edge.edge--bottom { left: 24px; font-size: 17px; }
-  html .back { top: 14px; left: 24px; font-size: 20px; }
+  html .back { top: 14px; left: 24px; font-size: 20px; gap: 8px; }
   .edge--bottom .cue-d { display: none; } .edge--bottom .cue-m { display: block; }
   .chapter { padding-bottom: 64px; }
   .chapter__in { gap: 14px; } .pill { margin-bottom: 14px; }
@@ -72,5 +72,6 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
   .facts b { font-size: 15px; margin-bottom: 4px; }
   .shot, .shot--ph { max-height: 30dvh; }
 }
-.back { position: fixed; z-index: 6; top: 45px; left: 56px; display: inline-flex; align-items: center; gap: 6px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); text-decoration: none; }
+.back { position: fixed; z-index: 6; top: calc(var(--u) * 67.6 - 11px); left: 56px; display: inline-flex; align-items: center; gap: 10px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); text-decoration: none; }
+.back .arr { display: block; flex: none; }   /* the same arrow as the Scroll cue, turned to point back */
 @media (prefers-reduced-motion: reduce) { .chapter, .chapter.is-active { transition: none; } }
