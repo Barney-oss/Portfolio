@@ -189,11 +189,22 @@ function show(i) {
   playVideos(i);
   try { history.replaceState(null, "", "#c" + i); } catch (e) {}
 }
+/* Every request for a chapter is kept: the page moves to the latest one asked for, one fade at a time, so a quick second
+   swipe is never thrown away. */
+let want = -1, moving = false;
+async function run() {
+  moving = true;
+  while (want !== cur) {
+    const target = want;
+    if (still || !window.Fade) show(target); else await Fade.swap(() => show(target));
+  }
+  moving = false;
+}
 function goTo(i) {
-  if (i < 0 || i >= secs.length || i === cur) return;
-  busy = true; clearTimeout(rel); rel = setTimeout(() => busy = false, 750);
-  const dir = i > cur ? 1 : -1;
-  if (still || !window.Fade) show(i); else Fade.swap(() => show(i));
+  if (i < 0 || i >= secs.length || i === want) return;
+  busy = true; clearTimeout(rel); rel = setTimeout(() => busy = false, 750);   /* only the mouse wheel looks at this */
+  want = i;
+  if (!moving) run();
 }
 const canScroll = (dir) => { const el = secs[cur]; return dir > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 2 : el.scrollTop > 2; };
 addEventListener("wheel", (e) => {
@@ -202,21 +213,35 @@ addEventListener("wheel", (e) => {
   if (canScroll(dir) && !busy) return;           // let a tall chapter scroll itself
   e.preventDefault();
   if (busy) { clearTimeout(rel); rel = setTimeout(() => busy = false, 180); return; }
-  goTo(cur + dir);
+  goTo(want + dir);
 }, { passive: false });
-let ty = 0, edgeStart = 0;
-addEventListener("touchstart", (e) => { ty = e.touches[0].clientY; const el = secs[cur]; edgeStart = (el.scrollTop <= 2 ? -1 : 0) + (el.scrollTop + el.clientHeight >= el.scrollHeight - 2 ? 1 : 0); }, { passive: true });
-addEventListener("touchend", (e) => {
-  const dy = ty - e.changedTouches[0].clientY;
-  if (Math.abs(dy) < 50 || busy) return;
+let ty = 0, tt = 0, edgeStart = 0, tdone = true;
+function swipe(dy) {
   const dir = dy > 0 ? 1 : -1;
   const atEdge = dir > 0 ? (edgeStart === 1 || edgeStart === 0 && false) || !canScroll(1) && edgeStart >= 1 : !canScroll(-1) && edgeStart <= -1;
-  const fits = secs[cur].scrollHeight <= secs[cur].clientHeight + 2;
-  if (fits || atEdge) goTo(cur + dir);
+  const fits = secs[cur].scrollHeight <= secs[cur].clientHeight + 64;   /* a few pixels over is only the bottom padding: nothing is hidden, so the swipe changes chapter */
+  if (fits || atEdge) goTo(want + dir);          /* from the chapter we are heading to, so quick swipes add up */
+}
+addEventListener("touchstart", (e) => {
+  tdone = e.touches.length !== 1; tt = performance.now();
+  ty = e.touches[0].clientY; const el = secs[cur]; edgeStart = (el.scrollTop <= 2 ? -1 : 0) + (el.scrollTop + el.clientHeight >= el.scrollHeight - 2 ? 1 : 0);
 }, { passive: true });
+addEventListener("touchmove", (e) => {       /* far enough: change chapter now, without waiting for the finger to lift */
+  if (tdone) return;
+  const dy = ty - e.touches[0].clientY;
+  if (Math.abs(dy) > 40) { tdone = true; swipe(dy); }
+}, { passive: true });
+addEventListener("touchend", (e) => {
+  if (tdone) return; tdone = true;
+  const dy = ty - e.changedTouches[0].clientY;
+  const speed = Math.abs(dy) / Math.max(performance.now() - tt, 1);
+  if (Math.abs(dy) > 40 || (Math.abs(dy) > 16 && speed > 0.3)) swipe(dy);   /* a short, quick flick counts too */
+}, { passive: true });
+addEventListener("touchcancel", () => { tdone = true; }, { passive: true });
 addEventListener("keydown", (e) => {
-  if (["ArrowDown", "PageDown", " "].includes(e.key) && !canScroll(1)) { e.preventDefault(); goTo(cur + 1); }
-  else if (["ArrowUp", "PageUp"].includes(e.key) && !canScroll(-1)) { e.preventDefault(); goTo(cur - 1); }
+  if (["ArrowDown", "PageDown", " "].includes(e.key) && !canScroll(1)) { e.preventDefault(); goTo(want + 1); }
+  else if (["ArrowUp", "PageUp"].includes(e.key) && !canScroll(-1)) { e.preventDefault(); goTo(want - 1); }
 });
 const start = /^#c(\d+)$/.exec(location.hash);
 show(start && +start[1] < secs.length ? +start[1] : 0);
+want = cur;
