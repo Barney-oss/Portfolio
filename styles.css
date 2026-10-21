@@ -346,7 +346,7 @@ p, dl, dd { margin: 0; }
 
 .intro__hello, .intro__bio { margin: 0; color: var(--ink); text-align: center; transition: opacity .35s ease .5s; }
 .intro__hello { font: 400 calc(var(--u) * 38)/1 "Kaushan Script", "Caveat", cursive; color: var(--orange); transform: rotate(-4deg); transform-origin: 0 50%; text-align: left; }
-.intro__bio { font: 400 calc(var(--u) * 20)/1.3 var(--font-body); white-space: nowrap; }   /* one short sentence, tucked close under the name */
+.intro__bio { font: 400 calc(var(--u) * 16)/1.4 var(--font-body); }
 
 .intro__name {
   margin: 0; display: flex; align-items: center; justify-content: center;
@@ -499,7 +499,7 @@ p, dl, dd { margin: 0; }
   .intro__blob img { width: 100%; height: 100%; object-fit: fill; }   /* stand-in shape until the phone blob is exported */
   .intro__hello { font-size: calc(var(--u) * 15); }
   .intro__name { font-size: calc(var(--u) * 80); }
-  .intro__bio { font-size: calc(var(--u) * 13); }
+  .intro__bio { font-size: calc(var(--u) * 10); }
   .stage.is-intro .burger { opacity: 0; }
   .stage.is-intro.is-leaving .burger { opacity: 1; transition: opacity .3s .65s; }
   /* the cue is the same one as desktop: crisp above the entry screen, reading "Scroll" */
@@ -513,7 +513,7 @@ p, dl, dd { margin: 0; }
   .intro__blob  { --x: 11.8 !important;  --y: 226.3 !important; --w: 401 !important; --h: 309 !important; }
   .intro__hello { --x: 134 !important; --y: 351 !important; --w: 110 !important; font-size: calc(var(--u) * 14); color: var(--ink); text-align: center; transform-origin: 50% 50%; transform: rotate(-3deg); line-height: 1; }   /* in the notch above the R, like on desktop */
   .intro__name  { --x: 0 !important;   --y: 329 !important; --w: 412 !important; --h: 120 !important; }
-  .intro__bio   { --x: 56 !important; --y: 446 !important; --w: 300 !important; }
+  .intro__bio   { --x: 56 !important; --y: 443 !important; --w: 300 !important; }
 }
 
 /* Lato has no weight between regular (400) and bold (700), so a hairline stroke gives it one step more weight. */
@@ -524,5 +524,5 @@ p, dl, dd { margin: 0; }
    and the bio is centred under the name */
 @media (min-width: 701px) {
   .intro__hello { --x: 536 !important; --y: 414 !important; --w: 300 !important; font-size: calc(var(--u) * 30); color: var(--ink); text-align: center; transform: rotate(-3deg); transform-origin: 50% 50%; line-height: 1; }
-  .intro__bio { --x: 433 !important; --y: 620 !important; --w: 600 !important; text-align: center; }
+  .intro__bio { --x: 433 !important; --w: 600 !important; text-align: center; text-wrap: balance; }
 }
