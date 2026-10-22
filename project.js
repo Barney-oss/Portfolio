@@ -197,6 +197,7 @@ async function run() {
   while (want !== cur) {
     const target = want;
     if (still || !window.Fade) show(target); else await Fade.swap(() => show(target));
+    if (cur !== target) show(target);                  /* if the fade could not run, still arrive */
   }
   moving = false;
 }

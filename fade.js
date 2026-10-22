@@ -48,16 +48,22 @@
 
   /* ---- between chapters ---- */
   let swapping = false;
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   async function swap(change) {
     if (still) { change(); return; }
     if (swapping) return;
     swapping = true; root.classList.add("fading");
-    const out = fadeOut(seen());
-    await out.done;
-    change();
-    out.anims.forEach((a) => a.cancel());                  /* the old chapter must come back whole if it is visited again */
-    await fadeIn(pieces());                                /* started in the same frame as the change, so nothing flashes */
-    root.classList.remove("fading"); swapping = false;
+    try {
+      const out = fadeOut(seen());
+      await Promise.race([out.done, wait(900)]);           /* never wait forever for an animation that did not report back */
+      change();
+      out.anims.forEach((a) => a.cancel());                /* the old chapter must come back whole if it is visited again */
+      await Promise.race([fadeIn(pieces()), wait(1400)]);  /* started in the same frame as the change, so nothing flashes */
+    } finally {
+      root.classList.remove("fading"); swapping = false;
+      /* Whatever happened, the chapter on screen must end up fully visible: drop every leftover fade. */
+      document.getAnimations().forEach((a) => { const t = a.effect && a.effect.target; if (t && t.closest && t.closest(".chapter")) a.cancel(); });
+    }
   }
 
   /* ---- between pages ---- */
