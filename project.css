@@ -72,6 +72,7 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
   .chapter { padding-bottom: 64px; }
   .chapter__in { gap: 14px; } .pill { margin-bottom: 14px; }
   .pill h1 { font-size: 36px; } .pill h2 { font-size: 26px; }   /* every text one step smaller on the phone */
+  .chapter--text .pill h1 { font-size: 30px; }   /* a long title on a text-only chapter must fit between the margin and the dots */
   .text p { font-size: 15px; }
   .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; margin-top: 20px; font-size: 14px; }
   .facts b { font-size: 14px; margin-bottom: 4px; }

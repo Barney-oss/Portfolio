@@ -128,11 +128,39 @@ const PROJECTS = {
         images: [{ src: "assets/web-amharic-the-result.webp?v=2", bare: true, alt: "Reviews on the Play Store", caption: "What people wrote once it shipped." }] },
     ],
   },
+  "this-site": {
+    name: "How I built this site", role: "Designer", type: "Portfolio \u00b7 Web",
+    chapters: [
+      { title: "How I built this site", big: true,
+        body: ["This portfolio is hand-coded: plain HTML, CSS and a little JavaScript, with no template and no website builder. I designed every screen first, then built it with Claude, which wrote most of the code while I directed it.",
+               "I wanted the site to be a design project too, not only the place where the others are shown."],
+        images: [] },
+      { title: "One thing per screen",
+        body: ["Every page is a single screen with nothing to scroll past. A project is told in chapters, one at a time, with a few lines and a picture each.",
+               "Someone looking through a portfolio is usually in a hurry. One point at a time means they get each of mine, and it is how I try to design apps too."],
+        images: [] },
+      { title: "Designed to scale",
+        body: ["I drew the desktop screens at 1440 by 1080 and the phone screens at 412 by 780. Every size on the site comes from those two drawings, so at any window size you are looking at the design, only bigger or smaller.",
+               "That is why nothing is cut off and nothing needs a different layout for each device."],
+        images: [] },
+      { title: "The details",
+        body: ["The soft shapes behind the text are blobs I drew as SVG, and the site uses them as frames and masks. The type is Antonio for headings and Lato for reading. The R in my name is BBH Sans Bartle, turned a quarter to sit like the blob behind it.",
+               "Chapters fade into each other instead of cutting. If your device is set to reduce motion, they simply change."],
+        images: [] },
+      { title: "Working with Claude",
+        body: ["I know HTML and CSS, and JavaScript is where I lean on Claude. I describe what I want, look at it on my own phone, then send back screenshots with what is wrong. We repeat that until it matches the design.",
+               "Most of the work was looking closely: a gap that was a few pixels off, a swipe that misbehaved on a real phone. That part is still design."],
+        images: [] },
+      { title: "Where it lives",
+        body: ["The code is on GitHub and the site is served from GitHub Pages, with my own domain through Cloudflare. It costs almost nothing to run, and I can change a word and see it live in minutes."],
+        images: [] },
+    ],
+  },
 };
 const slug = document.body.dataset.project || new URLSearchParams(location.search).get("p");
 const p = PROJECTS[slug] || PROJECTS["agristelle"];
 document.title = p.name + " \u00b7 Nardos";
-try { if (PROJECTS[slug]) localStorage.setItem("lastProject", slug); } catch (e) {}
+try { if (PROJECTS[slug] && slug !== "this-site") localStorage.setItem("lastProject", slug); } catch (e) {}
 const homeLink = document.querySelector("a[data-home]"); if (homeLink) homeLink.href = "./" + (PROJECTS[slug] ? "?card=" + slug : "?work");
 
 const chapters = p.chapters.map((c, i) => ({ ...c, first: i === 0 }));
