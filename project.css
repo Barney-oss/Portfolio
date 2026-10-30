@@ -21,7 +21,9 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
 .chapter { position: absolute; inset: 0; display: flex; flex-direction: column; overflow-y: auto; padding: var(--pt) 44px 56px 24px;
   opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .2s ease, visibility 0s .2s; }
 .chapter.is-active { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .3s ease .2s, visibility 0s .2s; }
-.chapter__in { margin: auto 0; display: grid; gap: 18px; width: 100%; }
+.chapter__in { margin: auto 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; width: 100%; }
+.chapter__in > * { min-width: 0; }
+.text p { overflow-wrap: anywhere; }
 .pill { position: relative; display: inline-grid; place-items: center; margin: 0 0 22px; padding: .6em 1.7em .5em; justify-self: start; }
 .pill img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .pill h1, .pill h2 { position: relative; margin: 0; font-family: "Antonio", sans-serif; font-weight: 400; line-height: 1; color: var(--ink); white-space: nowrap; }
@@ -88,6 +90,9 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
   .fig figcaption { font-size: 12px; }
   .shot, .shot--ph { max-height: 30dvh; }
   .pair { --mh: 30dvh; }
+  .pill h1, .pill h2 { white-space: normal; text-align: center; }
+  .pill { max-width: 100%; }
+  .chapter { padding-right: 48px; }
 }
 .back { position: fixed; z-index: 6; top: calc(var(--u) * 67.6 - 11px); left: 56px; display: inline-flex; align-items: center; gap: 10px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); text-decoration: none; }
 .back .arr { display: block; flex: none; }   /* the same arrow as the Scroll cue, turned to point back */
