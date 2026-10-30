@@ -57,11 +57,20 @@ const PROJECTS = [
       { src: "assets/card-liq-3.webp", alt: "A question and its explanation" },
     ],
   },
+  {
+    slug: "ribkas-portfolio",
+    title: "Ribka\u2019s portfolio",
+    designedFor: "Ribka, a computer science student",
+    role: "Product designer",
+    type: "A portfolio site for a computer science student, drawn like a technical sheet. Designed in Figma and built by Ribka in React.",
+    side: "assets/left-blob.svg", tint: "0deg", blob: "assets/blob-5.svg",
+    cover: { src: "assets/web-ribka-card.webp", alt: "Ribka\u2019s portfolio: the home screen on a laptop and a phone" },
+  },
 ];
 
 /* ------------------------------------------------------------
-   Where a card sits for each slot, in design pixels on the
-   1440 x 1080 canvas. Slot = (project number - current) mod 4.
+   Where a card sits for each role (centre, next, waiting, previous), in design pixels on the
+   1440 x 1080 canvas. Role = where the card is relative to the current one (see slotOf in script.js).
    0 = centre, 1 = next (upper right), 3 = previous (lower left),
    2 = waiting out of sight.
    To swap the diagonal, swap the slot 1 and slot 3 rows.
@@ -174,8 +183,11 @@ const cardEls = PROJECTS.map((p, i) => {
   return a;
 });
 
+/* Whatever the number of projects: 0 = centre, 1 = next (upper right), the last one = previous (lower left),
+   and all the others wait out of sight (role 2). */
 function slotOf(i) {
-  return (i - current + total) % total;
+  const d = (i - current + total) % total;
+  return d === 0 ? 0 : d === 1 ? 1 : d === total - 1 ? 3 : 2;
 }
 
 /* ---------- put every card in its slot ---------- */
