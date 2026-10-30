@@ -130,7 +130,7 @@ const PROJECTS = {
   },
   "ribkas-portfolio": {
     name: "Ribka's portfolio", role: "Product designer", forWho: "Ribka, a computer science student", type: "Portfolio site · Web",
-    timeline: "TIMELINE?", team: "Me designing, Ribka building",
+    timeline: "2 weeks", team: "Me designing, Ribka building",
     chapters: [
       { title: "Ribka’s portfolio", big: true,
         body: ["A portfolio site for my sister, a third-year computer science student who needs it for internship applications. I designed it and set up the Figma file for handoff. Ribka built it herself in React.",
