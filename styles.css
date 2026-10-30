@@ -150,6 +150,14 @@ p, dl, dd { margin: 0; }
   .card__screen, .card__shot--cover { transition: none; }
 }
 .card__shot--back { border-radius: calc(var(--u) * 12); }
+
+/* Ribka's card: a laptop and a phone screenshot, rounded, with a shadow, drifting apart when the pointer is on the card. */
+.card__pair { height: auto; box-shadow: 0 calc(var(--u) * 10) calc(var(--u) * 26) rgba(35, 31, 28, 0.26); transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+.card__pair--back { border-radius: calc(var(--u) * 7); }
+.card__pair--front { border-radius: calc(var(--u) * 11); }
+.card[data-slot="0"]:hover .card__pair--back { transform: translate(-1.5%, -2%) rotate(-1deg); }
+.card[data-slot="0"]:hover .card__pair--front { transform: translate(5%, -3%) rotate(2.5deg); }
+@media (prefers-reduced-motion: reduce) { .card__pair { transition: none; } }
 .card__shot--front { border-radius: calc(var(--u) * 27); }
 
 /* Stand-in screenshots until the real ones arrive. */

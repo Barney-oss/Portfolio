@@ -64,7 +64,7 @@ const PROJECTS = [
     role: "Product designer",
     type: "A portfolio site for a computer science student, drawn like a technical sheet. Designed in Figma and built by Ribka in React.",
     side: "assets/left-blob.svg", tint: "0deg", blob: "assets/blob-5.svg",
-    cover: { src: "assets/web-ribka-card.webp", alt: "Ribka\u2019s portfolio: the home screen on a laptop and a phone" },
+    pair: { back: "assets/web-ribka-desktop.webp", front: "assets/web-ribka-phone.webp", alt: "Ribka\u2019s portfolio: the home screen on a laptop and a phone" },
   },
 ];
 
@@ -136,6 +136,11 @@ const stretchX = (b) => ({ ...b, x: 720 + (b.x + b.w / 2 - 720) * WIDE_K - (b.w 
 const slots = isPhone ? MOBILE_SLOTS : isWide ? Object.fromEntries(Object.entries(SLOTS).map(([k, b]) => [k, stretchX(b)])) : SLOTS;
 const shotBox = isPhone ? MOBILE_SHOTS : DESKTOP_SHOTS;
 const coverBox = isPhone ? MOBILE_COVER : isWide ? { x: (112 + 275) * WIDE_K - (550 * WIDE_K * 0.95) / 2, y: 326 - 231, w: 550 * WIDE_K * 0.95, h: 462 } : DESKTOP_COVER;
+/* A laptop screenshot and a phone screenshot placed inside the cover box, so they stay inside the blob at every window size. */
+const pairBoxes = (cb) => ({
+  back:  { x: cb.x + 0.03 * cb.w, y: cb.y + 0.19 * cb.h, w: 0.72 * cb.w },
+  front: { x: cb.x + 0.80 * cb.w, y: cb.y + 0.24 * cb.h, w: 0.17 * cb.w },
+});
 const box = (b) => `--x:${b.x}; --y:${b.y}; --w:${b.w};` + (b.h ? ` --h:${b.h};` : "");
 
 const stage = document.querySelector(".stage");
@@ -164,6 +169,9 @@ const cardEls = PROJECTS.map((p, i) => {
       <div class="card__blob" aria-hidden="true"><img class="card__blob-fill" src="${p.blob.replace('.svg', '-fill.svg')}" alt=""><img class="card__blob-line" src="${p.blob.replace('.svg', '-line.svg')}" alt=""></div>
       ${p.screens ? p.screens.map((sc, n) => `
         <img class="card__screen layer" style="${box(screenRow(p.screenLeft)[n])} --i:${n}" src="${sc.src}" alt="${sc.alt}">`).join("")
+      : p.pair ? `
+        <img class="card__pair card__pair--back layer" style="${box(pairBoxes(coverBox).back)}" src="${p.pair.back}" alt="">
+        <img class="card__pair card__pair--front layer" style="${box(pairBoxes(coverBox).front)}" src="${p.pair.front}" alt="${p.pair.alt}">`
       : p.cover ? `
         <img class="card__shot card__shot--cover layer" style="${box(coverBox)}" src="${p.cover.src}" alt="${p.cover.alt}">`
       : p.shots ? `

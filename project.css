@@ -36,6 +36,14 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
 .fig figcaption { margin-top: 8px; font-size: 13px; opacity: .8; max-width: 56ch; }
 .shot { display: block; width: auto; max-width: 100%; max-height: 34dvh; border-radius: 12px; box-shadow: 0 14px 34px rgba(35,31,28,.2); }
 .shot--bare { border-radius: 0; box-shadow: none; }
+/* Two screenshots, a laptop one and a phone one, each with rounded corners and its own shadow. They shift a little when the pointer is over them. */
+.pair { --mh: 34dvh; position: relative; width: min(100%, calc(var(--mh) * 1.25)); aspect-ratio: 5 / 4; }
+.pair img { position: absolute; display: block; height: auto; box-shadow: 0 16px 38px rgba(35,31,28,.24); transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+.pair__back { left: 0; top: 6%; width: 75%; border-radius: 12px; }
+.pair__front { right: 0; bottom: 0; width: 22.5%; border-radius: 18px; }
+.pair:hover .pair__back { transform: translate(-1.5%, -1.5%) rotate(-1deg); }
+.pair:hover .pair__front { transform: translate(3%, -3%) rotate(2deg); }
+@media (prefers-reduced-motion: reduce) { .pair img { transition: none; } }
 .shot--ph { width: 100%; aspect-ratio: 4 / 3; max-height: 34dvh; background: #e6f3ef; display: grid; place-items: center; font-size: 14px; opacity: .8; }
 
 /* Desktop: text on one side (wider), one big image on the other */
@@ -51,6 +59,7 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
   .facts { font-size: max(17px, calc(var(--u) * 17)); gap: 18px 40px; margin-top: 52px; }
   .facts b { font-size: max(18px, calc(var(--u) * 18)); }
   .shot, .shot--ph { max-height: 70dvh; }
+  .pair { --mh: 70dvh; }
 }
 /* A chapter with no image: the text is centred and wider */
 .chapter--text .chapter__in { max-width: 1060px; margin: auto; justify-items: center; text-align: center; }
@@ -78,6 +87,7 @@ body { margin: 0; color: var(--ink); font-family: "Lato", system-ui, sans-serif;
   .facts b { font-size: 14px; margin-bottom: 4px; }
   .fig figcaption { font-size: 12px; }
   .shot, .shot--ph { max-height: 30dvh; }
+  .pair { --mh: 30dvh; }
 }
 .back { position: fixed; z-index: 6; top: calc(var(--u) * 67.6 - 11px); left: 56px; display: inline-flex; align-items: center; gap: 10px; font-family: "Antonio", sans-serif; font-weight: 600; font-size: 22px; line-height: 1; letter-spacing: .02em; color: var(--orange); text-decoration: none; }
 .back .arr { display: block; flex: none; }   /* the same arrow as the Scroll cue, turned to point back */

@@ -135,7 +135,7 @@ const PROJECTS = {
       { title: "Ribka’s portfolio", big: true,
         body: ["A portfolio site for my sister, a third-year computer science student who needs it for internship applications. I designed it and set up the Figma file for handoff. Ribka built it herself in React.",
                "The first part is live. The rest is still being built."],
-        images: [{ src: "assets/web-ribka-overview.webp", bare: true, alt: "The home screen of Ribka’s portfolio on a laptop and a phone", caption: "" }] },
+        images: [{ pair: { back: "assets/web-ribka-desktop.webp", front: "assets/web-ribka-phone.webp" }, alt: "The home screen of Ribka’s portfolio on a laptop and a phone", caption: "" }] },
       { title: "The brief",
         body: ["Her brief was “design it how you want”, which was the hardest part. There was no direction to react to, so I wrote my own brief from a short set of questions about her projects, her goals and her taste.",
                "Then I kept going back to her with specific questions as I designed: what she built herself, which tools she actually uses, when she could start. Those answers changed the design more than any reference did."],
@@ -182,7 +182,7 @@ const homeLink = document.querySelector("a[data-home]"); if (homeLink) homeLink.
 const chapters = p.chapters.map((c, i) => ({ ...c, first: i === 0 }));
 /* An image can also carry a short silent video: { video: "assets/clip.mp4", src: "assets/still.png" }.
    src is the still shown until the video loads, and the only thing shown if the visitor prefers reduced motion. */
-const fig = (im) => `<figure class="fig">${im.video
+const fig = (im) => im.pair ? `<figure class="fig"><div class="pair" role="img" aria-label="${im.alt || ""}"><img class="pair__back" src="${im.pair.back}" alt=""><img class="pair__front" src="${im.pair.front}" alt=""></div>${im.caption ? `<figcaption>${im.caption}</figcaption>` : ""}</figure>` : `<figure class="fig">${im.video
   ? `<video class="shot" data-video="${im.video}" ${im.src ? `poster="${im.src}"` : ""} muted loop playsinline preload="none" aria-label="${im.alt || ""}"></video>`
   : im.src
   ? `<img class="shot${im.bare ? " shot--bare" : ""}" src="${im.src}" alt="${im.alt || ""}">`
